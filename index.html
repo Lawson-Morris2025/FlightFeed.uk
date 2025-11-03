@@ -5,20 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlightFeed.uk | Cardiff UAV Command</title>
     
-    <!-- PWA: Status Bar & Theme Color -->
+    <!-- Theme and PWA config -->
     <meta name="theme-color" content="#00BFFF">
+    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='60' fill='%2300BFFF' font-family='Orbitron, sans-serif'%3EF%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='60' fill='%2300BFFF' font-family='Orbitron, sans-serif'%3EF%3C/text%3E%3C/svg%3E">
     
-    <!-- PWA: Icons (Using placeholders to ensure PWA structure is correct) -->
-    <link rel="icon" type="image/png" sizes="192x192" href="https://placehold.co/192x192/00BFFF/0D1117?text=FF">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://placehold.co/512x512/00BFFF/0D1117?text=FF">
-    <!-- Apple Touch Icon for iOS (ensures proper home screen icon) -->
-    <link rel="apple-touch-icon" href="https://placehold.co/180x180/00BFFF/0D1117?text=FF">
+    <!-- Using a generic manifest, as the logo is now text -->
+    <link rel="manifest" href="data:application/json;base64,eyJpY29ucyI6W3sic3JjIjoib3B0aW9uYWxfaWNvbi5zdmciLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnIn0seyJzcmMiOiJvcHRpb25hbF9pY29uLnN2ZyIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9zdmcifV0sIm5hbWUiOiJGbGlnaHRGZWVkLnVrIHwgQ2FyZGlmZiBVUEJWIENvbW1hbmQiLCJzaG9ydF9uYW1lIjoiRmxpZ2h0RmVlZCIsInN0YXJ0X3VybCI6Ii4vIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBEMTExNyIsInRoZW1lX2NvbG9yIjoiIzAwQkZGRiJ9">
 
-    <!-- PWA: Web App Manifest (Embedded as Data URI) -->
-    <!-- short_name is set to 'FlightFeed' to ensure correct home screen naming -->
-    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRmxpZ2h0RmVlZC51ayB8IENhcmRpZmYgVVBWIENvbW1hbmQiLCJzaG9ydF9uYW1lIjoiRmxpZ2h0RmVlZCIsImRlc2NyaXB0aW9uIjoiUmVhbC10aW1lIFVBViBTdGF0dXMgYW5kIFdlYXRoZXIgRmVlZCBmb3IgQ2FyZGlmZi4iLCJzdGFydF91cmwiOiIuLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwRDExMTciLCJ0aGVtZV9jb2xvciI6IiMwMEJGRkYiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9wbGFjZWhvbGQuY28vMTkyeDE5Mi8wMEJGRkYvMEQxMTE3P3RleHQ9RkYiLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn0seyJzcmMiOiJodHRwczovL3BsYWNlaG9sZC5jby81MTJ4NTEyLzAwQkZGRi8wRDExMTc/dGV4dD1GRiIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9wbmcifV19">
-
-    <!-- Load Tailwind CSS and Fonts -->
+    <!-- Tailwind CSS and Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght[300..900]&display=swap" rel="stylesheet">
     <style>
@@ -44,7 +39,7 @@
                         'neon-yellow': '0 0 8px rgba(255, 215, 0, 0.4)',
                         'neon-red': '0 0 8px rgba(255, 7, 58, 0.4)',
                         'app-focus': '0 0 15px rgba(0, 191, 255, 0.4)',
-                        'prompt-pop': '0 4px 15px rgba(0, 191, 255, 0.8), 0 0 5px rgba(0, 191, 255, 0.6)', /* New Shadow for prompt */
+                        'prompt-pop': '0 0 20px rgba(0, 191, 255, 0.8), 0 0 8px rgba(0, 191, 255, 1)', 
                     }
                 }
             }
@@ -132,7 +127,7 @@
             display: block;
         }
         
-        /* PWA Install Prompt Styles (made it pop) */
+        /* PWA Install Prompt Styles */
         #install-prompt {
             position: fixed;
             bottom: 4rem; /* Above the navigation bar */
@@ -157,16 +152,31 @@
             vertical-align: middle;
             display: inline-block;
         }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid rgba(0, 191, 255, 0.1);
+            border-top: 4px solid #00BFFF;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="font-sans">
 
-    <!-- Fixed Header (App Bar) -->
+    <!-- Header with new text logo -->
     <header id="app-header" class="bg-dark-card p-4 border-b border-matrix-blue/40 shadow-2xl sticky top-0 z-10">
         <div class="max-w-xl mx-auto flex justify-between items-center">
-            <div class="text-2xl font-display font-bold text-neon-green tracking-wider">
-                FLIGHTFEED<span class="text-matrix-blue">.UK</span>
-            </div>
+            
+            <!-- New Text Logo -->
+            <span class="text-xl font-display text-matrix-blue font-bold">FlightFeed.uk</span>
+            
             <div class="flex items-center space-x-2">
                 <span class="text-xs text-matrix-blue/70">SYNC:</span>
                 <span id="system-status" class="text-neon-green font-bold text-sm">LIVE</span>
@@ -175,18 +185,17 @@
         </div>
     </header>
 
-    <!-- Main Scrollable Content Area -->
+    <!-- Main Content Area -->
     <main id="app-main" class="max-w-xl mx-auto w-full px-4 sm:px-6">
-        <!-- The main page content container. Only one section will be visible at a time. -->
+        
         <div id="page-container" class="space-y-4">
 
-            <!-- 1. ZONES PAGE (Default View) -->
+            <!-- Zones Page -->
             <section id="page-zones" data-page-name="Zones" class="page-content active">
                 <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/20">
                     Cardiff & Vale Flight Zones
                 </h1>
-        
-                <!-- Legend / Key (Compact App Style) -->
+                
                 <div class="bg-dark-card p-3 rounded-lg mb-6 shadow-lg border border-matrix-blue/20">
                     <h2 class="text-sm font-bold text-matrix-blue mb-2">System Key:</h2>
                     <div class="grid grid-cols-3 gap-2 text-xs">
@@ -204,22 +213,23 @@
                         </div>
                     </div>
                 </div>
-        
-                <!-- Location Cards Container (Populated by JS) -->
+                
                 <section id="location-container" class="space-y-4"></section>
             </section>
 
-            <!-- 2. FORECAST PAGE -->
+            <!-- Forecast Page (Updated for API fetch) -->
             <section id="page-forecast" data-page-name="Forecast" class="page-content">
                 <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/20">
-                    UAV 7-Day Flight Forecast
+                    UAV 7-Day Flight Forecast (Live Data)
                 </h1>
-                <p class="text-sm text-gray-400 mb-6">Real-time aviation weather data for the Cardiff region.</p>
+                <p class="text-sm text-gray-400 mb-6">Generated forecast for the Cardiff region based on live web data.</p>
                 
-                <section id="forecast-details-container" class="space-y-4"></section>
+                <section id="forecast-details-container" class="space-y-4">
+                    <!-- Loading/Error/Content will be rendered here -->
+                </section>
             </section>
 
-            <!-- 3. ALERTS PAGE -->
+            <!-- Alerts Page -->
             <section id="page-alerts" data-page-name="Alerts" class="page-content">
                 <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/20">
                     Active Flight Advisories & Warnings
@@ -232,37 +242,33 @@
         </div>
     </main>
     
-    <!-- iOS PWA INSTALL INSTRUCTIONS POPUP -->
-    <div id="install-prompt" class="bg-matrix-blue/95 text-dark-bg p-3 rounded-xl shadow-prompt-pop">
+    <!-- PWA Install Prompt -->
+    <div id="install-prompt" class="bg-dark-card text-white p-3 rounded-xl shadow-prompt-pop border border-matrix-blue/50">
         <div class="flex justify-between items-center mb-2">
             <span class="font-bold text-sm">Install FlightFeed App (iOS)</span>
-            <button id="close-prompt" class="text-lg font-bold p-1 leading-none hover:text-danger-red/80 transition duration-150">
+            <button id="close-prompt" class="text-lg font-bold p-1 leading-none text-gray-400 hover:text-danger-red transition duration-150">
                 &times;
             </button>
         </div>
         <p class="text-xs font-semibold">
             To install: Tap the 
-            <!-- Share Icon SVG (Up Arrow from Box) -->
-            <svg class="share-icon-svg" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
-            <span class="font-bold">Share icon</span>, then select **'Add to Home Screen'**.
+            <svg class="share-icon-svg text-white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
+            <span class="font-bold text-matrix-blue">Share icon</span>, then select **'Add to Home Screen'**.
         </p>
     </div>
 
-    <!-- Fixed Bottom Navigation Bar (App Footer) -->
-    <footer class="fixed bottom-0 w-full bg-dark-card border-t border-matrix-blue/40 z-50">
+    <!-- Bottom Navigation Bar -->
+    <footer class="fixed bottom-0 w-full bg-dark-bg border-t-2 border-matrix-blue z-50 shadow-2xl shadow-matrix-blue/50">
         <div class="max-w-xl mx-auto flex justify-around items-center h-14 text-xs font-medium">
             <a href="#" id="nav-zones" data-page="Zones" class="nav-btn active">
-                <!-- Map Pin Icon SVG (lucide) -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M12 21.75l-4.5-5.5a7 7 0 1 1 9 0l-4.5 5.5z"/><circle cx="12" cy="10" r="3"/></svg>
                 <span class="mt-1">Zones</span>
             </a>
             <a href="#" id="nav-forecast" data-page="Forecast" class="nav-btn">
-                <!-- Gauge Icon SVG (lucide) -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gauge"><path d="M12 14v4"/><path d="M15.5 16.5l2.5 2.5"/><path d="M8.5 16.5l-2.5 2.5"/><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 12c-3.3 0-6-2.7-6-6"/></svg>
                 <span class="mt-1">Forecast</span>
             </a>
             <a href="#" id="nav-alerts" data-page="Alerts" class="nav-btn">
-                <!-- Alert/Bell Icon SVG (lucide) -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
                 <span class="mt-1">Alerts</span>
             </a>
@@ -271,11 +277,36 @@
 
 
 <script>
-    // --- MOCK DATA SETS ---
+    // --- API Configuration and Data Structures ---
+    const apiKey = ""; 
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
-    // EXPANDED LOCATION DATA: Now includes 30 locations for better regional coverage
+    // Schema to force the LLM to return a predictable JSON array of forecast data
+    const forecastSchema = {
+        type: "ARRAY",
+        description: "A 7-day weather forecast for UAV/Drone operations in Cardiff, Wales.",
+        items: {
+            type: "OBJECT",
+            properties: {
+                day: { type: "STRING", description: "Day of the week, e.g., 'MON (TODAY)'" },
+                wind_speed: { type: "NUMBER", description: "Average wind speed in mph." },
+                gust_speed: { type: "NUMBER", description: "Maximum gust speed in mph." },
+                temp: { type: "NUMBER", description: "Maximum temperature in Celsius." },
+                rain: { type: "NUMBER", description: "Percentage chance of precipitation." },
+                direction: { type: "STRING", description: "Wind direction abbreviation (e.g., 'SW', 'NE')." },
+                pressure: { type: "NUMBER", description: "Air pressure in hPa." },
+                solar: { type: "STRING", description: "Solar/UV activity, one of (LOW, MED, HIGH)." }
+            },
+            required: ["day", "wind_speed", "gust_speed", "temp", "rain", "direction", "pressure", "solar"]
+        }
+    };
+    
+    // The previous mock data is kept here just for structure reference but is no longer used for rendering.
+    let currentForecastData = []; 
+
+    // --- MOCK ZONE AND ALERT DATA (Remains static) ---
+
     const locationData = [
-        // Original 7 locations
         { id: 1, name: "Cardiff Bay Barrage", area: "Cardiff Bay", coords: "51.45N, -3.16W", wind_speed: 15, nfz_status: 'CAUTION', notes: "Wind is often higher near the coast. Requires awareness of local Port Authority / Bay Byelaws." },
         { id: 2, name: "Trellai Park", area: "Llanrumney", coords: "51.50N, -3.12W", wind_speed: 8, nfz_status: 'OPEN', notes: "Good open space. Standard Drone Code applies (VLOS, 400ft max)." },
         { id: 5, name: "Cardiff Airport FRZ", area: "Rhoose (Warning)", coords: "51.39N, -3.34W", wind_speed: 16, nfz_status: 'RESTRICTED', notes: "STRICT NO-FLY ZONE. Within Flight Restriction Zone (FRZ). Do NOT attempt flight." },
@@ -283,8 +314,6 @@
         { id: 29, name: "Ogmore-by-Sea", area: "Bridgend Coast (Vale)", coords: "51.46N, -3.61W", wind_speed: 18, nfz_status: 'CAUTION', notes: "Strong sea winds (18 mph). Suitable for experienced pilots only. Watch tide line." },
         { id: 33, name: "Cardiff Central Train Station", area: "City Centre", coords: "51.47N, -3.18W", wind_speed: 8, nfz_status: 'RESTRICTED', notes: "Critical transport infrastructure. Rail and high public risk. **Do NOT fly** without explicit Network Rail/Police permission." },
         { id: 35, name: "Roath Park Lake", area: "Roath", coords: "51.49N, -3.15W", wind_speed: 9, nfz_status: 'OPEN', notes: "Open park, but requires care due to water and wildlife. Keep clear of children's play areas." },
-        
-        // 23 New Locations Added
         { id: 40, name: "Bute Park South", area: "City Centre Fringe", coords: "51.48N, -3.18W", wind_speed: 7, nfz_status: 'CAUTION', notes: "High pedestrian volume, especially weekends. Maintain 50m separation from people/buildings." },
         { id: 41, name: "Garth Mountain Summit", area: "Taff's Well", coords: "51.54N, -3.27W", wind_speed: 25, nfz_status: 'CAUTION', notes: "SEVERE WIND WARNING (25 mph)! High altitude, turbulent air. Not recommended for non-pro gear." },
         { id: 42, name: "Llandaff Cathedral Area", area: "Llandaff", coords: "51.49N, -3.22W", wind_speed: 6, nfz_status: 'RESTRICTED', notes: "Historic structure protection zone. Permission from site management is mandatory." },
@@ -311,16 +340,6 @@
         { id: 63, name: "Parc Penallta", area: "Hengoed", coords: "51.65N, -3.24W", wind_speed: 7, nfz_status: 'OPEN', notes: "Former colliery site, now parkland. Low risk, clear visibility." },
     ];
 
-    const forecastData = [
-        { day: 'MON (TODAY)', wind_speed: 15, gust_speed: 24, temp: 12, visibility: 'GOOD', rain: 10 },
-        { day: 'TUE', wind_speed: 8, gust_speed: 12, temp: 14, visibility: 'EXCELLENT', rain: 0 },
-        { day: 'WED', wind_speed: 6, gust_speed: 9, temp: 15, visibility: 'EXCELLENT', rain: 0 },
-        { day: 'THU', wind_speed: 18, gust_speed: 30, temp: 11, visibility: 'GOOD', rain: 75 },
-        { day: 'FRI', wind_speed: 10, gust_speed: 15, temp: 13, visibility: 'MODERATE', rain: 50 },
-        { day: 'SAT', wind_speed: 12, gust_speed: 19, temp: 14, visibility: 'GOOD', rain: 20 },
-        { day: 'SUN', wind_speed: 14, gust_speed: 22, temp: 12, visibility: 'MODERATE', rain: 0 },
-    ];
-
     const alertData = [
         {
             id: 1,
@@ -340,9 +359,12 @@
         }
     ];
 
-    // --- UTILITIES ---
+    // --- UTILITIES (Remain the same) ---
 
     function getUAVForecast(windSpeed) {
+        if (windSpeed === null || isNaN(windSpeed)) {
+             return { status: 'UNKNOWN', color: 'text-gray-400', shadow: 'shadow-none', bgColor: 'bg-gray-400/20', icon: '' };
+        }
         if (windSpeed >= 19) { 
             return {
                 status: 'UNSAFE',
@@ -401,6 +423,9 @@
     function getRainIcon(rainChance) {
         let iconColor = 'text-gray-400';
         let icon;
+        if (rainChance === null || isNaN(rainChance)) {
+             rainChance = 0; // Default to 0 for rendering
+        }
 
         if (rainChance >= 60) {
             iconColor = 'text-matrix-blue';
@@ -410,13 +435,96 @@
             icon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-drizzle ${iconColor}"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.35"/><line x1="16" x2="16" y1="17" y2="21"/><line x1="8" x2="8" y1="17" y2="21"/><line x1="12" x2="12" y1="19" y2="23"/></svg>`;
         } else {
             iconColor = 'text-neon-green/80';
-            icon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun ${iconColor}"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
+            icon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun ${iconColor}"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93l-1.41 1.41"/></svg>`;
         }
 
         return `<div class="flex items-center space-x-1 font-semibold text-xs">${icon}<span>${rainChance}%</span></div>`;
     }
 
-    // --- PAGE RENDERING FUNCTIONS (Partial to keep file size down) ---
+    // --- API Fetch Function with Exponential Backoff ---
+
+    /**
+     * Fetches real-time weather data from the Gemini API using Google Search Grounding.
+     * @param {number} maxRetries - Maximum number of retries for exponential backoff.
+     */
+    async function fetchWeatherData(maxRetries = 5) { // Increased retries to 5
+        const container = document.getElementById('forecast-details-container');
+        container.innerHTML = `
+            <div class="flex flex-col items-center justify-center p-12 bg-dark-card rounded-xl">
+                <div class="spinner mb-4"></div>
+                <p class="text-matrix-blue font-semibold">Fetching Live Data...</p>
+                <p class="text-xs text-gray-500 mt-1">This uses real-time web search for the forecast.</p>
+            </div>
+        `;
+
+        const systemPrompt = "You are a professional aviation meteorologist specializing in UK UAV/drone operations. Based on current weather data, generate a concise 7-day forecast for the Cardiff, Wales area. You MUST return the forecast as a JSON array matching the provided schema. Do not include any explanatory text outside of the JSON block.";
+        const userQuery = "7-day UAV flight forecast for Cardiff, Wales. Include wind speed (mph), max gust speed (mph), max temperature (°C), rain chance (%), wind direction (e.g., NW), air pressure (hPa), and UV index/solar activity (Low/Med/High).";
+
+        const payload = {
+            contents: [{ parts: [{ text: userQuery }] }],
+            tools: [{ "google_search": {} }],
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+            generationConfig: {
+                responseMimeType: "application/json",
+                responseSchema: forecastSchema
+            }
+        };
+
+        let lastError = null;
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                // Log attempt number for debugging
+                console.log(`[API_CALL] Attempt ${i + 1}/${maxRetries}. URL: ${apiUrl}`); 
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    // Log the detailed error message from the response body
+                    console.error(`[API_ERROR] HTTP Status: ${response.status}. Response body:`, errorText); 
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (jsonText) {
+                    currentForecastData = JSON.parse(jsonText);
+                    return; // Success, exit loop
+                } else {
+                    throw new Error("API response was missing expected JSON content.");
+                }
+
+            } catch (error) {
+                lastError = error;
+                // Exponential backoff delay
+                const delay = Math.pow(2, i) * 1000;
+                // Don't log retries as errors to the console, only the final failure
+                if (i < maxRetries - 1) { 
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+        }
+
+        // If all retries fail, display the error
+        container.innerHTML = `
+            <div class="bg-dark-card p-6 rounded-xl border border-danger-red/50 shadow-neon-red/50">
+                <p class="text-danger-red font-bold flex items-center mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-octagon mr-2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                    DATA FETCH FAILED
+                </p>
+                <p class="text-sm text-gray-400">Could not retrieve live weather forecast after multiple attempts. This may be a temporary service issue (Authentication Error 401).</p>
+                <p class="text-xs text-gray-500 mt-2 italic">Error: ${lastError ? lastError.message : 'Unknown error.'}</p>
+            </div>
+        `;
+        throw lastError; // Propagate error
+    }
+
+    // --- PAGE RENDERING FUNCTIONS ---
 
     function renderZonesPage() {
         const container = document.getElementById('location-container');
@@ -427,9 +535,9 @@
         const sortedLocations = locationData.sort((a, b) => a.name.localeCompare(b.name));
 
         sortedLocations.forEach(location => {
-            const forecast = getUAVForecast(location.wind_speed);
+            // Using mock wind speed for Zones page since this data is static
+            const forecast = getUAVForecast(location.wind_speed); 
             const nfzStyle = getNFZStyle(location.nfz_status);
-
             const advisoryColor = nfzStyle.color.replace('text-', 'text-') + (location.nfz_status === 'RESTRICTED' ? ' font-bold' : '/90');
 
             const html = `
@@ -446,7 +554,7 @@
 
                     <div class="grid grid-cols-2 gap-4 mt-3 pt-3 border-t border-matrix-blue/10">
                         <div>
-                            <p class="text-xs text-matrix-blue/70 mb-1 font-semibold flex items-center">UAV FORECAST</p>
+                            <p class="text-xs text-matrix-blue/70 mb-1 font-semibold flex items-center">STATIC WIND FORECAST</p>
                             <div class="flex items-center space-x-2">
                                 <span class="text-2xl font-display ${forecast.color}">
                                     ${location.wind_speed}<span class="text-sm font-sans ml-1">mph</span>
@@ -477,62 +585,114 @@
         });
     }
 
-    function renderForecastPage() {
+    async function renderForecastPage() {
         const container = document.getElementById('forecast-details-container');
         if (!container) return;
-        container.innerHTML = '';
+        
+        try {
+            // Fetch fresh data if the array is empty or not yet loaded
+            if (currentForecastData.length === 0) {
+                await fetchWeatherData();
+            }
 
-        const overview = forecastData[0];
-        const currentForecast = getUAVForecast(overview.wind_speed);
-        let overviewHTML = `
-            <div class="app-card bg-dark-card p-5 rounded-xl shadow-2xl border-matrix-blue/40">
-                <h2 class="text-lg font-display text-matrix-blue mb-3">CURRENT CONDITIONS</h2>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-end">
-                        <span class="text-5xl font-display font-light ${currentForecast.color}">${overview.temp}&deg;C</span>
-                        <span class="text-lg text-gray-500 ml-2">(${overview.wind_speed}mph)</span>
+            // If fetch was successful, render the data
+            if (currentForecastData.length > 0) {
+                container.innerHTML = '';
+                
+                const overview = currentForecastData[0];
+                const currentForecast = getUAVForecast(overview.wind_speed);
+
+                // --- Current Conditions Overview ---
+                let overviewHTML = `
+                    <div class="app-card bg-dark-card p-5 rounded-xl shadow-2xl border-matrix-blue/40">
+                        <h2 class="text-lg font-display text-matrix-blue mb-3">CURRENT CONDITIONS</h2>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-end">
+                                <span class="text-5xl font-display font-light ${currentForecast.color}">${overview.temp || '--'}&deg;C</span>
+                                <span class="text-lg text-gray-500 ml-2">(${overview.wind_speed || '--'}mph)</span>
+                            </div>
+                            ${currentForecast.icon}
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mt-4 text-sm">
+                            <p class="text-matrix-blue/80"><span class="font-bold">FLIGHT RATING:</span> <span class="font-display font-semibold ${currentForecast.color}">${currentForecast.status}</span></p>
+                            <p class="text-matrix-blue/80"><span class="font-bold">GUSTS:</span> <span class="text-white">${overview.gust_speed || '--'} mph</span></p>
+                            <p class="text-matrix-blue/80"><span class="font-bold">PRESSURE:</span> <span class="text-white">${overview.pressure || '--'} hPa</span></p>
+                            <p class="text-matrix-blue/80"><span class="font-bold">WIND DIR:</span> <span class="text-white">${overview.direction || '--'}</span></p>
+                        </div>
                     </div>
-                    ${currentForecast.icon}
-                </div>
-                <div class="grid grid-cols-2 gap-3 mt-4 text-sm">
-                    <p class="text-matrix-blue/80"><span class="font-bold">FLIGHT RATING:</span> <span class="font-display font-semibold ${currentForecast.color}">${currentForecast.status}</span></p>
-                    <p class="text-matrix-blue/80"><span class="font-bold">GUSTS:</span> <span class="text-white">${overview.gust_speed} mph</span></p>
-                    <p class="text-matrix-blue/80"><span class="font-bold">VISIBILITY:</span> <span class="text-white">${overview.visibility}</span></p>
-                    <p class="text-matrix-blue/80"><span class="font-bold">RAIN RISK:</span> <span class="text-white">${overview.rain}%</span></p>
-                </div>
-            </div>
-        `;
-        container.insertAdjacentHTML('beforeend', overviewHTML);
+                `;
+                container.insertAdjacentHTML('beforeend', overviewHTML);
 
-        let detailedHTML = `<div class="space-y-2"><h2 class="text-lg font-display text-matrix-blue pt-4">UPCOMING DAYS</h2>`;
-        detailedHTML += `
-            <div class="flex justify-between items-center text-xs font-semibold text-matrix-blue/70 uppercase border-b border-matrix-blue/20 pb-2 mb-2">
-                <span class="w-1/4">Day</span>
-                <span class="w-1/4 text-center">Wind (mph)</span>
-                <span class="w-1/4 text-center">Temp / Rain</span>
-                <span class="w-1/4 text-right">Rating</span>
-            </div>
-        `;
+                // --- Detailed Forecast Log ---
+                let detailedHTML = `<div class="space-y-2"><h2 class="text-lg font-display text-matrix-blue pt-6 mb-4">DETAILED 7-DAY LOG</h2>`;
+                
+                // Header for the detailed log (Desktop)
+                detailedHTML += `
+                    <div class="hidden sm:flex justify-between items-center text-xs font-semibold text-matrix-blue/70 uppercase border-b border-matrix-blue/20 pb-2 mb-2">
+                        <span class="w-1/6">Day</span>
+                        <span class="w-1/6 text-center">Wind/Gust</span>
+                        <span class="w-1/6 text-center">Dir. / Press.</span>
+                        <span class="w-1/6 text-center">Temp / Rain</span>
+                        <span class="w-1/6 text-center">Solar</span>
+                        <span class="w-1/6 text-right">Rating</span>
+                    </div>
+                `;
 
-        forecastData.forEach(dayForecast => {
-            const f = getUAVForecast(dayForecast.wind_speed);
-            const rainIconHtml = getRainIcon(dayForecast.rain);
-            const bgColor = dayForecast.day.includes('TODAY') ? 'bg-dark-hover' : 'bg-dark-card';
-            
-            detailedHTML += `
-                <div class="flex justify-between items-center ${bgColor} p-3 rounded-lg border border-matrix-blue/10 hover:border-matrix-blue/40 transition duration-150">
-                    <span class="font-bold w-1/4 ${dayForecast.day.includes('TODAY') ? 'text-white' : 'text-matrix-blue/80'}">${dayForecast.day}</span>
-                    <span class="w-1/4 text-center text-sm font-semibold ${f.color}">${dayForecast.wind_speed}</span>
-                    <span class="w-1/4 text-center text-sm text-gray-300 flex justify-center items-center space-x-2">
-                        <span>${dayForecast.temp}&deg;C</span>
-                        ${rainIconHtml}
-                    </span>
-                    <span class="w-1/4 text-right status-pill ${f.bgColor} ${f.color} ring-1 ring-current">${f.status}</span>
-                </div>
-            `;
-        });
-        detailedHTML += `</div>`;
-        container.insertAdjacentHTML('beforeend', detailedHTML);
+                currentForecastData.forEach(dayForecast => {
+                    const f = getUAVForecast(dayForecast.wind_speed);
+                    const rainIconHtml = getRainIcon(dayForecast.rain);
+                    const bgColor = dayForecast.day.includes('TODAY') ? 'bg-dark-hover' : 'bg-dark-card';
+                    
+                    // Row structure
+                    detailedHTML += `
+                        <div class="app-card ${bgColor} p-3 rounded-xl border border-matrix-blue/10 hover:border-matrix-blue/40 transition duration-150">
+                            <!-- Desktop/Tablet View -->
+                            <div class="hidden sm:flex justify-between items-center">
+                                <span class="font-bold w-1/6 ${dayForecast.day.includes('TODAY') ? 'text-white' : 'text-matrix-blue/80'}">${dayForecast.day}</span>
+                                <span class="w-1/6 text-center text-sm font-semibold ${f.color}">${dayForecast.wind_speed || '--'}/${dayForecast.gust_speed || '--'}</span>
+                                <span class="w-1/6 text-center text-xs text-gray-300">${dayForecast.direction || '--'} / ${dayForecast.pressure || '--'}</span>
+                                <span class="w-1/6 text-center text-sm text-gray-300 flex justify-center items-center space-x-2">
+                                    <span>${dayForecast.temp || '--'}&deg;C</span>
+                                    ${rainIconHtml}
+                                </span>
+                                <span class="w-1/6 text-center text-sm text-gray-300">${dayForecast.solar || '--'}</span>
+                                <span class="w-1/6 text-right status-pill ${f.bgColor} ${f.color} ring-1 ring-current">${f.status}</span>
+                            </div>
+                            
+                            <!-- Mobile View (Stacked) -->
+                            <div class="sm:hidden grid grid-cols-2 gap-2 text-sm">
+                                <div class="font-bold ${dayForecast.day.includes('TODAY') ? 'text-white' : 'text-matrix-blue/80'}">${dayForecast.day}</div>
+                                <div class="text-right"><span class="status-pill ${f.bgColor} ${f.color} ring-1 ring-current">${f.status}</span></div>
+                                
+                                <div class="text-matrix-blue/70">Wind/Gust:</div>
+                                <div class="text-right font-semibold ${f.color}">${dayForecast.wind_speed || '--'} / ${dayForecast.gust_speed || '--'} mph</div>
+                                
+                                <div class="text-matrix-blue/70">Temp/Rain:</div>
+                                <div class="text-right text-gray-300 flex justify-end items-center space-x-2">
+                                    <span>${dayForecast.temp || '--'}&deg;C</span>
+                                    ${rainIconHtml}
+                                </div>
+
+                                <div class="text-matrix-blue/70">Pressure/Solar:</div>
+                                <div class="text-right text-gray-300">${dayForecast.pressure || '--'} hPa / ${dayForecast.solar || '--'}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                detailedHTML += `</div>`;
+                container.insertAdjacentHTML('beforeend', detailedHTML);
+            } else {
+                // This covers cases where the API returned successfully but the data was empty/malformed
+                container.innerHTML = `<div class="text-center p-8 text-gray-500 bg-dark-card rounded-xl border border-electric-yellow/30">
+                    <p class="text-lg text-electric-yellow">Weather Data Unavailable</p>
+                    <p class="text-sm mt-1">The forecast could not be parsed. Please reload the app.</p>
+                </div>`;
+            }
+
+        } catch (e) {
+            // Error handled inside fetchWeatherData, no need to re-render here
+            console.error("Forecast rendering failed:", e);
+        }
     }
 
     function renderAlertsPage() {
@@ -596,7 +756,7 @@
 
     let currentPage = 'Zones';
 
-    function changePage(pageName) {
+    async function changePage(pageName) {
         if (currentPage === pageName) return;
 
         currentPage = pageName;
@@ -625,7 +785,7 @@
                 renderZonesPage();
                 break;
             case 'Forecast':
-                renderForecastPage();
+                await renderForecastPage();
                 break;
             case 'Alerts':
                 renderAlertsPage();
@@ -644,9 +804,8 @@
 
         // Only show if it's likely iOS and the app is NOT already installed
         if (isIOS && !isStandalone) {
-            installPrompt.style.display = 'block'; // Ensure it's rendered
+            installPrompt.style.display = 'block'; 
             
-            // Use a slight delay to trigger the opacity transition, making it "pop"
             setTimeout(() => {
                 installPrompt.classList.add('visible');
             }, 50); 
@@ -654,13 +813,11 @@
             // Add dismiss listener
             document.getElementById('close-prompt').addEventListener('click', () => {
                 installPrompt.classList.remove('visible');
-                // Hide completely after fade out
                 setTimeout(() => {
                     installPrompt.style.display = 'none';
                 }, 300); 
             });
         } else {
-            // Hide the prompt container if conditions aren't met
             installPrompt.style.display = 'none';
         }
     }
@@ -678,7 +835,8 @@
             });
         });
 
-        // --- 2. Render and Show Prompt ---
+        // --- 2. Render Initial Page and Show Prompt ---
+        // We initially render Zones as it doesn't require an API call on load.
         renderZonesPage();
         showInstallPrompt();
     };
