@@ -8,8 +8,15 @@
     <!-- PWA: Status Bar & Theme Color -->
     <meta name="theme-color" content="#00BFFF">
     
+    <!-- PWA: Icons (Using placeholders to ensure PWA structure is correct) -->
+    <link rel="icon" type="image/png" sizes="192x192" href="https://placehold.co/192x192/00BFFF/0D1117?text=FF">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://placehold.co/512x512/00BFFF/0D1117?text=FF">
+    <!-- Apple Touch Icon for iOS (ensures proper home screen icon) -->
+    <link rel="apple-touch-icon" href="https://placehold.co/180x180/00BFFF/0D1117?text=FF">
+
     <!-- PWA: Web App Manifest (Embedded as Data URI) -->
-    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRmxpZ2h0RmVlZCBVVlYgQ29tbWFuZCIsInNob3J0X25hbWUiOiJGbGlnaHRGZWVkIiwiZGVzY3JpcHRpb24iOiJSZWFsLXRpbWUgVVZGIFN0YXR1cyBhbmQgV2VhdGhlciBGZWVkIGZvciBDYXJkaWZmLiIsInN0YXJ0X3VybCI6Ii4vIiwic3RhbmRhbG9uZSI6ImF1dG8iLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBEMTExNyIsInRoZW1lX2NvbG9yIjoiIzAwQkZGRiIsImljb25zIjp7fV0sImJhZ2VzIjpbXX0=">
+    <!-- short_name is set to 'FlightFeed' to ensure correct home screen naming -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRmxpZ2h0RmVlZC51ayB8IENhcmRpZmYgVVBWIENvbW1hbmQiLCJzaG9ydF9uYW1lIjoiRmxpZ2h0RmVlZCIsImRlc2NyaXB0aW9uIjoiUmVhbC10aW1lIFVBViBTdGF0dXMgYW5kIFdlYXRoZXIgRmVlZCBmb3IgQ2FyZGlmZi4iLCJzdGFydF91cmwiOiIuLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwRDExMTciLCJ0aGVtZV9jb2xvciI6IiMwMEJGRkYiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9wbGFjZWhvbGQuY28vMTkyeDE5Mi8wMEJGRkYvMEQxMTE3P3RleHQ9RkYiLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn0seyJzcmMiOiJodHRwczovL3BsYWNlaG9sZC5jby81MTJ4NTEyLzAwQkZGRi8wRDExMTc/dGV4dD1GRiIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9wbmcifV19">
 
     <!-- Load Tailwind CSS and Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -37,6 +44,7 @@
                         'neon-yellow': '0 0 8px rgba(255, 215, 0, 0.4)',
                         'neon-red': '0 0 8px rgba(255, 7, 58, 0.4)',
                         'app-focus': '0 0 15px rgba(0, 191, 255, 0.4)',
+                        'prompt-pop': '0 4px 15px rgba(0, 191, 255, 0.8), 0 0 5px rgba(0, 191, 255, 0.6)', /* New Shadow for prompt */
                     }
                 }
             }
@@ -124,7 +132,7 @@
             display: block;
         }
         
-        /* PWA Install Prompt Styles */
+        /* PWA Install Prompt Styles (made it pop) */
         #install-prompt {
             position: fixed;
             bottom: 4rem; /* Above the navigation bar */
@@ -133,7 +141,9 @@
             max-width: 90%;
             z-index: 100;
             opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; 
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.8), 0 0 5px rgba(0, 191, 255, 0.6); 
+            display: none; /* Starts hidden, shown by JS */
         }
         #install-prompt.visible {
             opacity: 1;
@@ -223,7 +233,7 @@
     </main>
     
     <!-- iOS PWA INSTALL INSTRUCTIONS POPUP -->
-    <div id="install-prompt" class="bg-matrix-blue/95 text-dark-bg p-3 rounded-xl shadow-2xl border border-matrix-blue/20 hidden">
+    <div id="install-prompt" class="bg-matrix-blue/95 text-dark-bg p-3 rounded-xl shadow-prompt-pop">
         <div class="flex justify-between items-center mb-2">
             <span class="font-bold text-sm">Install FlightFeed App (iOS)</span>
             <button id="close-prompt" class="text-lg font-bold p-1 leading-none hover:text-danger-red/80 transition duration-150">
@@ -628,25 +638,30 @@
 
     function showInstallPrompt() {
         const installPrompt = document.getElementById('install-prompt');
+        // Check for iOS (based on user agent) and if the app is NOT running standalone
         const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
 
         // Only show if it's likely iOS and the app is NOT already installed
         if (isIOS && !isStandalone) {
-            installPrompt.classList.remove('hidden');
-            // Use a short delay to ensure visibility after content loads
+            installPrompt.style.display = 'block'; // Ensure it's rendered
+            
+            // Use a slight delay to trigger the opacity transition, making it "pop"
             setTimeout(() => {
                 installPrompt.classList.add('visible');
-            }, 1000); 
+            }, 50); 
 
             // Add dismiss listener
             document.getElementById('close-prompt').addEventListener('click', () => {
                 installPrompt.classList.remove('visible');
                 // Hide completely after fade out
                 setTimeout(() => {
-                    installPrompt.classList.add('hidden');
-                }, 500); 
+                    installPrompt.style.display = 'none';
+                }, 300); 
             });
+        } else {
+            // Hide the prompt container if conditions aren't met
+            installPrompt.style.display = 'none';
         }
     }
 
