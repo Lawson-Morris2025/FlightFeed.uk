@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlightFeed.uk | Cardiff UAV Command</title>
     
-    <!-- Theme and PWA config -->
-    <meta name="theme-color" content="#00BFFF">
+    <!-- Theme and PWA config --><meta name="theme-color" content="#00BFFF">
     <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='60' fill='%2300BFFF' font-family='Orbitron, sans-serif'%3EF%3C/text%3E%3C/svg%3E">
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='60' fill='%2300BFFF' font-family='Orbitron, sans-serif'%3EF%3C</text>%3E%3C/svg%3E">
     
     <link rel="manifest" href="data:application/json;base64,eyJpY29ucyI6W3sic3JjIjoib3B0aW9uYWxfaWNvbi5zdmciLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiZmlsZV91cmwifSwic3JjIjoib3B0aW9uYWxfaWNvbi5zdmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiZmlsZV91cmwifV0sIm5hbWUiOiJGbGlnaHRGZWVkLnVrIHwgQ2FyZGlmZiBVUEJWIENvbW1hbmQiLCJzaG9ydF9uYW1lOiJGbGlnaHRGZWVkIiwic3RhcnRfdXJsIjoiLi8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZWRydW5rYmFjayIsImJhY2tncm91bmRfY29sb3IiOiIjMEQxMTE3IiwidGhlbWVfY29sb3IiOiIjMDBCRkZGIH0=">
 
-    <!-- Tailwind CSS and Fonts -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS and Fonts --><script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght[300..900]&display=swap" rel="stylesheet">
     <style>
         /* Define custom Tailwind colors and configuration for the futuristic look */
@@ -109,6 +107,12 @@
             background-color: #1a2028; 
         }
         
+        /* Specific glow for location cards */
+        .location-card-glow {
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.4); 
+            border-color: rgba(0, 191, 255, 0.5); 
+        }
+
         /* Bottom Nav Bar Button Style */
         .nav-btn {
             display: flex;
@@ -187,15 +191,12 @@
 </head>
 <body class="font-sans">
 
-    <!-- MAIN APPLICATION WRAPPER (Now always visible) -->
-    <div id="app-wrapper">
+    <!-- MAIN APPLICATION WRAPPER (Now always visible) --><div id="app-wrapper">
 
-        <!-- Header with new text logo -->
-        <header id="app-header" class="bg-dark-card p-4 border-b border-matrix-blue/40 shadow-2xl sticky top-0 z-10">
+        <!-- Header with new text logo --><header id="app-header" class="bg-dark-card p-4 border-b border-matrix-blue/40 shadow-2xl sticky top-0 z-10">
             <div class="max-w-xl mx-auto flex justify-between items-center">
                 
-                <!-- New Text Logo -->
-                <span class="text-xl font-display text-matrix-blue font-bold">FlightFeed.uk</span>
+                <!-- New Text Logo --><span class="text-xl font-display text-matrix-blue font-bold">FlightFeed.uk</span>
                 
                 <div class="flex items-center space-x-2">
                     <span class="text-xs text-matrix-blue/70">SYSTEM:</span>
@@ -205,13 +206,11 @@
             </div>
         </header>
 
-        <!-- Main Content Area -->
-        <main id="app-main" class="max-w-xl mx-auto w-full px-4 sm:px-6">
+        <!-- Main Content Area --><main id="app-main" class="max-w-xl mx-auto w-full px-4 sm:px-6">
             
             <div id="page-container" class="space-y-4">
 
-                <!-- Zones Page -->
-                <section id="page-zones" data-page-name="Zones" class="page-content active">
+                <!-- Zones Page --><section id="page-zones" data-page-name="Zones" class="page-content active">
                     <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/20">
                         Cardiff & Vale Flight Zones
                     </h1>
@@ -237,20 +236,17 @@
                     <section id="location-container" class="space-y-4"></section>
                 </section>
 
-                <!-- Forecast Page -->
-                <section id="page-forecast" data-page-name="Forecast" class="page-content">
+                <!-- Forecast Page --><section id="page-forecast" data-page-name="Forecast" class="page-content">
                     <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/20">
                         UAV 7-Day Flight Forecast (Live Feed)
                     </h1>
                     <p class="text-sm text-gray-400 mb-6" id="forecast-source">Source: WeatherAPI. Last Update: <span id="last-update-time">...</span></p>
                     
                     <section id="forecast-details-container" class="space-y-4">
-                        <!-- Content will be rendered here -->
-                    </section>
+                        <!-- Content will be rendered here --></section>
                 </section>
 
-                <!-- Alerts Page -->
-                <section id="page-alerts" data-page-name="Alerts" class="page-content">
+                <!-- Alerts Page --><section id="page-alerts" data-page-name="Alerts" class="page-content">
                     <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/20">
                         Active Flight Advisories & Warnings
                     </h1>
@@ -259,14 +255,12 @@
                     <section id="alerts-container" class="space-y-4"></section>
                 </section>
                 
-                <!-- Control Page (Now contains internal lock logic) -->
-                <section id="page-control" data-page-name="Control" class="page-content">
+                <!-- Control Page (Now contains internal lock logic) --><section id="page-control" data-page-name="Control" class="page-content">
                     <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/50">
                         SYSTEM & FLIGHT CONTROL
                     </h1>
                     
-                    <!-- Control Lock Form (Visible until unlocked) -->
-                    <div id="control-lock-form" class="max-w-md mx-auto bg-dark-card p-6 rounded-xl shadow-blue-glow border border-danger-red/50">
+                    <!-- Control Lock Form (Visible until unlocked) --><div id="control-lock-form" class="max-w-md mx-auto bg-dark-card p-6 rounded-xl shadow-blue-glow border border-danger-red/50">
                         <h2 class="text-2xl font-display font-bold text-danger-red mb-2">RESTRICTED ACCESS</h2>
                         <p class="text-sm text-electric-yellow mb-6">
                             Access to System Controls requires a valid 4-digit security key.
@@ -281,16 +275,14 @@
                         <div id="control-lock-status" class="text-center text-sm font-semibold pt-4 hidden"></div>
                     </div>
 
-                    <!-- Control Panel Content (Hidden until unlocked) -->
-                    <div id="control-panel-content" class="hidden">
+                    <!-- Control Panel Content (Hidden until unlocked) --><div id="control-panel-content" class="hidden">
                         <p class="text-sm text-electric-yellow mb-6">
                             Manage data feed and apply local overrides for today's flight plan.
                         </p>
 
                         <div class="bg-dark-card p-6 rounded-xl shadow-2xl border border-matrix-blue/30 space-y-6">
                             
-                            <!-- Live Data Refresh Control -->
-                            <div class="space-y-3 border-b border-matrix-blue/20 pb-4">
+                            <!-- Live Data Refresh Control --><div class="space-y-3 border-b border-matrix-blue/20 pb-4">
                                 <h2 class="text-lg font-display text-white">Live Data Feed Control</h2>
                                 <p class="text-xs text-gray-400/80">
                                     Fetch the latest 7-day forecast from the secure WeatherAPI feed.
@@ -300,8 +292,7 @@
                                 </button>
                             </div>
 
-                            <!-- Current Day Override -->
-                            <div class="space-y-4">
+                            <!-- Current Day Override --><div class="space-y-4">
                                 <h2 class="text-lg font-display text-white">Local Wind Override (Day 1)</h2>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="flex flex-col">
@@ -329,8 +320,7 @@
             </div>
         </main>
         
-        <!-- PWA Install Prompt -->
-        <div id="install-prompt" class="bg-dark-card text-white p-3 rounded-xl shadow-prompt-pop border border-matrix-blue/50">
+        <!-- PWA Install Prompt --><div id="install-prompt" class="bg-dark-card text-white p-3 rounded-xl shadow-prompt-pop border border-matrix-blue/50">
             <div class="flex justify-between items-center mb-2">
                 <span class="font-bold text-sm">Install FlightFeed App (iOS)</span>
                 <button id="close-prompt" class="text-lg font-bold p-1 leading-none text-gray-400 hover:text-danger-red transition duration-150">
@@ -344,8 +334,7 @@
             </p>
         </div>
 
-        <!-- Bottom Navigation Bar -->
-        <footer class="fixed bottom-0 w-full bg-dark-bg border-t-2 border-matrix-blue z-50 shadow-2xl shadow-matrix-blue/50">
+        <!-- Bottom Navigation Bar --><footer class="fixed bottom-0 w-full bg-dark-bg border-t-2 border-matrix-blue z-50 shadow-2xl shadow-matrix-blue/50">
             <div class="max-w-xl mx-auto flex justify-around items-center h-14 text-xs font-medium">
                 <a href="#" id="nav-zones" data-page="Zones" class="nav-btn active">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M12 21.75l-4.5-5.5a7 7 0 1 1 9 0l-4.5 5.5z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -367,8 +356,7 @@
         </footer>
     </div>
 
-<!-- App Script -->
-<script type="text/javascript">
+<!-- App Script --><script type="text/javascript">
     
     // --- API CONFIGURATION ---
     const API_KEY = '0e7e5b27f8c04153866221152250311'; 
@@ -728,7 +716,7 @@
             const advisoryColor = nfzStyle.color.replace('text-', 'text-') + (location.nfz_status === 'RESTRICTED' ? ' font-bold' : '/90');
 
             const html = `
-                <div class="app-card bg-dark-card p-4 rounded-xl shadow-xl">
+                <div class="app-card bg-dark-card p-4 rounded-xl shadow-xl location-card-glow">
                     <div class="flex items-start justify-between">
                         <div class="flex items-center space-x-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00BFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M12 21.75l-4.5-5.5a7 7 0 1 1 9 0l-4.5 5.5z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -838,8 +826,7 @@
                 
                 detailedHTML += `
                     <div class="app-card ${bgColor} p-3 rounded-xl border border-matrix-blue/10 hover:border-matrix-blue/40 transition duration-150">
-                        <!-- Desktop/Tablet View -->
-                        <div class="hidden sm:flex justify-between items-center">
+                        <!-- Desktop/Tablet View --><div class="hidden sm:flex justify-between items-center">
                             <span class="font-bold w-1/6 ${isToday ? 'text-white' : 'text-matrix-blue/80'}">${dayName}${isToday ? ' (TODAY)' : ''}</span>
                             <span class="w-1/6 text-center text-sm font-semibold ${f.color}">${dayForecast.wind_speed || '--'}/${dayForecast.gust_speed || '--'}</span>
                             <span class="w-1/6 text-center text-xs text-gray-300">${dayForecast.direction || '--'} / ${dayForecast.pressure || '--'}</span>
@@ -851,8 +838,7 @@
                             <span class="w-1/6 text-right status-pill ${f.bgColor} ${f.color} ring-1 ring-current">${f.status}</span>
                         </div>
                         
-                        <!-- Mobile View (Stacked) -->
-                        <div class="sm:hidden grid grid-cols-2 gap-2 text-sm">
+                        <!-- Mobile View (Stacked) --><div class="sm:hidden grid grid-cols-2 gap-2 text-sm">
                             <div class="font-bold ${isToday ? 'text-white' : 'text-matrix-blue/80'}">${dayName}${isToday ? ' (TODAY)' : ''}</div>
                             <div class="text-right"><span class="status-pill ${f.bgColor} ${f.color} ring-1 ring-current">${f.status}</span></div>
                             
