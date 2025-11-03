@@ -8,10 +8,9 @@
     <!-- Theme and PWA config -->
     <meta name="theme-color" content="#00BFFF">
     <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='60' fill='%2300BFFF' font-family='Orbitron, sans-serif'%3EF%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='60' fill='%2300BFFF' font-family='Orbitron, sans-serif'%3EF%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='60' fill='%2300BFFF' font-family='Orbitron, sans-serif'%3EF%3C</text>%3E%3C/svg%3E">
     
-    <!-- Using a generic manifest, as the logo is now text -->
-    <link rel="manifest" href="data:application/json;base64,eyJpY29ucyI6W3sic3JjIjoib3B0aW9uYWxfaWNvbi5zdmciLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnIn0seyJzcmMiOiJvcHRpb25hbF9pY29uLnN2ZyIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9zdmcifV0sIm5hbWUiOiJGbGlnaHRGZWVkLnVrIHwgQ2FyZGlmZiBVUEJWIENvbW1hbmQiLCJzaG9ydF9uYW1lIjoiRmxpZ2h0RmVlZCIsInN0YXJ0X3VybCI6Ii4vIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBEMTExNyIsInRoZW1lX2NvbG9yIjoiIzAwQkZGRiJ9">
+    <link rel="manifest" href="data:application/json;base64,eyJpY29ucyI6W3sic3JjIjoib3B0aW9uYWxfaWNvbi5zdmciLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiZmlsZV91cmwifSwic3JjIjoib3B0aW9uYWxfaWNvbi5zdmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiZmlsZV91cmwifV0sIm5hbWUiOiJGbGlnaHRGZWVkLnVrIHwgQ2FyZGlmZiBVUEJWIENvbW1hbmQiLCJzaG9ydF9uYW1lOiJGbGlnaHRGZWVkIiwic3RhcnRfdXJsIjoiLi8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZWRydW5rYmFjayIsImJhY2tncm91bmRfY29sb3IiOiIjMEQxMTE3IiwidGhlbWVfY29sb3IiOiIjMDBCRkZGIH0=">
 
     <!-- Tailwind CSS and Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -40,6 +39,7 @@
                         'neon-red': '0 0 8px rgba(255, 7, 58, 0.4)',
                         'app-focus': '0 0 15px rgba(0, 191, 255, 0.4)',
                         'prompt-pop': '0 0 20px rgba(0, 191, 255, 0.8), 0 0 8px rgba(0, 191, 255, 1)', 
+                        'green-glow': '0 0 10px rgba(57, 255, 20, 0.6)',
                     }
                 }
             }
@@ -55,12 +55,7 @@
             padding: 0;
             margin: 0;
             font-family: 'Inter', sans-serif;
-            overflow: hidden; /* Control scrolling only in main content */
-        }
-
-        /* Styling for the fixed header */
-        #app-header {
-            z-index: 50;
+            overflow: hidden; 
         }
 
         /* Styling for the main content area to enable scrolling */
@@ -68,8 +63,8 @@
             flex-grow: 1;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            padding-top: 1rem; /* Space below header */
-            padding-bottom: 5rem; /* Space above footer */
+            padding-top: 1rem; 
+            padding-bottom: 5rem; 
         }
 
         /* Status Pill Styling - App-like, structured */
@@ -95,14 +90,14 @@
 
         /* Style for the app-like card */
         .app-card {
-            border: 1px solid #161B22; /* Subtle border */
+            border: 1px solid #161B22; 
             transition: all 0.2s;
         }
 
         .app-card:hover {
             border-color: rgba(0, 191, 255, 0.4);
             box-shadow: 0 0 12px rgba(0, 191, 255, 0.2);
-            background-color: #1a2028; /* Slightly lighter on hover */
+            background-color: #1a2028; 
         }
         
         /* Bottom Nav Bar Button Style */
@@ -113,6 +108,7 @@
             padding: 0.5rem 0;
             color: #4D5763;
             transition: color 0.2s;
+            flex-grow: 1; /* Ensure equal spacing for 4 items */
         }
         .nav-btn.active {
             color: #00BFFF;
@@ -130,7 +126,7 @@
         /* PWA Install Prompt Styles */
         #install-prompt {
             position: fixed;
-            bottom: 4rem; /* Above the navigation bar */
+            bottom: 4rem; 
             left: 50%;
             transform: translateX(-50%);
             max-width: 90%;
@@ -138,13 +134,29 @@
             opacity: 0;
             transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; 
             box-shadow: 0 4px 15px rgba(0, 191, 255, 0.8), 0 0 5px rgba(0, 191, 255, 0.6); 
-            display: none; /* Starts hidden, shown by JS */
+            display: none; 
         }
         #install-prompt.visible {
             opacity: 1;
         }
+
+        /* Input styling for the control panel */
+        .control-input {
+            background-color: #0D1117;
+            border: 1px solid #00BFFF;
+            color: #FFFFFF;
+            font-family: 'Orbitron', monospace;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .control-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.8);
+            border-color: #00BFFF;
+        }
         
-        /* iOS Share Icon SVG - Inline for clarity and style consistency */
+        /* iOS Share Icon SVG */
         .share-icon-svg {
             width: 20px;
             height: 20px;
@@ -152,19 +164,14 @@
             vertical-align: middle;
             display: inline-block;
         }
-
-        /* Loading Spinner */
-        .spinner {
-            border: 4px solid rgba(0, 191, 255, 0.1);
-            border-top: 4px solid #00BFFF;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
+        
+        .sim-btn-force {
+            background-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+            color: #0D1117;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .sim-btn-force:hover {
+            background-color: #ffda3b;
         }
     </style>
 </head>
@@ -178,8 +185,8 @@
             <span class="text-xl font-display text-matrix-blue font-bold">FlightFeed.uk</span>
             
             <div class="flex items-center space-x-2">
-                <span class="text-xs text-matrix-blue/70">SYNC:</span>
-                <span id="system-status" class="text-neon-green font-bold text-sm">LIVE</span>
+                <span class="text-xs text-matrix-blue/70">SYSTEM:</span>
+                <span id="system-status" class="text-neon-green font-bold text-sm">LIVE FEED</span>
                 <div class="w-2 h-2 rounded-full bg-neon-green shadow-neon-green animate-pulse"></div>
             </div>
         </div>
@@ -217,15 +224,15 @@
                 <section id="location-container" class="space-y-4"></section>
             </section>
 
-            <!-- Forecast Page (Updated for API fetch) -->
+            <!-- Forecast Page -->
             <section id="page-forecast" data-page-name="Forecast" class="page-content">
                 <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/20">
-                    UAV 7-Day Flight Forecast (Live Data)
+                    UAV 7-Day Flight Forecast (Live Feed)
                 </h1>
-                <p class="text-sm text-gray-400 mb-6">Generated forecast for the Cardiff region based on live web data.</p>
+                <p class="text-sm text-gray-400 mb-6" id="forecast-source">Source: WeatherAPI. Last Update: <span id="last-update-time">...</span></p>
                 
                 <section id="forecast-details-container" class="space-y-4">
-                    <!-- Loading/Error/Content will be rendered here -->
+                    <!-- Content will be rendered here -->
                 </section>
             </section>
 
@@ -237,6 +244,54 @@
                 <p class="text-sm text-gray-400 mb-6">Essential NOTAMs and system warnings affecting local airspace.</p>
 
                 <section id="alerts-container" class="space-y-4"></section>
+            </section>
+            
+            <!-- Control Page -->
+            <section id="page-control" data-page-name="Control" class="page-content">
+                <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/50">
+                    SYSTEM & FLIGHT CONTROL
+                </h1>
+                <p class="text-sm text-electric-yellow mb-6">
+                    Manage data feed and apply local overrides for today's flight plan.
+                </p>
+
+                <div class="bg-dark-card p-6 rounded-xl shadow-2xl border border-matrix-blue/30 space-y-6">
+                    
+                    <!-- Live Data Refresh Control -->
+                    <div class="space-y-3 border-b border-matrix-blue/20 pb-4">
+                        <h2 class="text-lg font-display text-white">Live Data Feed Control</h2>
+                        <div id="live-feed-status" class="text-center text-sm text-matrix-blue/80 font-semibold italic">
+                            Data is automatically refreshed on launch.
+                        </div>
+                        <button id="refresh-live-data-btn" class="w-full sim-btn-force hover:bg-electric-yellow/80 text-dark-bg font-bold py-3 rounded-lg shadow-app-focus transition duration-200 font-display uppercase">
+                            REFRESH LIVE DATA FEED
+                        </button>
+                        <p class="text-xs text-gray-400">Pulls the latest 7-day forecast from WeatherAPI. This may take a moment.</p>
+                    </div>
+
+                    <!-- Current Day Override -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-display text-white">Local Wind Override (Day 1)</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex flex-col">
+                                <label for="input-wind-speed" class="text-sm font-semibold text-matrix-blue mb-1">Base Wind Speed</label>
+                                <input type="number" id="input-wind-speed" class="control-input" min="0" max="100" placeholder="13">
+                                <p class="text-xs text-gray-500 mt-1">13 mph or less = SAFE</p>
+                            </div>
+                            <div class="flex flex-col">
+                                <label for="input-gust-speed" class="text-sm font-semibold text-matrix-blue mb-1">Gust Speed</label>
+                                <input type="number" id="input-gust-speed" class="control-input" min="0" max="100" placeholder="19">
+                                <p class="text-xs text-gray-500 mt-1">19 mph or more = UNSAFE</p>
+                            </div>
+                        </div>
+
+                        <button id="update-forecast-btn" class="w-full bg-matrix-blue hover:bg-matrix-blue/80 text-dark-bg font-bold py-3 rounded-lg shadow-app-focus transition duration-200 font-display uppercase">
+                            APPLY DAY 1 OVERRIDE
+                        </button>
+                    </div>
+                    
+                    <div id="update-status" class="text-center text-sm font-semibold pt-3 hidden"></div>
+                </div>
             </section>
 
         </div>
@@ -272,72 +327,70 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
                 <span class="mt-1">Alerts</span>
             </a>
+            <a href="#" id="nav-control" data-page="Control" class="nav-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cpu"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+                <span class="mt-1">Control</span>
+            </a>
         </div>
     </footer>
 
-
-<script>
-    // --- API Configuration and Data Structures ---
-    const apiKey = ""; 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-
-    // Schema to force the LLM to return a predictable JSON array of forecast data
-    const forecastSchema = {
-        type: "ARRAY",
-        description: "A 7-day weather forecast for UAV/Drone operations in Cardiff, Wales.",
-        items: {
-            type: "OBJECT",
-            properties: {
-                day: { type: "STRING", description: "Day of the week, e.g., 'MON (TODAY)'" },
-                wind_speed: { type: "NUMBER", description: "Average wind speed in mph." },
-                gust_speed: { type: "NUMBER", description: "Maximum gust speed in mph." },
-                temp: { type: "NUMBER", description: "Maximum temperature in Celsius." },
-                rain: { type: "NUMBER", description: "Percentage chance of precipitation." },
-                direction: { type: "STRING", description: "Wind direction abbreviation (e.g., 'SW', 'NE')." },
-                pressure: { type: "NUMBER", description: "Air pressure in hPa." },
-                solar: { type: "STRING", description: "Solar/UV activity, one of (LOW, MED, HIGH)." }
-            },
-            required: ["day", "wind_speed", "gust_speed", "temp", "rain", "direction", "pressure", "solar"]
-        }
-    };
+<!-- App Script -->
+<script type="text/javascript">
     
-    // The previous mock data is kept here just for structure reference but is no longer used for rendering.
-    let currentForecastData = []; 
+    // --- API CONFIGURATION ---
+    // !!! CRITICAL SECURITY WARNING: This API key is exposed in client-side code. !!!
+    // !!! For a real app, this must be hidden on a secure server/proxy. !!!
+    const API_KEY = '0e7e5b27f8c04153866221152250311'; 
+    const LOCATION = 'Cardiff, UK';
+    const API_URL = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${LOCATION}&days=7`;
+    
+    // --- PERSISTENCE KEYS & GLOBALS ---
+    const OVERRIDE_STORAGE_KEY = 'uav_sim_day1_override';
+    const LAST_FETCH_TIME_KEY = 'uav_sim_last_fetch_time';
+    
+    // This variable will hold the live 7-day forecast data fetched from the API
+    let currentForecastData = [];
+    let day1Override = null;
+    let lastFetchTime = null;
+    let isFetching = false;
+    
+    // Default initial mock data while API is loading or fails
+    const defaultMockForecast = [
+        { wind_speed: 13, gust_speed: 19, temp: 15, rain: 40, direction: "SW", pressure: 1012, solar: "MED" },
+        { wind_speed: 8, gust_speed: 12, temp: 16, rain: 10, direction: "W", pressure: 1016, solar: "MED" },
+        { wind_speed: 5, gust_speed: 8, temp: 17, rain: 0, direction: "N", pressure: 1020, solar: "HIGH" },
+        { wind_speed: 18, gust_speed: 26, temp: 14, rain: 70, direction: "NW", pressure: 1008, solar: "LOW" },
+        { wind_speed: 10, gust_speed: 15, temp: 13, rain: 5, direction: "SE", pressure: 1018, solar: "MED" },
+        { wind_speed: 7, gust_speed: 11, temp: 15, rain: 0, direction: "E", pressure: 1022, solar: "HIGH" },
+        { wind_speed: 15, gust_speed: 22, temp: 12, rain: 50, direction: "SW", pressure: 1005, solar: "LOW" }
+    ];
 
     // --- MOCK ZONE AND ALERT DATA (Remains static) ---
-
     const locationData = [
-        { id: 1, name: "Cardiff Bay Barrage", area: "Cardiff Bay", coords: "51.45N, -3.16W", wind_speed: 15, nfz_status: 'CAUTION', notes: "Wind is often higher near the coast. Requires awareness of local Port Authority / Bay Byelaws." },
-        { id: 2, name: "Trellai Park", area: "Llanrumney", coords: "51.50N, -3.12W", wind_speed: 8, nfz_status: 'OPEN', notes: "Good open space. Standard Drone Code applies (VLOS, 400ft max)." },
-        { id: 5, name: "Cardiff Airport FRZ", area: "Rhoose (Warning)", coords: "51.39N, -3.34W", wind_speed: 16, nfz_status: 'RESTRICTED', notes: "STRICT NO-FLY ZONE. Within Flight Restriction Zone (FRZ). Do NOT attempt flight." },
-        { id: 11, name: "Penarth Pier Head", area: "Penarth Coast", coords: "51.43N, -3.16W", wind_speed: 21, nfz_status: 'CAUTION', notes: "EXTREME WIND WARNING (21 mph)! Unsafe for most consumer drones. Strong sea breeze expected. High chance of salt spray." },
-        { id: 29, name: "Ogmore-by-Sea", area: "Bridgend Coast (Vale)", coords: "51.46N, -3.61W", wind_speed: 18, nfz_status: 'CAUTION', notes: "Strong sea winds (18 mph). Suitable for experienced pilots only. Watch tide line." },
-        { id: 33, name: "Cardiff Central Train Station", area: "City Centre", coords: "51.47N, -3.18W", wind_speed: 8, nfz_status: 'RESTRICTED', notes: "Critical transport infrastructure. Rail and high public risk. **Do NOT fly** without explicit Network Rail/Police permission." },
-        { id: 35, name: "Roath Park Lake", area: "Roath", coords: "51.49N, -3.15W", wind_speed: 9, nfz_status: 'OPEN', notes: "Open park, but requires care due to water and wildlife. Keep clear of children's play areas." },
-        { id: 40, name: "Bute Park South", area: "City Centre Fringe", coords: "51.48N, -3.18W", wind_speed: 7, nfz_status: 'CAUTION', notes: "High pedestrian volume, especially weekends. Maintain 50m separation from people/buildings." },
-        { id: 41, name: "Garth Mountain Summit", area: "Taff's Well", coords: "51.54N, -3.27W", wind_speed: 25, nfz_status: 'CAUTION', notes: "SEVERE WIND WARNING (25 mph)! High altitude, turbulent air. Not recommended for non-pro gear." },
-        { id: 42, name: "Llandaff Cathedral Area", area: "Llandaff", coords: "51.49N, -3.22W", wind_speed: 6, nfz_status: 'RESTRICTED', notes: "Historic structure protection zone. Permission from site management is mandatory." },
-        { id: 43, name: "St. Fagans Museum", area: "St. Fagans", coords: "51.48N, -3.28W", wind_speed: 10, nfz_status: 'RESTRICTED', notes: "No overflight permitted due to protected buildings and visitor safety regulations." },
-        { id: 44, name: "Sully Island Coast", area: "Sully", coords: "51.40N, -3.20W", wind_speed: 17, nfz_status: 'CAUTION', notes: "Tidal movements are rapid. Launch/Recovery must be planned around the tide. High winds." },
-        { id: 45, name: "Newport Wetlands Reserve", area: "Newport", coords: "51.55N, -2.96W", wind_speed: 12, nfz_status: 'RESTRICTED', notes: "RSPB Nature Reserve. STRICTLY NO FLYING due to wildlife disturbance." },
-        { id: 46, name: "Taff Trail (Radyr)", area: "Northern Cardiff", coords: "51.52N, -3.22W", wind_speed: 5, nfz_status: 'CAUTION', notes: "Linear path next to private land and river. Maintain low altitude and respect privacy." },
-        { id: 47, name: "Porthcawl Seafront", area: "Porthcawl", coords: "51.48N, -3.71W", wind_speed: 19, nfz_status: 'CAUTION', notes: "Gale-force gusts (19 mph). Only heavy, professional rigs should be flown." },
-        { id: 48, name: "Barry Island Pleasure Park", area: "Barry", coords: "51.39N, -3.28W", wind_speed: 14, nfz_status: 'RESTRICTED', notes: "High public density and major attraction. Do not fly over crowds or rides." },
-        { id: 49, name: "Caerphilly Castle", area: "Caerphilly", coords: "51.57N, -3.22W", wind_speed: 9, nfz_status: 'RESTRICTED', notes: "Protected historical site. CAA Article 241 rules apply. Permission needed." },
-        { id: 50, name: "Tredegar Park", area: "Newport", coords: "51.57N, -3.05W", wind_speed: 7, nfz_status: 'OPEN', notes: "Large open park suitable for recreational flying. Check for local events." },
-        { id: 51, name: "Pontcanna Fields", area: "Cardiff", coords: "51.48N, -3.20W", wind_speed: 11, nfz_status: 'CAUTION', notes: "Often used for sports and grazing. Monitor for horses and sporting events." },
-        { id: 52, name: "Ely Bridge Junction", area: "Western Cardiff", coords: "51.47N, -3.25W", wind_speed: 13, nfz_status: 'RESTRICTED', notes: "Proximity to high-speed road (A4232). High risk of distracted driving. AVOID." },
-        { id: 53, name: "HMS Cambria Reserve", area: "Sully (Military)", coords: "51.41N, -3.17W", wind_speed: 16, nfz_status: 'RESTRICTED', notes: "Military airspace/establishment. Immediate grounding and police report if observed flying." },
-        { id: 54, name: "Heath Park", area: "Cardiff", coords: "51.51N, -3.18W", wind_speed: 4, nfz_status: 'OPEN', notes: "Low wind, excellent conditions. Avoid hospital heli-route nearby." },
-        { id: 55, name: "Blackwood Showground", area: "Blackwood", coords: "51.64N, -3.17W", wind_speed: 10, nfz_status: 'OPEN', notes: "Large, unobstructed area. Ideal for testing and training." },
-        { id: 56, name: "Brecon Beacons National Park", area: "Storey Arms", coords: "51.88N, -3.45W", wind_speed: 20, nfz_status: 'CAUTION', notes: "High altitude flight requires specialist batteries. Strong, sudden mountain winds (20 mph)." },
-        { id: 57, name: "Bristol Channel (Near Tunnel)", area: "Seven Estuary", coords: "51.52N, -2.70W", wind_speed: 18, nfz_status: 'RESTRICTED', notes: "Major transport and national border infrastructure. High-risk zone." },
-        { id: 58, name: "M4 Corridor", area: "J33 Area", coords: "51.49N, -3.32W", wind_speed: 15, nfz_status: 'CAUTION', notes: "Proximity to motorway. Maintain height below 50ft when near the road boundary." },
-        { id: 59, name: "Castell Coch", area: "Tongwynlais", coords: "51.53N, -3.23W", wind_speed: 11, nfz_status: 'CAUTION', notes: "Wooded hill area, potential for high wind shear and RF interference. Permission advised." },
-        { id: 60, name: "Flat Holm Island", area: "Bristol Channel", coords: "51.37N, -3.12W", wind_speed: 18, nfz_status: 'RESTRICTED', notes: "Protected Nature Reserve. Absolute ban on drone flight over the island." },
-        { id: 61, name: "The Hayes Shopping Area", area: "Cardiff City Centre", coords: "51.48N, -3.17W", wind_speed: 3, nfz_status: 'RESTRICTED', notes: "High concentration of people and buildings. Requires specific GVC/Operational Authorisation." },
-        { id: 62, name: "Talybont Reservoir", area: "Brecon Beacons", coords: "51.88N, -3.30W", wind_speed: 12, nfz_status: 'OPEN', notes: "Remote location, great views. Be aware of private water utility land." },
-        { id: 63, name: "Parc Penallta", area: "Hengoed", coords: "51.65N, -3.24W", wind_speed: 7, nfz_status: 'OPEN', notes: "Former colliery site, now parkland. Low risk, clear visibility." },
+        { id: 1, name: "Cardiff Bay Barrage", area: "Cardiff Bay", coords: "51.45N, -3.16W", nfz_status: 'CAUTION', notes: "Wind is often higher near the coast. Requires awareness of local Port Authority / Bay Byelaws." },
+        { id: 2, name: "Trellai Park", area: "Llanrumney", coords: "51.50N, -3.12W", nfz_status: 'OPEN', notes: "Good open space. Standard Drone Code applies (VLOS, 400ft max)." },
+        { id: 5, name: "Cardiff Airport FRZ", area: "Rhoose (Warning)", coords: "51.39N, -3.34W", nfz_status: 'RESTRICTED', notes: "STRICT NO-FLY ZONE. Within Flight Restriction Zone (FRZ). Do NOT attempt flight." },
+        { id: 11, name: "Penarth Pier Head", area: "Penarth Coast", coords: "51.43N, -3.16W", nfz_status: 'CAUTION', notes: "Strong sea breeze expected. High chance of salt spray. Base wind risk will be applied from simulation." },
+        { id: 29, name: "Ogmore-by-Sea", area: "Bridgend Coast (Vale)", coords: "51.46N, -3.61W", nfz_status: 'CAUTION', notes: "Strong sea winds. Suitable for experienced pilots only. Watch tide line. Base wind risk will be applied from simulation." },
+        { id: 33, name: "Cardiff Central Train Station", area: "City Centre", coords: "51.47N, -3.18W", nfz_status: 'RESTRICTED', notes: "Critical transport infrastructure. Rail and high public risk. **Do NOT fly** without explicit Network Rail/Police permission." },
+        { id: 35, name: "Roath Park Lake", area: "Roath", coords: "51.49N, -3.15W", nfz_status: 'OPEN', notes: "Good open space. Check for local events or crowds." },
+        { id: 40, name: "Bute Park South", area: "City Centre Fringe", coords: "51.48N, -3.18W", nfz_status: 'CAUTION', notes: "High pedestrian volume, especially weekends. Maintain 50m separation from people/buildings." },
+        { id: 41, name: "Garth Mountain Summit", area: "Taff's Well", coords: "51.54N, -3.27W", nfz_status: 'CAUTION', notes: "High altitude, turbulent air. Strong mountain winds often add +5mph to base forecast." },
+        { id: 42, name: "Llandaff Cathedral Area", area: "Llandaff", coords: "51.49N, -3.22W", nfz_status: 'RESTRICTED', notes: "Historic structure protection zone. Permission from site management is mandatory." },
+        { id: 43, name: "St. Fagans Museum", area: "St. Fagans", coords: "51.48N, -3.28W", nfz_status: 'RESTRICTED', notes: "No overflight permitted due to protected buildings and visitor safety regulations." },
+        { id: 44, name: "Sully Island Coast", area: "Sully", coords: "51.40N, -3.20W", nfz_status: 'CAUTION', notes: "Tidal movements are rapid. Launch/Recovery must be planned around the tide. High winds likely." },
+        { id: 45, name: "Newport Wetlands Reserve", area: "Newport", coords: "51.55N, -2.96W", nfz_status: 'RESTRICTED', notes: "RSPB Nature Reserve. STRICTLY NO FLYING due to wildlife disturbance." },
+        { id: 46, name: "Taff Trail (Radyr)", area: "Northern Cardiff", coords: "51.52N, -3.22W", nfz_status: 'CAUTION', notes: "Linear path next to private land and river. Maintain low altitude and respect privacy." },
+        { id: 47, name: "Porthcawl Seafront", area: "Porthcawl", coords: "51.48N, -3.71W", nfz_status: 'CAUTION', notes: "Seafront area. Gale-force gusts possible. Only heavy, professional rigs should be flown." },
+        { id: 48, name: "Barry Island Pleasure Park", area: "Barry", coords: "51.39N, -3.28W", nfz_status: 'RESTRICTED', notes: "High public density and major attraction. Do not fly over crowds or rides." },
+        { id: 49, name: "Caerphilly Castle", area: "Caerphilly", coords: "51.57N, -3.22W", nfz_status: 'RESTRICTED', notes: "Protected historical site. CAA Article 241 rules apply. Permission needed." },
+        { id: 50, name: "Tredegar Park", area: "Newport", coords: "51.57N, -3.05W", nfz_status: 'OPEN', notes: "Large open park suitable for recreational flying. Check for local events." },
+        { id: 51, name: "Pontcanna Fields", area: "Cardiff", coords: "51.48N, -3.20W", nfz_status: 'CAUTION', notes: "Often used for sports and grazing. Monitor for horses and sporting events." },
+        { id: 52, name: "Ely Bridge Junction", area: "Western Cardiff", coords: "51.47N, -3.25W", nfz_status: 'RESTRICTED', notes: "Proximity to high-speed road (A4232). High risk of distracted driving. AVOID." },
+        { id: 53, name: "HMS Cambria Reserve", area: "Sully (Military)", coords: "51.41N, -3.17W", nfz_status: 'RESTRICTED', notes: "Military airspace/establishment. Immediate grounding and police report if observed flying." },
+        { id: 54, name: "Heath Park", area: "Cardiff", coords: "51.51N, -3.18W", nfz_status: 'OPEN', notes: "Low wind, excellent conditions. Avoid hospital heli-route nearby." },
+        { id: 55, name: "Blackwood Showground", area: "Blackwood", coords: "51.64N, -3.17W", nfz_status: 'OPEN', notes: "Large, unobstructed area. Ideal for testing and training." },
+        { id: 56, name: "Brecon Beacons National Park", area: "Storey Arms", coords: "51.88N, -3.45W", nfz_status: 'CAUTION', notes: "High altitude flight requires specialist batteries. Mountain winds often add +7mph to base forecast." },
     ];
 
     const alertData = [
@@ -346,7 +399,7 @@
             type: 'TEMPORARY FLIGHT RESTRICTION',
             area: 'CARDIFF BAY CENTRE',
             priority: 'HIGH',
-            details: 'Public event (Regatta) from 09:00 to 18:00 on Nov 4th. TFR applies to all UAS up to 400ft AGL within 0.5nm radius.',
+            details: 'Public event (Regatta) TFR applies to all UAS up to 400ft AGL within 0.5nm radius.',
             date: '2025-11-04'
         },
         {
@@ -359,13 +412,168 @@
         }
     ];
 
-    // --- UTILITIES (Remain the same) ---
+    // --- FETCH LOGIC (USING REAL WEATHERAPI) ---
 
-    function getUAVForecast(windSpeed) {
+    /**
+     * Fetches the 7-day forecast from WeatherAPI and maps the data to our internal structure.
+     */
+    async function fetchRealWeatherForecast() {
+        if (isFetching) return;
+        isFetching = true;
+
+        const statusDiv = document.getElementById('update-status');
+        const refreshButton = document.getElementById('refresh-live-data-btn');
+        
+        // Show loading state
+        refreshButton.textContent = 'FETCHING LIVE DATA...';
+        refreshButton.disabled = true;
+        statusDiv.innerHTML = 'Fetching new data feed from WeatherAPI...';
+        statusDiv.className = 'text-center text-sm font-semibold pt-3 text-electric-yellow shadow-neon-yellow block';
+
+        try {
+            const response = await fetch(API_URL);
+            
+            if (!response.ok) {
+                 throw new Error(`WeatherAPI returned status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (!data.forecast || !Array.isArray(data.forecast.forecastday) || data.forecast.forecastday.length < 7) {
+                 throw new Error("Invalid forecast data structure received.");
+            }
+            
+            // Fixed rotation lists for data points not provided in the daily summary
+            const directions = ["SW", "W", "N", "NW", "SE", "E", "S"];
+            const pressures = [1015, 1010, 1008, 1020, 1012, 1018, 1005];
+            const solarValues = ["MED", "HIGH", "HIGH", "LOW", "MED", "HIGH", "LOW"];
+
+            // Map WeatherAPI structure to our internal app structure
+            const newForecastData = data.forecast.forecastday.map((dayData, index) => {
+                const maxWind = dayData.day.maxwind_mph;
+                
+                return {
+                    // Actual WeatherAPI Data
+                    wind_speed: Math.round(maxWind),
+                    temp: Math.round(dayData.day.avgtemp_c),
+                    rain: dayData.day.daily_chance_of_rain, // In percent
+                    
+                    // Simulated/Estimated Data (for UAV risk model completeness)
+                    gust_speed: Math.round(maxWind * 1.5), // Simulating gust as 1.5x max wind
+                    direction: directions[index % directions.length],
+                    pressure: pressures[index % pressures.length],
+                    solar: solarValues[index % solarValues.length],
+                };
+            });
+            
+            // Update global state and persist fetch time
+            currentForecastData = newForecastData;
+            lastFetchTime = Date.now();
+            localStorage.setItem(LAST_FETCH_TIME_KEY, lastFetchTime.toString());
+            
+            // Apply any local Day 1 override if it exists
+            if (day1Override) {
+                currentForecastData[0].wind_speed = day1Override.wind_speed;
+                currentForecastData[0].gust_speed = day1Override.gust_speed;
+            }
+
+            // Success message
+            statusDiv.innerHTML = `LIVE DATA REFRESHED. Last fetch at ${formatTime(lastFetchTime)}.`;
+            statusDiv.className = 'text-center text-sm font-semibold pt-3 text-neon-green shadow-green-glow block';
+
+        } catch (error) {
+            console.error("Failed to fetch live weather data:", error);
+            currentForecastData = defaultMockForecast; // Fallback to mock data
+            statusDiv.innerHTML = `ERROR: Failed to fetch live data (${error.message}). Using fallback mock data.`;
+            statusDiv.className = 'text-center text-sm font-semibold pt-3 text-danger-red shadow-neon-red block';
+        } finally {
+            isFetching = false;
+            // Restore button state
+            refreshButton.textContent = 'REFRESH LIVE DATA FEED';
+            refreshButton.disabled = false;
+
+            // Re-render the active page to show changes
+            const activePage = document.querySelector('.page-content.active').getAttribute('data-page-name');
+            changePage(activePage); 
+            
+            // Hide status message after a delay
+            setTimeout(() => {
+                statusDiv.classList.add('hidden');
+                statusDiv.classList.remove('shadow-green-glow', 'shadow-neon-red');
+            }, 3000);
+        }
+    }
+    
+    function loadInitialState() {
+        try {
+            const savedOverride = localStorage.getItem(OVERRIDE_STORAGE_KEY);
+            day1Override = savedOverride ? JSON.parse(savedOverride) : null;
+            
+            const savedTime = localStorage.getItem(LAST_FETCH_TIME_KEY);
+            lastFetchTime = savedTime ? parseInt(savedTime) : null;
+            
+        } catch (e) {
+            console.error("Could not load local state.", e);
+            day1Override = null;
+            lastFetchTime = null;
+        }
+
+        // Use default mock data until the real fetch completes
+        currentForecastData = defaultMockForecast;
+    }
+
+    function saveDay1Override(wind, gust) {
+        day1Override = { wind_speed: wind, gust_speed: gust };
+        try {
+            localStorage.setItem(OVERRIDE_STORAGE_KEY, JSON.stringify(day1Override));
+        } catch (e) {
+            console.error("Could not save Day 1 override to localStorage.", e);
+        }
+    }
+    
+    // --- UTILITIES ---
+
+    // Function to get the correct day name (MON, TUE, etc.) based on index
+    function getDayName(index) {
+        const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+        const todayIndex = new Date().getDay(); // 0 for Sunday, 1 for Monday
+        const targetIndex = (todayIndex + index) % 7;
+        return days[targetIndex];
+    }
+    
+    // Formats a date object into a human-readable string (e.g., Nov 3, 2025 at 10:00 PM)
+    function formatTime(timestamp) {
+        if (!timestamp) return 'N/A';
+        const date = new Date(timestamp);
+        return date.toLocaleString('en-GB', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+    }
+
+    function getEffectiveWindSpeed(baseWindSpeed, locationName) {
+        let effectiveWind = baseWindSpeed;
+
+        if (locationName.includes('Bay Barrage') || locationName.includes('Pier Head') || locationName.includes('Sully Island')) {
+            effectiveWind += 3; 
+        } else if (locationName.includes('Garth Mountain') || locationName.includes('Brecon Beacons')) {
+            effectiveWind += 7; 
+        }
+        
+        return effectiveWind;
+    }
+
+    function getUAVFlightRisk(windSpeed, gustSpeed) {
         if (windSpeed === null || isNaN(windSpeed)) {
              return { status: 'UNKNOWN', color: 'text-gray-400', shadow: 'shadow-none', bgColor: 'bg-gray-400/20', icon: '' };
         }
-        if (windSpeed >= 19) { 
+        
+        // Unsafe conditions: Base wind >= 19mph OR Gusts >= 25mph
+        if (windSpeed >= 19 || gustSpeed >= 25) { 
             return {
                 status: 'UNSAFE',
                 color: 'text-danger-red',
@@ -373,7 +581,10 @@
                 bgColor: 'bg-danger-red/20',
                 icon: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wind"><path d="M17.74 3.34a7 7 0 0 0-11.48 4"/><path d="M2.57 14.5a6 6 0 0 1 11.85-2.22"/><path d="M4.68 8.61a5 5 0 0 1 8.87 2.03"/><path d="M12 21v-8"/></svg>'
             };
-        } else if (windSpeed >= 13) {
+        } 
+        
+        // Moderate/Caution conditions: Base wind 14-18mph OR Gusts 19-24mph
+        else if (windSpeed >= 14 || gustSpeed >= 19) {
             return {
                 status: 'MODERATE',
                 color: 'text-electric-yellow',
@@ -381,7 +592,10 @@
                 bgColor: 'bg-electric-yellow/20',
                 icon: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-wind"><path d="M12.55 18a2 2 0 0 1-1.39-2"/><path d="M16 16.2a2 2 0 0 1-3.2-.2"/><path d="M6 18H4a2 2 0 0 1-2-2"/><path d="M14.58 4.09A5.8 5.8 0 0 0 13 4c-2.48 0-4.7 1.15-6.13 2.91a2 2 0 0 0-2.11.19A3.5 3.5 0 0 0 5 13h10a4 4 0 0 0 0-8.5"/><path d="M22 17H10"/></svg>'
             };
-        } else {
+        } 
+        
+        // Safe conditions: Base wind <= 13mph AND Gusts <= 18mph
+        else {
             return {
                 status: 'SAFE',
                 color: 'text-neon-green',
@@ -424,7 +638,7 @@
         let iconColor = 'text-gray-400';
         let icon;
         if (rainChance === null || isNaN(rainChance)) {
-             rainChance = 0; // Default to 0 for rendering
+             rainChance = 0; 
         }
 
         if (rainChance >= 60) {
@@ -440,103 +654,25 @@
 
         return `<div class="flex items-center space-x-1 font-semibold text-xs">${icon}<span>${rainChance}%</span></div>`;
     }
-
-    // --- API Fetch Function with Exponential Backoff ---
-
-    /**
-     * Fetches real-time weather data from the Gemini API using Google Search Grounding.
-     * @param {number} maxRetries - Maximum number of retries for exponential backoff.
-     */
-    async function fetchWeatherData(maxRetries = 5) { // Increased retries to 5
-        const container = document.getElementById('forecast-details-container');
-        container.innerHTML = `
-            <div class="flex flex-col items-center justify-center p-12 bg-dark-card rounded-xl">
-                <div class="spinner mb-4"></div>
-                <p class="text-matrix-blue font-semibold">Fetching Live Data...</p>
-                <p class="text-xs text-gray-500 mt-1">This uses real-time web search for the forecast.</p>
-            </div>
-        `;
-
-        const systemPrompt = "You are a professional aviation meteorologist specializing in UK UAV/drone operations. Based on current weather data, generate a concise 7-day forecast for the Cardiff, Wales area. You MUST return the forecast as a JSON array matching the provided schema. Do not include any explanatory text outside of the JSON block.";
-        const userQuery = "7-day UAV flight forecast for Cardiff, Wales. Include wind speed (mph), max gust speed (mph), max temperature (°C), rain chance (%), wind direction (e.g., NW), air pressure (hPa), and UV index/solar activity (Low/Med/High).";
-
-        const payload = {
-            contents: [{ parts: [{ text: userQuery }] }],
-            tools: [{ "google_search": {} }],
-            systemInstruction: { parts: [{ text: systemPrompt }] },
-            generationConfig: {
-                responseMimeType: "application/json",
-                responseSchema: forecastSchema
-            }
-        };
-
-        let lastError = null;
-        for (let i = 0; i < maxRetries; i++) {
-            try {
-                // Log attempt number for debugging
-                console.log(`[API_CALL] Attempt ${i + 1}/${maxRetries}. URL: ${apiUrl}`); 
-
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    // Log the detailed error message from the response body
-                    console.error(`[API_ERROR] HTTP Status: ${response.status}. Response body:`, errorText); 
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (jsonText) {
-                    currentForecastData = JSON.parse(jsonText);
-                    return; // Success, exit loop
-                } else {
-                    throw new Error("API response was missing expected JSON content.");
-                }
-
-            } catch (error) {
-                lastError = error;
-                // Exponential backoff delay
-                const delay = Math.pow(2, i) * 1000;
-                // Don't log retries as errors to the console, only the final failure
-                if (i < maxRetries - 1) { 
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                }
-            }
-        }
-
-        // If all retries fail, display the error
-        container.innerHTML = `
-            <div class="bg-dark-card p-6 rounded-xl border border-danger-red/50 shadow-neon-red/50">
-                <p class="text-danger-red font-bold flex items-center mb-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-octagon mr-2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
-                    DATA FETCH FAILED
-                </p>
-                <p class="text-sm text-gray-400">Could not retrieve live weather forecast after multiple attempts. This may be a temporary service issue (Authentication Error 401).</p>
-                <p class="text-xs text-gray-500 mt-2 italic">Error: ${lastError ? lastError.message : 'Unknown error.'}</p>
-            </div>
-        `;
-        throw lastError; // Propagate error
-    }
-
+    
     // --- PAGE RENDERING FUNCTIONS ---
 
     function renderZonesPage() {
         const container = document.getElementById('location-container');
         if (!container) return;
         container.innerHTML = ''; 
+        
+        // Get the current simulated wind and gust speed from the first (TODAY) entry
+        const baseWindSpeed = currentForecastData[0]?.wind_speed;
+        const baseGustSpeed = currentForecastData[0]?.gust_speed;
 
-        // Sort locations alphabetically by name before rendering
         const sortedLocations = locationData.sort((a, b) => a.name.localeCompare(b.name));
 
         sortedLocations.forEach(location => {
-            // Using mock wind speed for Zones page since this data is static
-            const forecast = getUAVForecast(location.wind_speed); 
+            const effectiveWind = getEffectiveWindSpeed(baseWindSpeed, location.name);
+            const effectiveGust = getEffectiveWindSpeed(baseGustSpeed, location.name);
+            
+            const forecast = getUAVFlightRisk(effectiveWind, effectiveGust); 
             const nfzStyle = getNFZStyle(location.nfz_status);
             const advisoryColor = nfzStyle.color.replace('text-', 'text-') + (location.nfz_status === 'RESTRICTED' ? ' font-bold' : '/90');
 
@@ -554,22 +690,25 @@
 
                     <div class="grid grid-cols-2 gap-4 mt-3 pt-3 border-t border-matrix-blue/10">
                         <div>
-                            <p class="text-xs text-matrix-blue/70 mb-1 font-semibold flex items-center">STATIC WIND FORECAST</p>
+                            <p class="text-xs text-matrix-blue/70 mb-1 font-semibold flex items-center">EFFECTIVE WIND / GUST</p>
                             <div class="flex items-center space-x-2">
                                 <span class="text-2xl font-display ${forecast.color}">
-                                    ${location.wind_speed}<span class="text-sm font-sans ml-1">mph</span>
+                                    ${effectiveWind || '--'}<span class="text-sm font-sans ml-1">mph</span>
                                 </span>
-                                <span class="status-pill ${forecast.bgColor} ${forecast.color} font-bold ring-1 ring-current">
-                                    ${forecast.status}
-                                </span>
+                                <span class="text-xs text-gray-400">(${effectiveGust || '--'} Gust)</span>
                             </div>
                         </div>
                         <div>
-                            <p class="text-xs ${nfzStyle.color} mb-1 font-semibold flex items-center">NFZ STATUS</p>
-                            <span class="status-pill ${nfzStyle.bgColor} ${nfzStyle.color} ring-1 ring-current font-bold">
-                                <span class="status-dot-sm inline-block ${nfzStyle.dotColor}"></span>
-                                ${nfzStyle.statusText}
-                            </span>
+                            <p class="text-xs ${nfzStyle.color} mb-1 font-semibold flex items-center">FLIGHT RISK / NFZ STATUS</p>
+                            <div class="flex items-center space-x-2">
+                                <span class="status-pill ${forecast.bgColor} ${forecast.color} font-bold ring-1 ring-current">
+                                    ${forecast.status}
+                                </span>
+                                <span class="status-pill ${nfzStyle.bgColor} ${nfzStyle.color} ring-1 ring-current font-bold">
+                                    <span class="status-dot-sm inline-block ${nfzStyle.dotColor}"></span>
+                                    ${nfzStyle.statusText.split(':')[0]}
+                                </span>
+                            </div>
                         </div>
                     </div>
 
@@ -585,113 +724,110 @@
         });
     }
 
-    async function renderForecastPage() {
+    function renderForecastPage() {
         const container = document.getElementById('forecast-details-container');
-        if (!container) return;
-        
-        try {
-            // Fetch fresh data if the array is empty or not yet loaded
-            if (currentForecastData.length === 0) {
-                await fetchWeatherData();
-            }
+        const lastUpdateSpan = document.getElementById('last-update-time');
 
-            // If fetch was successful, render the data
-            if (currentForecastData.length > 0) {
-                container.innerHTML = '';
-                
-                const overview = currentForecastData[0];
-                const currentForecast = getUAVForecast(overview.wind_speed);
+        lastUpdateSpan.textContent = formatTime(lastFetchTime) || 'Never (Click Refresh)';
+        container.innerHTML = ''; 
 
-                // --- Current Conditions Overview ---
-                let overviewHTML = `
-                    <div class="app-card bg-dark-card p-5 rounded-xl shadow-2xl border-matrix-blue/40">
-                        <h2 class="text-lg font-display text-matrix-blue mb-3">CURRENT CONDITIONS</h2>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-end">
-                                <span class="text-5xl font-display font-light ${currentForecast.color}">${overview.temp || '--'}&deg;C</span>
-                                <span class="text-lg text-gray-500 ml-2">(${overview.wind_speed || '--'}mph)</span>
-                            </div>
-                            ${currentForecast.icon}
+        if (currentForecastData.length >= 7) {
+            const overview = currentForecastData[0];
+            const currentForecast = getUAVFlightRisk(overview.wind_speed, overview.gust_speed);
+
+            // --- Current Conditions Overview ---
+            let overviewHTML = `
+                <div class="app-card bg-dark-card p-5 rounded-xl shadow-2xl border-matrix-blue/40">
+                    <h2 class="text-lg font-display text-matrix-blue mb-3">CURRENT BASE CONDITIONS (${getDayName(0)})</h2>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-end">
+                            <span class="text-5xl font-display font-light ${currentForecast.color}">${overview.temp || '--'}&deg;C</span>
+                            <span class="text-lg text-gray-500 ml-2">(${overview.wind_speed || '--'}mph)</span>
                         </div>
-                        <div class="grid grid-cols-2 gap-3 mt-4 text-sm">
-                            <p class="text-matrix-blue/80"><span class="font-bold">FLIGHT RATING:</span> <span class="font-display font-semibold ${currentForecast.color}">${currentForecast.status}</span></p>
-                            <p class="text-matrix-blue/80"><span class="font-bold">GUSTS:</span> <span class="text-white">${overview.gust_speed || '--'} mph</span></p>
-                            <p class="text-matrix-blue/80"><span class="font-bold">PRESSURE:</span> <span class="text-white">${overview.pressure || '--'} hPa</span></p>
-                            <p class="text-matrix-blue/80"><span class="font-bold">WIND DIR:</span> <span class="text-white">${overview.direction || '--'}</span></p>
-                        </div>
+                        ${currentForecast.icon}
                     </div>
-                `;
-                container.insertAdjacentHTML('beforeend', overviewHTML);
+                    <div class="grid grid-cols-2 gap-3 mt-4 text-sm">
+                        <p class="text-matrix-blue/80"><span class="font-bold">FLIGHT RATING:</span> <span class="font-display font-semibold ${currentForecast.color}">${currentForecast.status}</span></p>
+                        <p class="text-matrix-blue/80"><span class="font-bold">GUSTS:</span> <span class="text-white">${overview.gust_speed || '--'} mph</span></p>
+                        <p class="text-matrix-blue/80"><span class="font-bold">PRESSURE:</span> <span class="text-white">${overview.pressure || '--'} hPa</span></p>
+                        <p class="text-matrix-blue/80"><span class="font-bold">WIND DIR:</span> <span class="text-white">${overview.direction || '--'}</span></p>
+                    </div>
+                    <p class="text-xs text-electric-yellow/80 mt-3 italic">
+                        *Note: Gust speed is simulated as 1.5x max wind (WeatherAPI daily summary limitation).
+                    </p>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', overviewHTML);
 
-                // --- Detailed Forecast Log ---
-                let detailedHTML = `<div class="space-y-2"><h2 class="text-lg font-display text-matrix-blue pt-6 mb-4">DETAILED 7-DAY LOG</h2>`;
+            // --- Detailed Forecast Log ---
+            let detailedHTML = `<div class="space-y-2"><h2 class="text-lg font-display text-matrix-blue pt-6 mb-4">DETAILED 7-DAY LOG</h2>`;
+            
+            // Header for the detailed log (Desktop)
+            detailedHTML += `
+                <div class="hidden sm:flex justify-between items-center text-xs font-semibold text-matrix-blue/70 uppercase border-b border-matrix-blue/20 pb-2 mb-2">
+                    <span class="w-1/6">Day</span>
+                    <span class="w-1/6 text-center">Wind/Gust</span>
+                    <span class="w-1/6 text-center">Dir. / Press.</span>
+                    <span class="w-1/6 text-center">Temp / Rain</span>
+                    <span class="w-1/6 text-center">Solar</span>
+                    <span class="w-1/6 text-right">Rating</span>
+                </div>
+            `;
+
+            // Only display the first 7 days
+            for (let index = 0; index < 7; index++) {
+                const dayForecast = currentForecastData[index];
+                if (!dayForecast) continue; 
                 
-                // Header for the detailed log (Desktop)
+                const f = getUAVFlightRisk(dayForecast.wind_speed, dayForecast.gust_speed);
+                const rainIconHtml = getRainIcon(dayForecast.rain);
+                const dayName = getDayName(index);
+                const isToday = index === 0;
+                const bgColor = isToday ? 'bg-dark-hover' : 'bg-dark-card';
+                
                 detailedHTML += `
-                    <div class="hidden sm:flex justify-between items-center text-xs font-semibold text-matrix-blue/70 uppercase border-b border-matrix-blue/20 pb-2 mb-2">
-                        <span class="w-1/6">Day</span>
-                        <span class="w-1/6 text-center">Wind/Gust</span>
-                        <span class="w-1/6 text-center">Dir. / Press.</span>
-                        <span class="w-1/6 text-center">Temp / Rain</span>
-                        <span class="w-1/6 text-center">Solar</span>
-                        <span class="w-1/6 text-right">Rating</span>
+                    <div class="app-card ${bgColor} p-3 rounded-xl border border-matrix-blue/10 hover:border-matrix-blue/40 transition duration-150">
+                        <!-- Desktop/Tablet View -->
+                        <div class="hidden sm:flex justify-between items-center">
+                            <span class="font-bold w-1/6 ${isToday ? 'text-white' : 'text-matrix-blue/80'}">${dayName}${isToday ? ' (TODAY)' : ''}</span>
+                            <span class="w-1/6 text-center text-sm font-semibold ${f.color}">${dayForecast.wind_speed || '--'}/${dayForecast.gust_speed || '--'}</span>
+                            <span class="w-1/6 text-center text-xs text-gray-300">${dayForecast.direction || '--'} / ${dayForecast.pressure || '--'}</span>
+                            <span class="w-1/6 text-center text-sm text-gray-300 flex justify-center items-center space-x-2">
+                                <span>${dayForecast.temp || '--'}&deg;C</span>
+                                ${rainIconHtml}
+                            </span>
+                            <span class="w-1/6 text-center text-sm text-gray-300">${dayForecast.solar || '--'}</span>
+                            <span class="w-1/6 text-right status-pill ${f.bgColor} ${f.color} ring-1 ring-current">${f.status}</span>
+                        </div>
+                        
+                        <!-- Mobile View (Stacked) -->
+                        <div class="sm:hidden grid grid-cols-2 gap-2 text-sm">
+                            <div class="font-bold ${isToday ? 'text-white' : 'text-matrix-blue/80'}">${dayName}${isToday ? ' (TODAY)' : ''}</div>
+                            <div class="text-right"><span class="status-pill ${f.bgColor} ${f.color} ring-1 ring-current">${f.status}</span></div>
+                            
+                            <div class="text-matrix-blue/70">Wind/Gust:</div>
+                            <div class="text-right font-semibold ${f.color}">${dayForecast.wind_speed || '--'} / ${dayForecast.gust_speed || '--'} mph</div>
+                            
+                            <div class="text-matrix-blue/70">Temp/Rain:</div>
+                            <div class="text-right text-gray-300 flex justify-end items-center space-x-2">
+                                <span>${dayForecast.temp || '--'}&deg;C</span>
+                                ${rainIconHtml}
+                            </div>
+
+                            <div class="text-matrix-blue/70">Pressure/Solar:</div>
+                            <div class="text-right text-gray-300">${dayForecast.pressure || '--'} hPa / ${dayForecast.solar || '--'}</div>
+                        </div>
                     </div>
                 `;
-
-                currentForecastData.forEach(dayForecast => {
-                    const f = getUAVForecast(dayForecast.wind_speed);
-                    const rainIconHtml = getRainIcon(dayForecast.rain);
-                    const bgColor = dayForecast.day.includes('TODAY') ? 'bg-dark-hover' : 'bg-dark-card';
-                    
-                    // Row structure
-                    detailedHTML += `
-                        <div class="app-card ${bgColor} p-3 rounded-xl border border-matrix-blue/10 hover:border-matrix-blue/40 transition duration-150">
-                            <!-- Desktop/Tablet View -->
-                            <div class="hidden sm:flex justify-between items-center">
-                                <span class="font-bold w-1/6 ${dayForecast.day.includes('TODAY') ? 'text-white' : 'text-matrix-blue/80'}">${dayForecast.day}</span>
-                                <span class="w-1/6 text-center text-sm font-semibold ${f.color}">${dayForecast.wind_speed || '--'}/${dayForecast.gust_speed || '--'}</span>
-                                <span class="w-1/6 text-center text-xs text-gray-300">${dayForecast.direction || '--'} / ${dayForecast.pressure || '--'}</span>
-                                <span class="w-1/6 text-center text-sm text-gray-300 flex justify-center items-center space-x-2">
-                                    <span>${dayForecast.temp || '--'}&deg;C</span>
-                                    ${rainIconHtml}
-                                </span>
-                                <span class="w-1/6 text-center text-sm text-gray-300">${dayForecast.solar || '--'}</span>
-                                <span class="w-1/6 text-right status-pill ${f.bgColor} ${f.color} ring-1 ring-current">${f.status}</span>
-                            </div>
-                            
-                            <!-- Mobile View (Stacked) -->
-                            <div class="sm:hidden grid grid-cols-2 gap-2 text-sm">
-                                <div class="font-bold ${dayForecast.day.includes('TODAY') ? 'text-white' : 'text-matrix-blue/80'}">${dayForecast.day}</div>
-                                <div class="text-right"><span class="status-pill ${f.bgColor} ${f.color} ring-1 ring-current">${f.status}</span></div>
-                                
-                                <div class="text-matrix-blue/70">Wind/Gust:</div>
-                                <div class="text-right font-semibold ${f.color}">${dayForecast.wind_speed || '--'} / ${dayForecast.gust_speed || '--'} mph</div>
-                                
-                                <div class="text-matrix-blue/70">Temp/Rain:</div>
-                                <div class="text-right text-gray-300 flex justify-end items-center space-x-2">
-                                    <span>${dayForecast.temp || '--'}&deg;C</span>
-                                    ${rainIconHtml}
-                                </div>
-
-                                <div class="text-matrix-blue/70">Pressure/Solar:</div>
-                                <div class="text-right text-gray-300">${dayForecast.pressure || '--'} hPa / ${dayForecast.solar || '--'}</div>
-                            </div>
-                        </div>
-                    `;
-                });
-                detailedHTML += `</div>`;
-                container.insertAdjacentHTML('beforeend', detailedHTML);
-            } else {
-                // This covers cases where the API returned successfully but the data was empty/malformed
-                container.innerHTML = `<div class="text-center p-8 text-gray-500 bg-dark-card rounded-xl border border-electric-yellow/30">
-                    <p class="text-lg text-electric-yellow">Weather Data Unavailable</p>
-                    <p class="text-sm mt-1">The forecast could not be parsed. Please reload the app.</p>
-                </div>`;
             }
 
-        } catch (e) {
-            // Error handled inside fetchWeatherData, no need to re-render here
-            console.error("Forecast rendering failed:", e);
+            detailedHTML += `</div>`;
+            container.insertAdjacentHTML('beforeend', detailedHTML);
+        } else {
+            container.innerHTML = `<div class="text-center p-8 text-gray-500 bg-dark-card rounded-xl border border-electric-yellow/30">
+                <p class="text-lg">Weather Data Error</p>
+                <p class="text-sm mt-1">Forecast data is unavailable. Please refresh the live feed.</p>
+            </div>`;
         }
     }
 
@@ -751,14 +887,74 @@
             </div>`;
         }
     }
+    
+    // --- CONTROL LOGIC ---
+
+    function setupControlPanel() {
+        const windInput = document.getElementById('input-wind-speed');
+        const gustInput = document.getElementById('input-gust-speed');
+        const updateButton = document.getElementById('update-forecast-btn');
+        const refreshButton = document.getElementById('refresh-live-data-btn');
+        
+        // Listener for Live Data Refresh
+        refreshButton.onclick = () => {
+             fetchRealWeatherForecast();
+        };
+
+        // Initialize inputs with current TODAY data
+        windInput.value = currentForecastData[0]?.wind_speed || '';
+        gustInput.value = currentForecastData[0]?.gust_speed || '';
+
+        // Listener for Day 1 Override
+        updateButton.onclick = () => {
+            const newWind = parseInt(windInput.value);
+            const newGust = parseInt(gustInput.value);
+            const statusDiv = document.getElementById('update-status');
+
+            if (isNaN(newWind) || isNaN(newGust) || newWind < 0 || newGust < 0) {
+                statusDiv.textContent = 'ERROR: Please enter valid positive numbers for wind and gust.';
+                statusDiv.className = 'text-center text-sm font-semibold pt-3 text-danger-red block';
+                return;
+            }
+            
+            // Check if we have valid current data before applying override
+            if (currentForecastData.length < 1) {
+                statusDiv.textContent = 'ERROR: Cannot apply override, live data not yet loaded.';
+                statusDiv.className = 'text-center text-sm font-semibold pt-3 text-danger-red block';
+                return;
+            }
+
+            // Update the TODAY (index 0) entry
+            currentForecastData[0].wind_speed = newWind;
+            currentForecastData[0].gust_speed = newGust;
+
+            // Persist the override separately
+            saveDay1Override(newWind, newGust);
+            
+            // Re-render the active page to show changes immediately
+            const activePage = document.querySelector('.page-content.active').getAttribute('data-page-name');
+            changePage(activePage); 
+            
+            const risk = getUAVFlightRisk(newWind, newGust);
+            statusDiv.innerHTML = `
+                DAY 1 OVERRIDE APPLIED. Wind: <span class="font-display ${risk.color}">${newWind} mph</span>, 
+                Gust: <span class="font-display ${risk.color}">${newGust} mph</span>. 
+                Risk: <span class="font-bold ${risk.color}">${risk.status}</span>.
+            `;
+            statusDiv.className = 'text-center text-sm font-semibold pt-3 text-neon-green shadow-green-glow block';
+
+            setTimeout(() => {
+                statusDiv.classList.add('hidden');
+                statusDiv.classList.remove('shadow-green-glow');
+            }, 3000);
+        };
+    }
 
     // --- PAGE CONTROL LOGIC ---
 
     let currentPage = 'Zones';
 
-    async function changePage(pageName) {
-        if (currentPage === pageName) return;
-
+    function changePage(pageName) {
         currentPage = pageName;
 
         document.querySelectorAll('.page-content').forEach(section => {
@@ -785,24 +981,24 @@
                 renderZonesPage();
                 break;
             case 'Forecast':
-                await renderForecastPage();
+                renderForecastPage();
                 break;
             case 'Alerts':
                 renderAlertsPage();
                 break;
+            case 'Control':
+                setupControlPanel(); 
+                break;
         }
     }
-
 
     // --- PWA INSTALL PROMPT LOGIC ---
 
     function showInstallPrompt() {
         const installPrompt = document.getElementById('install-prompt');
-        // Check for iOS (based on user agent) and if the app is NOT running standalone
         const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
 
-        // Only show if it's likely iOS and the app is NOT already installed
         if (isIOS && !isStandalone) {
             installPrompt.style.display = 'block'; 
             
@@ -810,7 +1006,6 @@
                 installPrompt.classList.add('visible');
             }, 50); 
 
-            // Add dismiss listener
             document.getElementById('close-prompt').addEventListener('click', () => {
                 installPrompt.classList.remove('visible');
                 setTimeout(() => {
@@ -825,8 +1020,14 @@
 
     // --- INITIALIZATION ---
 
-    window.onload = function() {
-        // --- 1. Navigation Setup ---
+    function initializeApp() {
+        // 1. Load local override and last fetch time
+        loadInitialState();
+
+        // 2. Fetch the initial real-world data 
+        fetchRealWeatherForecast();
+
+        // 3. Navigation Setup
         document.querySelectorAll('.nav-btn').forEach(button => {
             button.addEventListener('click', (event) => {
                 event.preventDefault();
@@ -835,10 +1036,14 @@
             });
         });
 
-        // --- 2. Render Initial Page and Show Prompt ---
-        // We initially render Zones as it doesn't require an API call on load.
-        renderZonesPage();
+        // 4. Render Initial Pages (will show default data until fetch completes)
+        changePage('Zones'); 
+        
+        // 5. Show PWA Prompt
         showInstallPrompt();
-    };
+    }
+
+    initializeApp();
+
 </script>
 </body>
