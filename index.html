@@ -40,6 +40,7 @@
                         'app-focus': '0 0 15px rgba(0, 191, 255, 0.4)',
                         'prompt-pop': '0 0 20px rgba(0, 191, 255, 0.8), 0 0 8px rgba(0, 191, 255, 1)', 
                         'green-glow': '0 0 10px rgba(57, 255, 20, 0.6)',
+                        'blue-glow': '0 0 15px rgba(0, 191, 255, 0.8)',
                     }
                 }
             }
@@ -65,6 +66,14 @@
             -webkit-overflow-scrolling: touch;
             padding-top: 1rem; 
             padding-bottom: 5rem; 
+        }
+
+        /* App Wrapper (Main content container - now always visible) */
+        #app-wrapper {
+            flex-grow: 1; 
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         /* Status Pill Styling - App-like, structured */
@@ -149,6 +158,7 @@
             padding: 0.75rem 1rem;
             border-radius: 8px;
             transition: all 0.2s;
+            letter-spacing: 0.2em; /* Emphasize input for code */
         }
         .control-input:focus {
             outline: none;
@@ -166,180 +176,201 @@
         }
         
         .sim-btn-force {
-            background-color: #FFD700;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+            background-color: #00BFFF;
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
             color: #0D1117;
         }
         .sim-btn-force:hover {
-            background-color: #ffda3b;
+            background-color: #38c8ff;
         }
     </style>
 </head>
 <body class="font-sans">
 
-    <!-- Header with new text logo -->
-    <header id="app-header" class="bg-dark-card p-4 border-b border-matrix-blue/40 shadow-2xl sticky top-0 z-10">
-        <div class="max-w-xl mx-auto flex justify-between items-center">
-            
-            <!-- New Text Logo -->
-            <span class="text-xl font-display text-matrix-blue font-bold">FlightFeed.uk</span>
-            
-            <div class="flex items-center space-x-2">
-                <span class="text-xs text-matrix-blue/70">SYSTEM:</span>
-                <span id="system-status" class="text-neon-green font-bold text-sm">LIVE FEED</span>
-                <div class="w-2 h-2 rounded-full bg-neon-green shadow-neon-green animate-pulse"></div>
+    <!-- MAIN APPLICATION WRAPPER (Now always visible) -->
+    <div id="app-wrapper">
+
+        <!-- Header with new text logo -->
+        <header id="app-header" class="bg-dark-card p-4 border-b border-matrix-blue/40 shadow-2xl sticky top-0 z-10">
+            <div class="max-w-xl mx-auto flex justify-between items-center">
+                
+                <!-- New Text Logo -->
+                <span class="text-xl font-display text-matrix-blue font-bold">FlightFeed.uk</span>
+                
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs text-matrix-blue/70">SYSTEM:</span>
+                    <span id="system-status" class="text-neon-green font-bold text-sm">LIVE FEED</span>
+                    <div class="w-2 h-2 rounded-full bg-neon-green shadow-neon-green animate-pulse"></div>
+                </div>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <!-- Main Content Area -->
-    <main id="app-main" class="max-w-xl mx-auto w-full px-4 sm:px-6">
-        
-        <div id="page-container" class="space-y-4">
-
-            <!-- Zones Page -->
-            <section id="page-zones" data-page-name="Zones" class="page-content active">
-                <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/20">
-                    Cardiff & Vale Flight Zones
-                </h1>
-                
-                <div class="bg-dark-card p-3 rounded-lg mb-6 shadow-lg border border-matrix-blue/20">
-                    <h2 class="text-sm font-bold text-matrix-blue mb-2">System Key:</h2>
-                    <div class="grid grid-cols-3 gap-2 text-xs">
-                        <div class="flex items-center space-x-1">
-                            <span class="w-2 h-2 rounded-full bg-neon-green shadow-neon-green"></span>
-                            <span class="text-neon-green font-semibold">SAFE</span>
-                        </div>
-                        <div class="flex items-center space-x-1">
-                            <span class="w-2 h-2 rounded-full bg-electric-yellow shadow-neon-yellow"></span>
-                            <span class="text-electric-yellow font-semibold">MODERATE / CAUTION</span>
-                        </div>
-                        <div class="flex items-center space-x-1">
-                            <span class="w-2 h-2 rounded-full bg-danger-red shadow-neon-red"></span>
-                            <span class="text-danger-red font-semibold">UNSAFE / RESTRICTED</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <section id="location-container" class="space-y-4"></section>
-            </section>
-
-            <!-- Forecast Page -->
-            <section id="page-forecast" data-page-name="Forecast" class="page-content">
-                <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/20">
-                    UAV 7-Day Flight Forecast (Live Feed)
-                </h1>
-                <p class="text-sm text-gray-400 mb-6" id="forecast-source">Source: WeatherAPI. Last Update: <span id="last-update-time">...</span></p>
-                
-                <section id="forecast-details-container" class="space-y-4">
-                    <!-- Content will be rendered here -->
-                </section>
-            </section>
-
-            <!-- Alerts Page -->
-            <section id="page-alerts" data-page-name="Alerts" class="page-content">
-                <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/20">
-                    Active Flight Advisories & Warnings
-                </h1>
-                <p class="text-sm text-gray-400 mb-6">Essential NOTAMs and system warnings affecting local airspace.</p>
-
-                <section id="alerts-container" class="space-y-4"></section>
-            </section>
+        <!-- Main Content Area -->
+        <main id="app-main" class="max-w-xl mx-auto w-full px-4 sm:px-6">
             
-            <!-- Control Page -->
-            <section id="page-control" data-page-name="Control" class="page-content">
-                <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/50">
-                    SYSTEM & FLIGHT CONTROL
-                </h1>
-                <p class="text-sm text-electric-yellow mb-6">
-                    Manage data feed and apply local overrides for today's flight plan.
-                </p>
+            <div id="page-container" class="space-y-4">
 
-                <div class="bg-dark-card p-6 rounded-xl shadow-2xl border border-matrix-blue/30 space-y-6">
+                <!-- Zones Page -->
+                <section id="page-zones" data-page-name="Zones" class="page-content active">
+                    <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/20">
+                        Cardiff & Vale Flight Zones
+                    </h1>
                     
-                    <!-- Live Data Refresh Control -->
-                    <div class="space-y-3 border-b border-matrix-blue/20 pb-4">
-                        <h2 class="text-lg font-display text-white">Live Data Feed Control</h2>
-                        <div id="live-feed-status" class="text-center text-sm text-matrix-blue/80 font-semibold italic">
-                            Data is automatically refreshed on launch.
-                        </div>
-                        <button id="refresh-live-data-btn" class="w-full sim-btn-force hover:bg-electric-yellow/80 text-dark-bg font-bold py-3 rounded-lg shadow-app-focus transition duration-200 font-display uppercase">
-                            REFRESH LIVE DATA FEED
-                        </button>
-                        <p class="text-xs text-gray-400">Pulls the latest 7-day forecast from WeatherAPI. This may take a moment.</p>
-                    </div>
-
-                    <!-- Current Day Override -->
-                    <div class="space-y-4">
-                        <h2 class="text-lg font-display text-white">Local Wind Override (Day 1)</h2>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="flex flex-col">
-                                <label for="input-wind-speed" class="text-sm font-semibold text-matrix-blue mb-1">Base Wind Speed</label>
-                                <input type="number" id="input-wind-speed" class="control-input" min="0" max="100" placeholder="13">
-                                <p class="text-xs text-gray-500 mt-1">13 mph or less = SAFE</p>
+                    <div class="bg-dark-card p-3 rounded-lg mb-6 shadow-lg border border-matrix-blue/20">
+                        <h2 class="text-sm font-bold text-matrix-blue mb-2">System Key:</h2>
+                        <div class="grid grid-cols-3 gap-2 text-xs">
+                            <div class="flex items-center space-x-1">
+                                <span class="w-2 h-2 rounded-full bg-neon-green shadow-neon-green"></span>
+                                <span class="text-neon-green font-semibold">SAFE</span>
                             </div>
-                            <div class="flex flex-col">
-                                <label for="input-gust-speed" class="text-sm font-semibold text-matrix-blue mb-1">Gust Speed</label>
-                                <input type="number" id="input-gust-speed" class="control-input" min="0" max="100" placeholder="19">
-                                <p class="text-xs text-gray-500 mt-1">19 mph or more = UNSAFE</p>
+                            <div class="flex items-center space-x-1">
+                                <span class="w-2 h-2 rounded-full bg-electric-yellow shadow-neon-yellow"></span>
+                                <span class="text-electric-yellow font-semibold">MODERATE / CAUTION</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <span class="w-2 h-2 rounded-full bg-danger-red shadow-neon-red"></span>
+                                <span class="text-danger-red font-semibold">UNSAFE / RESTRICTED</span>
                             </div>
                         </div>
-
-                        <button id="update-forecast-btn" class="w-full bg-matrix-blue hover:bg-matrix-blue/80 text-dark-bg font-bold py-3 rounded-lg shadow-app-focus transition duration-200 font-display uppercase">
-                            APPLY DAY 1 OVERRIDE
-                        </button>
                     </div>
                     
-                    <div id="update-status" class="text-center text-sm font-semibold pt-3 hidden"></div>
-                </div>
-            </section>
+                    <section id="location-container" class="space-y-4"></section>
+                </section>
 
+                <!-- Forecast Page -->
+                <section id="page-forecast" data-page-name="Forecast" class="page-content">
+                    <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/20">
+                        UAV 7-Day Flight Forecast (Live Feed)
+                    </h1>
+                    <p class="text-sm text-gray-400 mb-6" id="forecast-source">Source: WeatherAPI. Last Update: <span id="last-update-time">...</span></p>
+                    
+                    <section id="forecast-details-container" class="space-y-4">
+                        <!-- Content will be rendered here -->
+                    </section>
+                </section>
+
+                <!-- Alerts Page -->
+                <section id="page-alerts" data-page-name="Alerts" class="page-content">
+                    <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/20">
+                        Active Flight Advisories & Warnings
+                    </h1>
+                    <p class="text-sm text-gray-400 mb-6">Essential NOTAMs and system warnings affecting local airspace.</p>
+
+                    <section id="alerts-container" class="space-y-4"></section>
+                </section>
+                
+                <!-- Control Page (Now contains internal lock logic) -->
+                <section id="page-control" data-page-name="Control" class="page-content">
+                    <h1 class="text-xl font-display font-light text-matrix-blue mb-4 pb-2 border-b border-matrix-blue/50">
+                        SYSTEM & FLIGHT CONTROL
+                    </h1>
+                    
+                    <!-- Control Lock Form (Visible until unlocked) -->
+                    <div id="control-lock-form" class="max-w-md mx-auto bg-dark-card p-6 rounded-xl shadow-blue-glow border border-danger-red/50">
+                        <h2 class="text-2xl font-display font-bold text-danger-red mb-2">RESTRICTED ACCESS</h2>
+                        <p class="text-sm text-electric-yellow mb-6">
+                            Access to System Controls requires a valid 4-digit security key.
+                        </p>
+                        
+                        <input type="password" id="control-secret-code" class="control-input w-full text-center text-xl mb-4" placeholder="-- CODE --" maxlength="4">
+                        
+                        <button id="control-unlock-btn" class="w-full bg-danger-red hover:bg-danger-red/80 text-white font-bold py-4 rounded-lg shadow-neon-red transition duration-200 font-display uppercase text-lg">
+                            GRANT ACCESS
+                        </button>
+                        
+                        <div id="control-lock-status" class="text-center text-sm font-semibold pt-4 hidden"></div>
+                    </div>
+
+                    <!-- Control Panel Content (Hidden until unlocked) -->
+                    <div id="control-panel-content" class="hidden">
+                        <p class="text-sm text-electric-yellow mb-6">
+                            Manage data feed and apply local overrides for today's flight plan.
+                        </p>
+
+                        <div class="bg-dark-card p-6 rounded-xl shadow-2xl border border-matrix-blue/30 space-y-6">
+                            
+                            <!-- Live Data Refresh Control -->
+                            <div class="space-y-3 border-b border-matrix-blue/20 pb-4">
+                                <h2 class="text-lg font-display text-white">Live Data Feed Control</h2>
+                                <p class="text-xs text-gray-400/80">
+                                    Fetch the latest 7-day forecast from the secure WeatherAPI feed.
+                                </p>
+                                <button id="refresh-live-data-btn" class="w-full sim-btn-force text-dark-bg font-bold py-3 rounded-lg shadow-app-focus transition duration-200 font-display uppercase">
+                                    REFRESH LIVE DATA FEED
+                                </button>
+                            </div>
+
+                            <!-- Current Day Override -->
+                            <div class="space-y-4">
+                                <h2 class="text-lg font-display text-white">Local Wind Override (Day 1)</h2>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="flex flex-col">
+                                        <label for="input-wind-speed" class="text-sm font-semibold text-matrix-blue mb-1">Base Wind Speed</label>
+                                        <input type="number" id="input-wind-speed" class="control-input" min="0" max="100" placeholder="13">
+                                        <p class="text-xs text-gray-500 mt-1">13 mph or less = SAFE</p>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <label for="input-gust-speed" class="text-sm font-semibold text-matrix-blue mb-1">Gust Speed</label>
+                                        <input type="number" id="input-gust-speed" class="control-input" min="0" max="100" placeholder="19">
+                                        <p class="text-xs text-gray-500 mt-1">19 mph or more = UNSAFE</p>
+                                    </div>
+                                </div>
+
+                                <button id="update-forecast-btn" class="w-full bg-matrix-blue hover:bg-matrix-blue/80 text-dark-bg font-bold py-3 rounded-lg shadow-app-focus transition duration-200 font-display uppercase">
+                                    APPLY DAY 1 OVERRIDE
+                                </button>
+                            </div>
+                            
+                            <div id="update-status" class="text-center text-sm font-semibold pt-3 hidden"></div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+        
+        <!-- PWA Install Prompt -->
+        <div id="install-prompt" class="bg-dark-card text-white p-3 rounded-xl shadow-prompt-pop border border-matrix-blue/50">
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-bold text-sm">Install FlightFeed App (iOS)</span>
+                <button id="close-prompt" class="text-lg font-bold p-1 leading-none text-gray-400 hover:text-danger-red transition duration-150">
+                    &times;
+                </button>
+            </div>
+            <p class="text-xs font-semibold">
+                To install: Tap the 
+                <svg class="share-icon-svg text-white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
+                <span class="font-bold text-matrix-blue">Share icon</span>, then select **'Add to Home Screen'**.
+            </p>
         </div>
-    </main>
-    
-    <!-- PWA Install Prompt -->
-    <div id="install-prompt" class="bg-dark-card text-white p-3 rounded-xl shadow-prompt-pop border border-matrix-blue/50">
-        <div class="flex justify-between items-center mb-2">
-            <span class="font-bold text-sm">Install FlightFeed App (iOS)</span>
-            <button id="close-prompt" class="text-lg font-bold p-1 leading-none text-gray-400 hover:text-danger-red transition duration-150">
-                &times;
-            </button>
-        </div>
-        <p class="text-xs font-semibold">
-            To install: Tap the 
-            <svg class="share-icon-svg text-white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
-            <span class="font-bold text-matrix-blue">Share icon</span>, then select **'Add to Home Screen'**.
-        </p>
+
+        <!-- Bottom Navigation Bar -->
+        <footer class="fixed bottom-0 w-full bg-dark-bg border-t-2 border-matrix-blue z-50 shadow-2xl shadow-matrix-blue/50">
+            <div class="max-w-xl mx-auto flex justify-around items-center h-14 text-xs font-medium">
+                <a href="#" id="nav-zones" data-page="Zones" class="nav-btn active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M12 21.75l-4.5-5.5a7 7 0 1 1 9 0l-4.5 5.5z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span class="mt-1">Zones</span>
+                </a>
+                <a href="#" id="nav-forecast" data-page="Forecast" class="nav-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gauge"><path d="M12 14v4"/><path d="M15.5 16.5l2.5 2.5"/><path d="M8.5 16.5l-2.5 2.5"/><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 12c-3.3 0-6-2.7-6-6"/></svg>
+                    <span class="mt-1">Forecast</span>
+                </a>
+                <a href="#" id="nav-alerts" data-page="Alerts" class="nav-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                    <span class="mt-1">Alerts</span>
+                </a>
+                <a href="#" id="nav-control" data-page="Control" class="nav-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cpu"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+                    <span class="mt-1">Control</span>
+                </a>
+            </div>
+        </footer>
     </div>
-
-    <!-- Bottom Navigation Bar -->
-    <footer class="fixed bottom-0 w-full bg-dark-bg border-t-2 border-matrix-blue z-50 shadow-2xl shadow-matrix-blue/50">
-        <div class="max-w-xl mx-auto flex justify-around items-center h-14 text-xs font-medium">
-            <a href="#" id="nav-zones" data-page="Zones" class="nav-btn active">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M12 21.75l-4.5-5.5a7 7 0 1 1 9 0l-4.5 5.5z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span class="mt-1">Zones</span>
-            </a>
-            <a href="#" id="nav-forecast" data-page="Forecast" class="nav-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gauge"><path d="M12 14v4"/><path d="M15.5 16.5l2.5 2.5"/><path d="M8.5 16.5l-2.5 2.5"/><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 12c-3.3 0-6-2.7-6-6"/></svg>
-                <span class="mt-1">Forecast</span>
-            </a>
-            <a href="#" id="nav-alerts" data-page="Alerts" class="nav-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-                <span class="mt-1">Alerts</span>
-            </a>
-            <a href="#" id="nav-control" data-page="Control" class="nav-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cpu"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
-                <span class="mt-1">Control</span>
-            </a>
-        </div>
-    </footer>
 
 <!-- App Script -->
 <script type="text/javascript">
     
     // --- API CONFIGURATION ---
-    // !!! CRITICAL SECURITY WARNING: This API key is exposed in client-side code. !!!
-    // !!! For a real app, this must be hidden on a secure server/proxy. !!!
     const API_KEY = '0e7e5b27f8c04153866221152250311'; 
     const LOCATION = 'Cardiff, UK';
     const API_URL = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${LOCATION}&days=7`;
@@ -347,6 +378,10 @@
     // --- PERSISTENCE KEYS & GLOBALS ---
     const OVERRIDE_STORAGE_KEY = 'uav_sim_day1_override';
     const LAST_FETCH_TIME_KEY = 'uav_sim_last_fetch_time';
+    const SECRET_CODE = 3040; // Security Code for the Control page
+    
+    // Global state to track if the Control panel has been unlocked in the current session
+    let isControlUnlocked = false; 
     
     // This variable will hold the live 7-day forecast data fetched from the API
     let currentForecastData = [];
@@ -424,11 +459,15 @@
         const statusDiv = document.getElementById('update-status');
         const refreshButton = document.getElementById('refresh-live-data-btn');
         
-        // Show loading state
-        refreshButton.textContent = 'FETCHING LIVE DATA...';
-        refreshButton.disabled = true;
-        statusDiv.innerHTML = 'Fetching new data feed from WeatherAPI...';
-        statusDiv.className = 'text-center text-sm font-semibold pt-3 text-electric-yellow shadow-neon-yellow block';
+        if (refreshButton) {
+            refreshButton.textContent = 'FETCHING LIVE DATA...';
+            refreshButton.disabled = true;
+        }
+
+        if (statusDiv) {
+            statusDiv.innerHTML = 'Fetching new data feed from WeatherAPI...';
+            statusDiv.className = 'text-center text-sm font-semibold pt-3 text-electric-yellow shadow-neon-yellow block';
+        }
 
         try {
             const response = await fetch(API_URL);
@@ -478,29 +517,41 @@
             }
 
             // Success message
-            statusDiv.innerHTML = `LIVE DATA REFRESHED. Last fetch at ${formatTime(lastFetchTime)}.`;
-            statusDiv.className = 'text-center text-sm font-semibold pt-3 text-neon-green shadow-green-glow block';
+            if (statusDiv) {
+                statusDiv.innerHTML = `LIVE DATA REFRESHED. Last fetch at ${formatTime(lastFetchTime)}.`;
+                statusDiv.className = 'text-center text-sm font-semibold pt-3 text-neon-green shadow-green-glow block';
+            }
 
         } catch (error) {
             console.error("Failed to fetch live weather data:", error);
             currentForecastData = defaultMockForecast; // Fallback to mock data
-            statusDiv.innerHTML = `ERROR: Failed to fetch live data (${error.message}). Using fallback mock data.`;
-            statusDiv.className = 'text-center text-sm font-semibold pt-3 text-danger-red shadow-neon-red block';
+            if (statusDiv) {
+                statusDiv.innerHTML = `ERROR: Failed to fetch live data (${error.message}). Using fallback mock data.`;
+                statusDiv.className = 'text-center text-sm font-semibold pt-3 text-danger-red shadow-neon-red block';
+            }
         } finally {
             isFetching = false;
+            
             // Restore button state
-            refreshButton.textContent = 'REFRESH LIVE DATA FEED';
-            refreshButton.disabled = false;
+            if (refreshButton) {
+                refreshButton.textContent = 'REFRESH LIVE DATA FEED';
+                refreshButton.disabled = false;
+            }
 
             // Re-render the active page to show changes
-            const activePage = document.querySelector('.page-content.active').getAttribute('data-page-name');
-            changePage(activePage); 
+            const activePageElement = document.querySelector('.page-content.active');
+            if (activePageElement) {
+                const activePage = activePageElement.getAttribute('data-page-name');
+                changePage(activePage); 
+            }
             
             // Hide status message after a delay
-            setTimeout(() => {
-                statusDiv.classList.add('hidden');
-                statusDiv.classList.remove('shadow-green-glow', 'shadow-neon-red');
-            }, 3000);
+            if (statusDiv) {
+                setTimeout(() => {
+                    statusDiv.classList.add('hidden');
+                    statusDiv.classList.remove('shadow-green-glow', 'shadow-neon-red');
+                }, 3000);
+            }
         }
     }
     
@@ -888,9 +939,10 @@
         }
     }
     
-    // --- CONTROL LOGIC ---
+    // --- CONTROL LOGIC (Split into lock and interactions) ---
 
-    function setupControlPanel() {
+    // Function to set up the actual control panel interactions (only runs when unlocked)
+    function setupControlPanelInteractions() {
         const windInput = document.getElementById('input-wind-speed');
         const gustInput = document.getElementById('input-gust-speed');
         const updateButton = document.getElementById('update-forecast-btn');
@@ -905,7 +957,7 @@
         windInput.value = currentForecastData[0]?.wind_speed || '';
         gustInput.value = currentForecastData[0]?.gust_speed || '';
 
-        // Listener for Day 1 Override
+        // Listener for Day 1 Override (Existing)
         updateButton.onclick = () => {
             const newWind = parseInt(windInput.value);
             const newGust = parseInt(gustInput.value);
@@ -917,7 +969,6 @@
                 return;
             }
             
-            // Check if we have valid current data before applying override
             if (currentForecastData.length < 1) {
                 statusDiv.textContent = 'ERROR: Cannot apply override, live data not yet loaded.';
                 statusDiv.className = 'text-center text-sm font-semibold pt-3 text-danger-red block';
@@ -949,6 +1000,83 @@
             }, 3000);
         };
     }
+
+    // Function to manage the lock state of the Control page
+    function handleControlPage() {
+        const contentDiv = document.getElementById('control-panel-content');
+        const lockForm = document.getElementById('control-lock-form');
+
+        if (isControlUnlocked) {
+            // Unlocked: Show content, hide lock form
+            lockForm.classList.add('hidden');
+            contentDiv.classList.remove('hidden');
+            setupControlPanelInteractions(); 
+        } else {
+            // Locked: Hide content, show lock form
+            contentDiv.classList.add('hidden');
+            lockForm.classList.remove('hidden');
+            setupControlLock(); 
+        }
+    }
+    
+    // Function to handle the lock input/button
+    function setupControlLock() {
+        const lockInput = document.getElementById('control-secret-code');
+        const unlockBtn = document.getElementById('control-unlock-btn');
+        const lockStatus = document.getElementById('control-lock-status');
+        const contentDiv = document.getElementById('control-panel-content');
+        const lockForm = document.getElementById('control-lock-form');
+        
+        // Clear previous input/status
+        lockInput.value = '';
+        lockStatus.classList.add('hidden');
+        lockInput.disabled = false;
+        unlockBtn.disabled = false;
+
+        const verifyCode = (event) => {
+            // Only proceed on click or Enter key press
+            if (event.type === 'keydown' && event.key !== 'Enter') return;
+            
+            if (parseInt(lockInput.value) === SECRET_CODE) {
+                // SUCCESS: Grant Access
+                lockStatus.innerHTML = 'ACCESS GRANTED. Control panel unlocked.';
+                lockStatus.className = 'text-center text-sm font-semibold pt-4 text-neon-green shadow-green-glow block';
+                lockInput.disabled = true;
+                unlockBtn.disabled = true;
+                
+                isControlUnlocked = true; // Set global state
+                
+                // Show content and hide lock form
+                lockForm.classList.add('hidden');
+                contentDiv.classList.remove('hidden');
+                
+                // Set up interactions now that the panel is visible
+                setupControlPanelInteractions();
+
+            } else {
+                // FAILURE: Access Denied
+                lockStatus.innerHTML = 'ACCESS DENIED. Invalid security key.';
+                lockStatus.className = 'text-center text-sm font-semibold pt-4 text-danger-red shadow-neon-red block';
+                lockInput.value = ''; // Clear input on failure
+                lockInput.focus();
+
+                setTimeout(() => {
+                    lockStatus.classList.add('hidden');
+                    lockStatus.classList.remove('shadow-neon-red');
+                }, 3000);
+            }
+            lockStatus.classList.remove('hidden');
+        };
+
+        // Attach listeners (re-attaching them is safe since we set up the lock on every page change)
+        unlockBtn.onclick = verifyCode;
+        // Check if an event listener is already attached before adding
+        lockInput.onkeydown = verifyCode;
+        
+        // Focus the input when the lock form appears
+        lockInput.focus();
+    }
+
 
     // --- PAGE CONTROL LOGIC ---
 
@@ -987,7 +1115,7 @@
                 renderAlertsPage();
                 break;
             case 'Control':
-                setupControlPanel(); 
+                handleControlPage();
                 break;
         }
     }
@@ -1019,12 +1147,11 @@
 
 
     // --- INITIALIZATION ---
-
     function initializeApp() {
         // 1. Load local override and last fetch time
         loadInitialState();
 
-        // 2. Fetch the initial real-world data 
+        // 2. Fetch the initial real-world data (to populate immediately)
         fetchRealWeatherForecast();
 
         // 3. Navigation Setup
@@ -1042,8 +1169,9 @@
         // 5. Show PWA Prompt
         showInstallPrompt();
     }
-
-    initializeApp();
+    
+    // --- START UP ---
+    window.onload = initializeApp; 
 
 </script>
 </body>
