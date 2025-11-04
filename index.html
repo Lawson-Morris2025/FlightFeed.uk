@@ -136,94 +136,22 @@
             display: block;
         }
         
-      <!-- PWA Install Prompt -->
-<div id="install-prompt" class="visible">
-  <span id="closeInstallPrompt" style="
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      cursor: pointer;
-      font-size: 20px;
-      font-weight: bold;
-      color: white;
-  ">&times;</span>
-  <p style="margin: 0; font-size: 16px;">
-    Install our PWA for the best experience!
-  </p>
-  <button id="installBtn" style="
-      margin-top: 10px;
-      width: 100%;
-      padding: 10px;
-      background: white;
-      color: #1d4ed8;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.2s;
-  ">Install Now</button>
-</div>
-
-<style>
-#install-prompt {
-    position: fixed;
-    bottom: 4rem;
-    left: 50%;
-    transform: translateX(-50%);
-    max-width: 90%;
-    z-index: 1000;
-    display: block;
-    background-color: #1e1e1e; /* dark background */
-    color: white;
-    padding: 1.5rem 1.8rem;
-    border-radius: 1rem;
-    border: 2px solid #1d4ed8; /* solid blue edge */
-    box-shadow: 0 0 15px #1d4ed8; /* glowing effect */
-    font-family: sans-serif;
-    font-size: 16px;
-    opacity: 1; /* fully solid */
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-#install-prompt:hover {
-    box-shadow: 0 0 25px #1d4ed8; /* stronger glow on hover */
-}
-</style>
-
-<script>
-const installPrompt = document.getElementById('install-prompt');
-const closeBtn = document.getElementById('closeInstallPrompt');
-
-// Close button
-closeBtn.addEventListener('click', () => {
-    installPrompt.style.display = 'none';
-});
-
-// Example: Show prompt after 2 seconds (replace with your PWA logic)
-setTimeout(() => {
-    installPrompt.style.display = 'block';
-}, 2000);
-
-// Optional: handle actual PWA install event
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installPrompt.style.display = 'block';
-});
-
-const installBtn = document.getElementById('installBtn');
-installBtn.addEventListener('click', async () => {
-    if(deferredPrompt){
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log(`User response: ${outcome}`);
-        installPrompt.style.display = 'none';
-        deferredPrompt = null;
-    }
-});
-
-
+        /* PWA Install Prompt Styles */
+        #install-prompt {
+            position: fixed;
+            bottom: 4rem; 
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 90%;
+            z-index: 100;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; 
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.8), 0 0 5px rgba(0, 191, 255, 0.6); 
+            display: none; 
+        }
+        #install-prompt.visible {
+            opacity: 1;
+        }
 
         /* Input styling for the control panel */
         .control-input {
