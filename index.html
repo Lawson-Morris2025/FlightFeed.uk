@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlightFeed.uk | Cardiff UAV Command</title>
+    <title>FlightFeed.uk | Cardiff</title>
     
     <!-- Theme and PWA config --><meta name="theme-color" content="#00BFFF">
     <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='60' fill='%2300BFFF' font-family='Orbitron, sans-serif'%3EF%3C/text%3E%3C/svg%3E">
@@ -389,32 +389,51 @@
     ];
 
     // --- MOCK ZONE AND ALERT DATA (Remains static) ---
-    const locationData = [
-        { id: 1, name: "Cardiff Bay Barrage", area: "Cardiff Bay", coords: "51.45N, -3.16W", nfz_status: 'CAUTION', notes: "Wind is often higher near the coast. Requires awareness of local Port Authority / Bay Byelaws." },
-        { id: 2, name: "Trellai Park", area: "Llanrumney", coords: "51.50N, -3.12W", nfz_status: 'OPEN', notes: "Good open space. Standard Drone Code applies (VLOS, 400ft max)." },
-        { id: 5, name: "Cardiff Airport FRZ", area: "Rhoose (Warning)", coords: "51.39N, -3.34W", nfz_status: 'RESTRICTED', notes: "STRICT NO-FLY ZONE. Within Flight Restriction Zone (FRZ). Do NOT attempt flight." },
-        { id: 11, name: "Penarth Pier Head", area: "Penarth Coast", coords: "51.43N, -3.16W", nfz_status: 'CAUTION', notes: "Strong sea breeze expected. High chance of salt spray. Base wind risk will be applied from simulation." },
-        { id: 29, name: "Ogmore-by-Sea", area: "Bridgend Coast (Vale)", coords: "51.46N, -3.61W", nfz_status: 'CAUTION', notes: "Strong sea winds. Suitable for experienced pilots only. Watch tide line. Base wind risk will be applied from simulation." },
-        { id: 33, name: "Cardiff Central Train Station", area: "City Centre", coords: "51.47N, -3.18W", nfz_status: 'RESTRICTED', notes: "Critical transport infrastructure. Rail and high public risk. **Do NOT fly** without explicit Network Rail/Police permission." },
-        { id: 35, name: "Roath Park Lake", area: "Roath", coords: "51.49N, -3.15W", nfz_status: 'OPEN', notes: "Good open space. Check for local events or crowds." },
-        { id: 40, name: "Bute Park South", area: "City Centre Fringe", coords: "51.48N, -3.18W", nfz_status: 'CAUTION', notes: "High pedestrian volume, especially weekends. Maintain 50m separation from people/buildings." },
-        { id: 41, name: "Garth Mountain Summit", area: "Taff's Well", coords: "51.54N, -3.27W", nfz_status: 'CAUTION', notes: "High altitude, turbulent air. Strong mountain winds often add +5mph to base forecast." },
-        { id: 42, name: "Llandaff Cathedral Area", area: "Llandaff", coords: "51.49N, -3.22W", nfz_status: 'RESTRICTED', notes: "Historic structure protection zone. Permission from site management is mandatory." },
-        { id: 43, name: "St. Fagans Museum", area: "St. Fagans", coords: "51.48N, -3.28W", nfz_status: 'RESTRICTED', notes: "No overflight permitted due to protected buildings and visitor safety regulations." },
-        { id: 44, name: "Sully Island Coast", area: "Sully", coords: "51.40N, -3.20W", nfz_status: 'CAUTION', notes: "Tidal movements are rapid. Launch/Recovery must be planned around the tide. High winds likely." },
-        { id: 45, name: "Newport Wetlands Reserve", area: "Newport", coords: "51.55N, -2.96W", nfz_status: 'RESTRICTED', notes: "RSPB Nature Reserve. STRICTLY NO FLYING due to wildlife disturbance." },
-        { id: 46, name: "Taff Trail (Radyr)", area: "Northern Cardiff", coords: "51.52N, -3.22W", nfz_status: 'CAUTION', notes: "Linear path next to private land and river. Maintain low altitude and respect privacy." },
-        { id: 47, name: "Porthcawl Seafront", area: "Porthcawl", coords: "51.48N, -3.71W", nfz_status: 'CAUTION', notes: "Seafront area. Gale-force gusts possible. Only heavy, professional rigs should be flown." },
-        { id: 48, name: "Barry Island Pleasure Park", area: "Barry", coords: "51.39N, -3.28W", nfz_status: 'RESTRICTED', notes: "High public density and major attraction. Do not fly over crowds or rides." },
-        { id: 49, name: "Caerphilly Castle", area: "Caerphilly", coords: "51.57N, -3.22W", nfz_status: 'RESTRICTED', notes: "Protected historical site. CAA Article 241 rules apply. Permission needed." },
-        { id: 50, name: "Tredegar Park", area: "Newport", coords: "51.57N, -3.05W", nfz_status: 'OPEN', notes: "Large open park suitable for recreational flying. Check for local events." },
-        { id: 51, name: "Pontcanna Fields", area: "Cardiff", coords: "51.48N, -3.20W", nfz_status: 'CAUTION', notes: "Often used for sports and grazing. Monitor for horses and sporting events." },
-        { id: 52, name: "Ely Bridge Junction", area: "Western Cardiff", coords: "51.47N, -3.25W", nfz_status: 'RESTRICTED', notes: "Proximity to high-speed road (A4232). High risk of distracted driving. AVOID." },
-        { id: 53, name: "HMS Cambria Reserve", area: "Sully (Military)", coords: "51.41N, -3.17W", nfz_status: 'RESTRICTED', notes: "Military airspace/establishment. Immediate grounding and police report if observed flying." },
-        { id: 54, name: "Heath Park", area: "Cardiff", coords: "51.51N, -3.18W", nfz_status: 'OPEN', notes: "Low wind, excellent conditions. Avoid hospital heli-route nearby." },
-        { id: 55, name: "Blackwood Showground", area: "Blackwood", coords: "51.64N, -3.17W", nfz_status: 'OPEN', notes: "Large, unobstructed area. Ideal for testing and training." },
-        { id: 56, name: "Brecon Beacons National Park", area: "Storey Arms", coords: "51.88N, -3.45W", nfz_status: 'CAUTION', notes: "High altitude flight requires specialist batteries. Mountain winds often add +7mph to base forecast." },
-    ];
+const locationData = [
+    { id: 1, name: "Cardiff Bay Barrage", area: "Cardiff Bay", coords: "51.45N, -3.16W", nfz_status: 'CAUTION', notes: "Wind is often higher near the coast. Requires awareness of local Port Authority / Bay Byelaws." },
+    { id: 2, name: "Trellai Park", area: "Llanrumney", coords: "51.50N, -3.12W", nfz_status: 'OPEN', notes: "Good open space. Standard Drone Code applies (VLOS, 400ft max)." },
+    { id: 5, name: "Cardiff Airport FRZ", area: "Rhoose (Warning)", coords: "51.39N, -3.34W", nfz_status: 'RESTRICTED', notes: "STRICT NO-FLY ZONE. Within Flight Restriction Zone (FRZ). Do NOT attempt flight." },
+    { id: 11, name: "Penarth Pier Head", area: "Penarth Coast", coords: "51.43N, -3.16W", nfz_status: 'CAUTION', notes: "Strong sea breeze expected. High chance of salt spray. Base wind risk will be applied from simulation." },
+    { id: 29, name: "Ogmore-by-Sea", area: "Bridgend Coast (Vale)", coords: "51.46N, -3.61W", nfz_status: 'CAUTION', notes: "Strong sea winds. Suitable for experienced pilots only. Watch tide line. Base wind risk will be applied from simulation." },
+    { id: 33, name: "Cardiff Central Train Station", area: "City Centre", coords: "51.47N, -3.18W", nfz_status: 'RESTRICTED', notes: "Critical transport infrastructure. Rail and high public risk. **Do NOT fly** without explicit Network Rail/Police permission." },
+    { id: 35, name: "Roath Park Lake", area: "Roath", coords: "51.49N, -3.15W", nfz_status: 'OPEN', notes: "Good open space. Check for local events or crowds." },
+    { id: 40, name: "Bute Park South", area: "City Centre Fringe", coords: "51.48N, -3.18W", nfz_status: 'CAUTION', notes: "High pedestrian volume, especially weekends. Maintain 50m separation from people/buildings." },
+    { id: 41, name: "Garth Mountain Summit", area: "Taff's Well", coords: "51.54N, -3.27W", nfz_status: 'CAUTION', notes: "High altitude, turbulent air. Strong mountain winds often add +5mph to base forecast." },
+    { id: 42, name: "Llandaff Cathedral Area", area: "Llandaff", coords: "51.49N, -3.22W", nfz_status: 'RESTRICTED', notes: "Historic structure protection zone. Permission from site management is mandatory." },
+    { id: 43, name: "St. Fagans Museum", area: "St. Fagans", coords: "51.48N, -3.28W", nfz_status: 'RESTRICTED', notes: "No overflight permitted due to protected buildings and visitor safety regulations." },
+    { id: 44, name: "Sully Island Coast", area: "Sully", coords: "51.40N, -3.20W", nfz_status: 'CAUTION', notes: "Tidal movements are rapid. Launch/Recovery must be planned around the tide. High winds likely." },
+    { id: 45, name: "Newport Wetlands Reserve", area: "Newport", coords: "51.55N, -2.96W", nfz_status: 'RESTRICTED', notes: "RSPB Nature Reserve. STRICTLY NO FLYING due to wildlife disturbance." },
+    { id: 46, name: "Taff Trail (Radyr)", area: "Northern Cardiff", coords: "51.52N, -3.22W", nfz_status: 'CAUTION', notes: "Linear path next to private land and river. Maintain low altitude and respect privacy." },
+    { id: 47, name: "Porthcawl Seafront", area: "Porthcawl", coords: "51.48N, -3.71W", nfz_status: 'CAUTION', notes: "Seafront area. Gale-force gusts possible. Only heavy, professional rigs should be flown." },
+    { id: 48, name: "Barry Island Pleasure Park", area: "Barry", coords: "51.39N, -3.28W", nfz_status: 'RESTRICTED', notes: "High public density and major attraction. Do not fly over crowds or rides." },
+    { id: 49, name: "Caerphilly Castle", area: "Caerphilly", coords: "51.57N, -3.22W", nfz_status: 'RESTRICTED', notes: "Protected historical site. CAA Article 241 rules apply. Permission needed." },
+    { id: 50, name: "Tredegar Park", area: "Newport", coords: "51.57N, -3.05W", nfz_status: 'OPEN', notes: "Large open park suitable for recreational flying. Check for local events." },
+    { id: 51, name: "Pontcanna Fields", area: "Cardiff", coords: "51.48N, -3.20W", nfz_status: 'CAUTION', notes: "Often used for sports and grazing. Monitor for horses and sporting events." },
+    { id: 52, name: "Ely Bridge Junction", area: "Western Cardiff", coords: "51.47N, -3.25W", nfz_status: 'RESTRICTED', notes: "Proximity to high-speed road (A4232). High risk of distracted driving. AVOID." },
+    { id: 53, name: "HMS Cambria Reserve", area: "Sully (Military)", coords: "51.41N, -3.17W", nfz_status: 'RESTRICTED', notes: "Military airspace/establishment. Immediate grounding and police report if observed flying." },
+    { id: 54, name: "Heath Park", area: "Cardiff", coords: "51.51N, -3.18W", nfz_status: 'OPEN', notes: "Low wind, excellent conditions. Avoid hospital heli-route nearby." },
+    { id: 55, name: "Blackwood Showground", area: "Blackwood", coords: "51.64N, -3.17W", nfz_status: 'OPEN', notes: "Large, unobstructed area. Ideal for testing and training." },
+    { id: 56, name: "Brecon Beacons National Park (central)", area: "Brecon Beacons", coords: "51.88N, -3.45W", nfz_status: 'CAUTION', notes: "Central beacon area. Mountain winds and ridges. Use caution." },
+
+    // New additions 57–70
+    { id: 57, name: "Watkiss Way", area: "Cardiff Bay", coords: "51.4507N, -3.1788W", nfz_status: 'OPEN', notes: "Grassy launch areas along the bay. Good VLOS opportunities." },
+    { id: 58, name: "St Mellons Fields", area: "St Mellons", coords: "51.5050N, -3.0760W", nfz_status: 'OPEN', notes: "Open fields in St Mellons — candidate for low-altitude flights." },
+    { id: 59, name: "Rumney Meadows", area: "Rumney", coords: "51.4980N, -3.1400W", nfz_status: 'OPEN', notes: "Meadow / grassland in Rumney area." },
+    { id: 60, name: "Libanus Visitor Centre", area: "Brecon Beacons", coords: "51.5630N, -3.2820W", nfz_status: 'CAUTION', notes: "Visitor centre in Brecon Beacons NP, good base point." },
+    { id: 61, name: "Pen y Fan (Peak)", area: "Brecon Beacons", coords: "51.4960N, -3.1430W", nfz_status: 'CAUTION', notes: "Well-known Beacons peak; watch hikers." },
+    { id: 62, name: "Mynydd Llangorse", area: "Brecon Beacons / Black Mountains", coords: "51.8000N, -3.2700W", nfz_status: 'CAUTION', notes: "Hill in Black Mountains, open country area." },
+    { id: 63, name: "Fan Bwlch Chwyth", area: "Brecon Beacons", coords: "51.8000N, -3.4000W", nfz_status: 'CAUTION', notes: "Peak in Fforest Fawr region." },
+    { id: 64, name: "Cribarth (Sleeping Giant)", area: "Brecon Beacons", coords: "51.7630N, -3.5210W", nfz_status: 'CAUTION', notes: "Mapped hill in Beacons, open area." },
+    { id: 65, name: "Bryn Arw", area: "Black Mountains", coords: "51.8000N, -3.0000W", nfz_status: 'CAUTION', notes: "Hill in Monmouthshire side of Black Mountains." },
+    { id: 66, name: "Dunraven Bay", area: "Southerndown / Vale of Glamorgan", coords: "51.4800N, -3.5730W", nfz_status: 'CAUTION', notes: "Coastal area, tidal caution." },
+    { id: 67, name: "Nash Point Lighthouse", area: "Vale of Glamorgan", coords: "51.4260N, -3.5670W", nfz_status: 'CAUTION', notes: "Lighthouse and cliff area; safe for high vantage aerial shots." },
+    { id: 68, name: "Barry Waterfront / Docklands", area: "Barry", coords: "51.3960N, -3.2980W", nfz_status: 'CAUTION', notes: "Urban dockside, watch local regulations." },
+    { id: 69, name: "Mynydd y Garn", area: "Caerphilly / outskirts", coords: "51.5800N, -3.2100W", nfz_status: 'CAUTION', notes: "Small hill near Caerphilly; open country access." },
+    { id: 70, name: "Cwmcarn Forest", area: "Caerphilly", coords: "51.6360N, -3.1650W", nfz_status: 'CAUTION', notes: "Forest with open tracks; good for FPV / practice flights." }
+];
+
+
+
 
     const alertData = [
         {
