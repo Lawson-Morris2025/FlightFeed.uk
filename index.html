@@ -432,25 +432,122 @@ const locationData = [
 
 
 
+const alertData = [
+    {
+        id: 1,
+        type: 'TEMPORARY FLIGHT RESTRICTION',
+        area: 'CARDIFF BAY CENTRE',
+        priority: 'HIGH',
+        details: 'Public event (Regatta) TFR applies to all UAS up to 400ft AGL within 0.5nm radius.',
+        date: '2025-11-04'
+    },
+    {
+        id: 2,
+        type: 'TEMPORARY FLIGHT RESTRICTION',
+        area: 'BARRY ISLAND',
+        priority: 'HIGH',
+        details: 'Music festival and crowd area. No drone flights within 0.5nm of main stages until 20:00.',
+        date: '2025-11-05'
+    },
+    {
+        id: 3,
+        type: 'MANDATORY FRZ CHECK',
+        area: 'CARDIFF AIRPORT',
+        priority: 'CRITICAL',
+        details: 'The Airport FRZ boundary has been updated. ALL flight plans near Rhoose must be re-validated with the new map data.',
+        date: '2025-11-03'
+    },
+    {
+        id: 4,
+        type: 'ADVISORY',
+        area: 'TREDEGAR PARK, NEWPORT',
+        priority: 'MEDIUM',
+        details: 'Large public event (sports) this weekend; maintain 50m horizontal separation from crowds.',
+        date: '2025-11-06'
+    },
+    {
+        id: 5,
+        type: 'TEMPORARY FLIGHT RESTRICTION',
+        area: 'CAERPHILLY CASTLE',
+        priority: 'HIGH',
+        details: 'Special historical event; drones prohibited within castle grounds until further notice.',
+        date: '2025-11-04'
+    },
+    {
+        id: 6,
+        type: 'ADVISORY',
+        area: 'BRECON BEACONS - PEN Y FAN',
+        priority: 'MEDIUM',
+        details: 'High winds reported; pilots advised to limit altitude to 300ft AGL in exposed areas.',
+        date: '2025-11-04'
+    },
+    {
+        id: 7,
+        type: 'TEMPORARY FLIGHT RESTRICTION',
+        area: 'CARDIFF CITY CENTRE',
+        priority: 'HIGH',
+        details: 'Official parade & drone ban from 10:00–14:00; 0.5nm radius around central square.',
+        date: '2025-11-07'
+    },
+    {
+        id: 12,
+        type: 'SWARM DISPLAY PROHIBITION CLARIFICATION',
+        area: 'UK (All airspace)',
+        priority: 'MEDIUM',
+        details: 'The CAA clarifies that use of UAS swarms for commercial advertising (e.g. logos or QR codes) is prohibited under section 82 of the Civil Aviation Act 1982. <a href="https://www.caa.co.uk/drones/drones-news-and-updates/news-and-updates/" target="_blank" style="color:blue;">https://www.caa.co.uk/drones/drones-news-and-updates/news-and-updates/</a>',
+        date: '2025-12-01'
+    },
+    {
+        id: 8,
+        type: 'PRODUCT STANDARDS CHANGE',
+        area: 'UK (Open Category)',
+        priority: 'CRITICAL',
+        details: 'From 1 January 2026, drones in the Open Category must meet new product standards under a UK class marking (UK0–UK6) framework. The CAA will act as Market Surveillance Authority. <a href="https://www.caa.co.uk/newsroom/news/uk-civil-aviation-authority-appointed-to-oversee-safety-standards-for-drones/" target="_blank" style="color:blue;">https://www.caa.co.uk/newsroom/news/uk-civil-aviation-authority-appointed-to-oversee-safety-standards-for-drones/</a>',
+        date: '2026-01-01'
+    },
+    {
+        id: 9,
+        type: 'REMOTE ID / GEO-AWARENESS REQUIREMENT',
+        area: 'UK (Classed Drones)',
+        priority: 'HIGH',
+        details: 'From 1 January 2026, UK1, UK2, UK3 (and some higher) class-marked drones must broadcast Direct Remote ID and support geo-awareness in flight. <a href="https://www.heliguy.com/blogs/posts/uk-caa-proposed-drone-regulation-changes/" target="_blank" style="color:blue;">https://www.heliguy.com/blogs/posts/uk-caa-proposed-drone-regulation-changes/</a>',
+        date: '2026-01-01'
+    },
+    {
+        id: 10,
+        type: 'FLYER ID EXPANSION',
+        area: 'UK (≥100g Drones)',
+        priority: 'HIGH',
+        details: 'From 1 January 2026, any drone over 100 g will require the operator to obtain a Flyer ID (online test). <a href="https://www.caa.co.uk/drones/drones-news-and-updates/news-and-updates/" target="_blank" style="color:blue;">https://www.caa.co.uk/drones/drones-news-and-updates/news-and-updates/</a>',
+        date: '2026-01-01'
+    },
+    {
+        id: 11,
+        type: 'TRANSITION LEGACY EXTENSION',
+        area: 'UK (Legacy / transitional drones)',
+        priority: 'MEDIUM',
+        details: 'The transitional / legacy rules for existing drones have been extended through 1 January 2026, allowing non-class‑marked drones to continue under existing Open Category rules until then. <a href="https://www.arpas.uk/open-cat-transition-period-extended-to-1-jan-2026-and-its-implications/" target="_blank" style="color:blue;">https://www.arpas.uk/open-cat-transition-period-extended-to-1-jan-2026-and-its-implications/</a>',
+        date: '2026-01-01'
+    },
+    {
+        id: 13,
+        type: 'CLASS MARKING LABEL CHANGE',
+        area: 'UK (Class-marked drones)',
+        priority: 'HIGH',
+        details: 'The UK will adopt UK-specific class‑mark labels (UK0, UK1, etc.), replacing EU C0–C6 labels. EU class‑marked drones will be acceptable under transitional rules until Jan 2028. <a href="https://www.heliguy.com/blogs/posts/uk-caa-proposed-drone-regulation-changes/" target="_blank" style="color:blue;">https://www.heliguy.com/blogs/posts/uk-caa-proposed-drone-regulation-changes/</a>',
+        date: '2026-01-01'
+    },
+    {
+        id: 14,
+        type: 'NIGHT-FLIGHT LIGHT REQUIREMENT',
+        area: 'UK (Open Category at night)',
+        priority: 'HIGH',
+        details: 'Under planned changes, drones flown at night in Open Category must display a flashing anti-collision light. <a href="https://www.heliguy.com/blogs/posts/uk-caa-proposed-drone-regulation-changes/" target="_blank" style="color:blue;">https://www.heliguy.com/blogs/posts/uk-caa-proposed-drone-regulation-changes/</a>',
+        date: '2026-01-01'
+    }
+];
 
-    const alertData = [
-        {
-            id: 1,
-            type: 'TEMPORARY FLIGHT RESTRICTION',
-            area: 'CARDIFF BAY CENTRE',
-            priority: 'HIGH',
-            details: 'Public event (Regatta) TFR applies to all UAS up to 400ft AGL within 0.5nm radius.',
-            date: '2025-11-04'
-        },
-        {
-            id: 4,
-            type: 'MANDATORY FRZ CHECK',
-            area: 'CARDIFF AIRPORT',
-            priority: 'CRITICAL',
-            details: 'The Airport FRZ boundary has been adjusted. ALL flight plans near Rhoose must be re-validated with the new map data.',
-            date: '2025-11-03'
-        }
-    ];
+
 
     // --- FETCH LOGIC (USING REAL WEATHERAPI) ---
 
