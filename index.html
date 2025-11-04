@@ -113,29 +113,57 @@
             border-color: rgba(0, 191, 255, 0.5); 
         }
 
-        /* Bottom Nav Bar Button Style */
-        .nav-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0.5rem 0;
-            color: #4D5763;
-            transition: color 0.2s;
-            flex-grow: 1; /* Ensure equal spacing for 4 items */
-        }
-        .nav-btn.active {
-            color: #00BFFF;
-            text-shadow: 0 0 8px rgba(0, 191, 255, 0.5);
-        }
-        
-        /* Page content visibility management */
-        .page-content {
-            display: none;
-        }
-        .page-content.active {
-            display: block;
-        }
-        
+/* --- Solid Black Bottom Navigation Bar (Seamless Buttons) --- */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background-color: #000000 !important; /* solid black */
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 10000;
+    box-shadow: 0 -2px 15px rgba(0, 191, 255, 0.4); /* blue glow */
+    border: none;
+}
+
+/* --- Nav Buttons --- */
+.nav-btn {
+    all: unset; /* 🔥 removes ALL default browser button styles */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #4D5763;
+    background-color: #000000; /* same as nav bar */
+    height: 100%;
+    cursor: pointer;
+    transition: color 0.2s, text-shadow 0.2s;
+}
+
+/* --- Active Button --- */
+.nav-btn.active {
+    color: #00BFFF;
+    text-shadow: 0 0 8px rgba(0, 191, 255, 0.8);
+}
+
+/* --- Page Visibility --- */
+.page-content {
+    display: none;
+}
+.page-content.active {
+    display: block;
+}
+
+
+
        #install-prompt {
     position: fixed;
     bottom: 4rem; 
