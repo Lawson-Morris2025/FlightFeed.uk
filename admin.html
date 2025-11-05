@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlightFeed Admin Panel</title>
+  <style>
+    body {
+      background: #0d1117;
+      color: #00bfff;
+      font-family: system-ui, sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #00bfff;
+      text-shadow: 0 0 8px rgba(0, 191, 255, 0.6);
+    }
+
+    input[type="password"],
+    button {
+      margin-top: 1rem;
+      padding: 0.6rem 1rem;
+      background: #000;
+      color: #00bfff;
+      border: 1px solid #00bfff;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background: #00bfff;
+      color: #000;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 191, 255, 0.6);
+    }
+
+    #panel {
+      display: none;
+      margin-top: 2rem;
+      background: #000;
+      border: 1px solid rgba(0, 191, 255, 0.3);
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 0 20px rgba(0, 191, 255, 0.2);
+    }
+
+    #logout {
+      margin-top: 2rem;
+      background: none;
+      color: #888;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>FlightFeed Admin Login</h1>
+  <input type="password" id="adminPass" placeholder="Enter admin password" />
+  <button onclick="checkPass()">Login</button>
+
+  <div id="panel">
+    <h2>Admin Tools</h2>
+    <p>Add alerts, notes, or manage content here.</p>
+    <button onclick="alert('New alert added!')">➕ Add Alert</button>
+    <button onclick="alert('Zone updated!')">📍 Update Zone</button>
+
+    <br />
+    <button id="logout" onclick="logout()">Log out</button>
+  </div>
+
+  <script>
+    function checkPass() {
+      const pass = document.getElementById("adminPass").value;
+      // ⚠️ change this password to your own secret key
+      if (pass === "FlightFeed2025!") {
+        localStorage.setItem("admin", "true");
+        document.getElementById("panel").style.display = "block";
+        document.getElementById("adminPass").style.display = "none";
+        document.querySelector("button").style.display = "none";
+        document.querySelector("h1").textContent = "Admin Panel";
+      } else {
+        alert("Incorrect password.");
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("admin");
+      location.reload();
+    }
+
+    // Auto-login if previously authenticated
+    if (localStorage.getItem("admin") === "true") {
+      document.getElementById("panel").style.display = "block";
+      document.getElementById("adminPass").style.display = "none";
+      document.querySelector("button").style.display = "none";
+      document.querySelector("h1").textContent = "Admin Panel";
+    }
+  </script>
+</body>
+</html>
