@@ -172,7 +172,12 @@
             </p>
         </div>
         
-        <!-- iOS Add to Homescreen Instructions (Mobile Only) --><!-- Hidden on screen sizes 'sm' and larger --><div class="bg-blue-900/30 p-4 mb-6 rounded-xl neon-border border-blue-500/50 block sm:hidden">
+        <!-- iOS Add to Homescreen Instructions (Mobile Only) --><!-- Added ID and logic for dismissal --><div id="install-instructions" class="bg-blue-900/30 p-4 mb-6 rounded-xl neon-border border-blue-500/50 block sm:hidden relative">
+            
+            <!-- X Dismiss Button --><button id="close-instructions-x" class="absolute top-2 right-2 p-1 text-lg leading-none text-blue-300 hover:text-cyan-400 transition" aria-label="Close instructions">
+                &times;
+            </button>
+
             <h3 class="text-lg font-bold text-blue-300 mb-2 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2 text-blue-400 flex-shrink-0">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5h3m-6.75-2.25h10.5M18 6.75h-.75m-11.25 0H5.25m5.517 7.721 2.572-2.572m-2.572 2.572-2.572-2.572m2.572 2.572V19.5m0-12.75v12.75" />
@@ -187,6 +192,12 @@
                 <li>Scroll down and select <span class="font-bold text-cyan-400">Add to Home Screen</span>.</li>
                 <li>Tap <span class="font-bold text-cyan-400">Add</span> to install the app.</li>
             </ol>
+            
+            <!-- Don't Show Again Button --><div class="mt-4 text-right">
+                <button id="hide-instructions-permanent" class="text-xs font-semibold text-blue-300 hover:text-cyan-400 transition duration-150 underline">
+                    Don't show this again
+                </button>
+            </div>
         </div>
 
 
@@ -444,7 +455,45 @@
             });
         }
 
-        // Modal Functionality
+        // --- iOS Install Instructions Dismissal Logic ---
+        const installInstructions = document.getElementById('install-instructions');
+        const closeInstructionsXBtn = document.getElementById('close-instructions-x');
+        const hideInstructionsBtn = document.getElementById('hide-instructions-permanent');
+        const HIDE_KEY = 'hideInstallInstructions';
+
+        function hideInstructions() {
+            installInstructions.style.display = 'none';
+        }
+        
+        function setHidePermanent() {
+            // Set flag in localStorage and hide the element
+            try {
+                localStorage.setItem(HIDE_KEY, 'true');
+            } catch (e) {
+                console.error("Could not use localStorage to set preference.", e);
+            }
+            hideInstructions();
+        }
+
+        function checkAndHideInstructions() {
+            // Check if user has previously opted to hide the banner
+            const shouldHide = localStorage.getItem(HIDE_KEY) === 'true';
+            if (shouldHide) {
+                hideInstructions();
+            }
+        }
+
+        if (closeInstructionsXBtn) {
+            // Simply hide the banner for the current session when 'X' is pressed
+            closeInstructionsXBtn.addEventListener('click', hideInstructions);
+        }
+
+        if (hideInstructionsBtn) {
+            // Hide the banner permanently when 'Don't show this again' is pressed
+            hideInstructionsBtn.addEventListener('click', setHidePermanent);
+        }
+
+        // --- Modal Functionality (Opinion Modal) ---
         const modal = document.getElementById('opinion-modal');
         const showModalBtn = document.getElementById('show-opinion-modal');
         const closeModalXBtn = document.getElementById('close-modal-btn-x');
@@ -492,6 +541,7 @@
         // Main App initialization
         document.addEventListener('DOMContentLoaded', () => {
             updateOnlineStatus(); // Set initial online/offline status
+            checkAndHideInstructions(); // Check user preference for install banner
             populateCountyFilter();
             applyFilters(); // Initial render
             
