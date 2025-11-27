@@ -5,20 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>flightfeed.uk - South Wales Zone Filter</title>
     
-    <!-- Essential Mobile Metadata -->
-    <meta name="theme-color" content="#0a0a1a">
+    <!-- Essential Mobile Metadata --><meta name="theme-color" content="#0a0a1a">
     
-    <!-- PWA/IOS Setup for 'F' Logo & Standalone App Mode -->
-    <!-- Favicon (General) - Blue 'F' -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%2300FFFF'>F</text></svg>">
+    <!-- PWA/IOS Setup for 'F' Logo & Standalone App Mode --><!-- Favicon (General) - Simple Blue 'F' for browser tabs --><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-family='Orbitron' font-size='90' fill='%2300FFFF'>F</text></svg>">
     
-    <!-- iOS PWA/Homescreen Setup -->
-    <!-- Makes the app launch fullscreen without browser chrome -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- iOS PWA/Homescreen Setup --><!-- Makes the app launch fullscreen without browser chrome --><meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="FlightFeed">
-    <!-- Apple Touch Icon - Blue 'F' on Dark Background -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230a0a1a'/><text y='.9em' font-size='90' fill='%2300FFFF' font-family='Orbitron'>F</text></svg>">
+    <meta name="apple-mobile-web-app-title" content="FlightFeed UK">
+    <!-- Apple Touch Icon - Custom 'F' with 'flightfeed.uk' text on dark background --><link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230a0a1a'/><defs><linearGradient id='grad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%2300BFFF;stop-opacity:1' /><stop offset='100%' style='stop-color:%235B42F3;stop-opacity:1' /></linearGradient></defs><text x='50%' y='55%' font-family='Orbitron' font-size='70' fill='url(%23grad)' text-anchor='middle' dominant-baseline='middle'>F</text><text x='50%' y='85%' font-family='Inter, sans-serif' font-size='18' fill='%238AAEF9' text-anchor='middle'>flightfeed.uk</text></svg>">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght[400;600;800](https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600;800&display=swap)&display=swap" rel="stylesheet">
@@ -119,11 +113,9 @@
 </head>
 <body class="bg-dark-grid text-gray-200 min-h-screen">
 
-    <!-- Opinion Popup Modal -->
-    <div id="opinion-modal" class="modal-overlay hidden">
+    <!-- Opinion Popup Modal --><div id="opinion-modal" class="modal-overlay hidden">
         <div class="modal-content neon-border border-cyan-500/80">
-            <!-- Close Button -->
-            <button id="close-modal-btn-x" class="close-btn" aria-label="Close form">
+            <!-- Close Button --><button id="close-modal-btn-x" class="close-btn" aria-label="Close form">
                 &times;
             </button>
             
@@ -132,8 +124,7 @@
             </h2>
             <p class="text-gray-400 text-center mb-6">Help us refine this resource. Your feedback is confidential and appreciated!</p>
 
-            <!-- Formspree Form Placeholder (Replace with your actual endpoint) -->
-            <form action="https://formspree.io/f/YOUR_FORMSPREE_ENDPOINT" method="POST" class="space-y-4">
+            <!-- Formspree Form Placeholder (Replace with your actual endpoint) --><form action="https://formspree.io/f/YOUR_FORMSPREE_ENDPOINT" method="POST" class="space-y-4">
                 <div>
                     <label for="feedback_name" class="block text-sm font-medium text-cyan-400">Your Name (Optional)</label>
                     <input type="text" name="name" id="feedback_name" class="mt-1 block w-full bg-gray-700/50 border border-cyan-500/30 rounded-md shadow-sm p-2 text-white focus:ring-cyan-500 focus:border-cyan-500">
@@ -154,32 +145,25 @@
         </div>
     </div>
     
-    <!-- Main content container, fluid width on mobile -->
-    <div class="w-full max-w-7xl mx-auto p-4 md:p-8">
-        <!-- Header -->
-        <header class="text-center mb-6 p-2 border-b-2 border-cyan-500/50">
-            <!-- Status Row: Online Status and Zone Count -->
-            <div class="flex justify-between items-center mb-1">
-                <!-- Status Indicator -->
-                <p id="status-indicator" class="text-xs font-light tracking-widest text-cyan-400 font-mono flex items-center">
+    <!-- Main content container, fluid width on mobile --><div class="w-full max-w-7xl mx-auto p-4 md:p-8">
+        <!-- Header --><header class="text-center mb-6 p-2 border-b-2 border-cyan-500/50">
+            <!-- Status Row: Online Status and Zone Count --><div class="flex justify-between items-center mb-1">
+                <!-- Status Indicator --><p id="status-indicator" class="text-xs font-light tracking-widest text-cyan-400 font-mono flex items-center">
                     <span id="status-dot" class="inline-block w-2 h-2 rounded-full mr-2 bg-yellow-500 animate-pulse"></span>
                     >> Status: Initializing
                 </p>
-                <!-- Zone Load Status -->
-                <p id="zone-status" class="text-xs font-light tracking-widest text-cyan-400 font-mono">
+                <!-- Zone Load Status --><p id="zone-status" class="text-xs font-light tracking-widest text-cyan-400 font-mono">
                     >> Data: Static (<span id="total-locations">0</span> Zones)
                 </p>
             </div>
 
-            <!-- Title -->
-            <h1 class="text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight neon-text uppercase">
+            <!-- Title --><h1 class="text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight neon-text uppercase">
                 flightfeed.uk
             </h1>
             <p class="text-md sm:text-xl font-semibold tracking-wide text-gray-300 mt-1">South Wales Drone Flight Locations</p>
         </header>
 
-        <!-- Warning Box - Ensures text is readable even if it wraps -->
-        <div class="bg-red-900/40 p-3 mb-6 rounded-xl neon-border border-red-500/50">
+        <!-- Warning Box - Ensures text is readable even if it wraps --><div class="bg-red-900/40 p-3 mb-6 rounded-xl neon-border border-red-500/50">
             <p class="text-xs sm:text-sm font-semibold text-red-300 flex items-start">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-3 text-red-400 flex-shrink-0 mt-0.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.026 3.3 1.77 3.3h13.72c1.744 0 2.63-1.8 1.77-3.3L13.722 4.072a1.725 1.725 0 0 0-3.444 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
@@ -188,9 +172,7 @@
             </p>
         </div>
         
-        <!-- iOS Add to Homescreen Instructions (Mobile Only) -->
-        <!-- Hidden on screen sizes 'sm' and larger -->
-        <div class="bg-blue-900/30 p-4 mb-6 rounded-xl neon-border border-blue-500/50 block sm:hidden">
+        <!-- iOS Add to Homescreen Instructions (Mobile Only) --><!-- Hidden on screen sizes 'sm' and larger --><div class="bg-blue-900/30 p-4 mb-6 rounded-xl neon-border border-blue-500/50 block sm:hidden">
             <h3 class="text-lg font-bold text-blue-300 mb-2 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2 text-blue-400 flex-shrink-0">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5h3m-6.75-2.25h10.5M18 6.75h-.75m-11.25 0H5.25m5.517 7.721 2.572-2.572m-2.572 2.572-2.572-2.572m2.572 2.572V19.5m0-12.75v12.75" />
@@ -208,19 +190,15 @@
         </div>
 
 
-        <!-- Filter Controls -->
-        <div class="bg-secondary-bg p-4 mb-8 rounded-xl neon-border border-cyan-500/30 shadow-2xl">
+        <!-- Filter Controls --><div class="bg-secondary-bg p-4 mb-8 rounded-xl neon-border border-cyan-500/30 shadow-2xl">
             <div class="flex flex-col sm:flex-row gap-4 items-end">
-                <!-- Location Filter -->
-                <div class="w-full sm:w-1/3">
+                <!-- Location Filter --><div class="w-full sm:w-1/3">
                     <label for="area-filter" class="block text-sm font-medium text-cyan-400 mb-1">Filter by Area/County</label>
                     <select id="area-filter" class="filter-select w-full bg-gray-700/50 border border-cyan-500/30 rounded-lg text-white p-2.5 shadow-md focus:ring-cyan-500 focus:border-cyan-500">
-                        <!-- Options populated by JS -->
-                    </select>
+                        <!-- Options populated by JS --></select>
                 </div>
                 
-                <!-- Risk Level Filter -->
-                <div class="w-full sm:w-1/3">
+                <!-- Risk Level Filter --><div class="w-full sm:w-1/3">
                     <label for="risk-filter" class="block text-sm font-medium text-cyan-400 mb-1">Minimum Risk Level</label>
                     <select id="risk-filter" class="filter-select w-full bg-gray-700/50 border border-cyan-500/30 rounded-lg text-white p-2.5 shadow-md focus:ring-cyan-500 focus:border-cyan-500">
                         <option value="0">All Levels</option>
@@ -230,8 +208,7 @@
                     </select>
                 </div>
 
-                <!-- Action Button -->
-                <div class="w-full sm:w-1/3 flex justify-end">
+                <!-- Action Button --><div class="w-full sm:w-1/3 flex justify-end">
                     <button id="apply-filters-btn" class="w-full sm:w-auto px-6 py-2.5 text-lg font-bold rounded-xl text-gray-900 load-more-btn uppercase">
                         Apply Filters
                     </button>
@@ -239,20 +216,16 @@
             </div>
         </div>
 
-        <!-- Location Cards Grid -->
-        <div id="location-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <!-- Cards will be injected here -->
-        </div>
+        <!-- Location Cards Grid --><div id="location-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Cards will be injected here --></div>
 
-        <!-- Load More Button -->
-        <div class="text-center mb-10">
+        <!-- Load More Button --><div class="text-center mb-10">
             <button id="load-more-btn" class="load-more-btn text-gray-900 font-extrabold py-3 px-8 rounded-full shadow-lg uppercase text-lg tracking-widest transition duration-300">
                 Load More Zones (0/0 displayed)
             </button>
         </div>
         
-        <!-- Footer -->
-        <footer class="text-center text-sm text-gray-500 border-t border-cyan-500/20 pt-4">
+        <!-- Footer --><footer class="text-center text-sm text-gray-500 border-t border-cyan-500/20 pt-4">
             <p>&copy; 2025 flightfeed.uk concept | Data Simulated.</p>
             <button id="show-opinion-modal" class="text-cyan-500 hover:text-cyan-400 mt-1 transition duration-150">
                 Give Feedback
@@ -261,15 +234,13 @@
 
     </div>
     
-    <!-- Back to Top Button -->
-    <button id="back-to-top" class="fixed bottom-5 right-5 p-3 rounded-full load-more-btn opacity-0 hidden transition-opacity duration-300 shadow-xl z-50" aria-label="Back to top">
+    <!-- Back to Top Button --><button id="back-to-top" class="fixed bottom-5 right-5 p-3 rounded-full load-more-btn opacity-0 hidden transition-opacity duration-300 shadow-xl z-50" aria-label="Back to top">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 text-gray-900">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
         </svg>
     </button>
 
-    <!-- JavaScript Logic -->
-    <script>
+    <!-- JavaScript Logic --><script>
         // --- 1. Network Status Setup ---
         
         function updateOnlineStatus() {
@@ -450,91 +421,84 @@
         function loadMore() {
             displayLimit += locationsPerPage;
             renderLocations(filteredLocations);
-        }
-        
-        // --- Back to Top Logic ---
-        const backToTopBtn = document.getElementById('back-to-top');
-
-        function toggleBackToTopButton() {
-            if (window.scrollY > 300) { // Show button after scrolling 300px
-                backToTopBtn.classList.remove('hidden');
-                backToTopBtn.classList.add('opacity-100');
-            } else {
-                backToTopBtn.classList.remove('opacity-100');
-                // Use a short delay before adding 'hidden' to allow opacity transition to finish
-                setTimeout(() => {
-                    backToTopBtn.classList.add('hidden');
-                }, 300); 
-            }
-        }
-
-        function scrollToTop() {
-            window.scrollTo({
-                top: 0,
+            
+            // Scroll to the latest loaded content
+            window.scrollBy({
+                top: 400, // Scroll down by a fixed amount (adjust as needed)
                 behavior: 'smooth'
             });
         }
+        
+        // --- 3. Initialization and Event Listeners ---
 
-        // --- Initialization ---
-
-        function initialize() {
-            // Populate County Filter
-            const countiesList = ['All', ...new Set(mockLocations.map(loc => loc.county))].sort();
-            countiesList.forEach(county => {
+        function populateCountyFilter() {
+            // Get unique, sorted list of counties
+            const uniqueCounties = ['All', ...new Set(mockLocations.map(l => l.county))].sort();
+            
+            areaFilter.innerHTML = '';
+            uniqueCounties.forEach(county => {
                 const option = document.createElement('option');
                 option.value = county;
-                option.textContent = county;
+                option.textContent = county === 'All' ? 'All Areas' : county;
                 areaFilter.appendChild(option);
             });
-
-            // Initial render
-            applyFilters();
-
-            // Event Listeners
-            applyBtn.addEventListener('click', applyFilters);
-            loadMoreBtn.addEventListener('click', loadMore);
-            
-            // Optional: Auto-apply filters on select change
-            areaFilter.addEventListener('change', applyFilters);
-            riskFilter.addEventListener('change', applyFilters);
-            
-            // Back to Top Button Listeners
-            window.addEventListener('scroll', toggleBackToTopButton);
-            backToTopBtn.addEventListener('click', scrollToTop);
-            
-            // Initial network status check
-            updateOnlineStatus(); 
         }
 
-        // --- Modal/UX Logic ---
+        // Modal Functionality
+        const modal = document.getElementById('opinion-modal');
+        const showModalBtn = document.getElementById('show-opinion-modal');
+        const closeModalXBtn = document.getElementById('close-modal-btn-x');
+        const closeModalLaterBtn = document.getElementById('close-modal-btn-later');
+
+        function toggleModal(show) {
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
         
-        const opinionModal = document.getElementById('opinion-modal');
-        const showOpinionBtn = document.getElementById('show-opinion-modal');
-        const closeModalX = document.getElementById('close-modal-btn-x');
-        const closeModalLater = document.getElementById('close-modal-btn-later');
+        showModalBtn.addEventListener('click', () => toggleModal(true));
+        closeModalXBtn.addEventListener('click', () => toggleModal(false));
+        closeModalLaterBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleModal(false);
+        });
 
-        function openModal() {
-            opinionModal.classList.remove('hidden');
-        }
-
-        function closeModal() {
-            opinionModal.classList.add('hidden');
-        }
-
-        showOpinionBtn.addEventListener('click', openModal);
-        closeModalX.addEventListener('click', closeModal);
-        closeModalLater.addEventListener('click', closeModal);
-        
-        // Close modal on outside click
-        opinionModal.addEventListener('click', (e) => {
-            if (e.target === opinionModal) {
-                closeModal();
+        // Close modal when clicking outside (on the overlay)
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                toggleModal(false);
             }
         });
 
-        // Start the application initialization
-        window.addEventListener('load', initialize);
+        // Back to Top functionality
+        const backToTopBtn = document.getElementById('back-to-top');
 
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.remove('opacity-0', 'hidden');
+                backToTopBtn.classList.add('opacity-100', 'flex');
+            } else {
+                backToTopBtn.classList.remove('opacity-100', 'flex');
+                backToTopBtn.classList.add('opacity-0', 'hidden');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Main App initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            updateOnlineStatus(); // Set initial online/offline status
+            populateCountyFilter();
+            applyFilters(); // Initial render
+            
+            // Event listeners for filtering
+            applyBtn.addEventListener('click', applyFilters);
+            loadMoreBtn.addEventListener('click', loadMore);
+        });
     </script>
 </body>
 </html>
