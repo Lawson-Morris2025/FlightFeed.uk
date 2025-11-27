@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flightfeed.uk - South Wales Zone Filter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom neon glow and dark theme */
+        :root {
+            --neon-blue: #00BFFF;
+            --neon-cyan: #00FFFF;
+            --bg-dark: #0a0a1a;
+        }
+        .neon-text {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 20px var(--neon-cyan), 0 0 30px rgba(0, 255, 255, 0.5);
+            font-family: 'Orbitron', sans-serif;
+        }
+        .neon-border {
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 8px rgba(0, 191, 255, 0.5), 0 0 15px rgba(0, 191, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .neon-border:hover {
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.8), 0 0 25px rgba(0, 191, 255, 0.6);
+            transform: translateY(-2px);
+        }
+        .bg-dark-grid {
+            background-color: var(--bg-dark);
+            background-image: linear-gradient(0deg, transparent 24%, rgba(0, 191, 255, 0.03) 25%, rgba(0, 191, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 191, 255, 0.03) 75%, rgba(0, 191, 255, 0.03) 76%, transparent 77%), linear-gradient(90deg, transparent 24%, rgba(0, 191, 255, 0.03) 25%, rgba(0, 191, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 191, 255, 0.03) 75%, rgba(0, 191, 255, 0.03) 76%, transparent 77%);
+            background-size: 50px 50px;
+        }
+        .load-more-btn {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-cyan));
+            box-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-cyan);
+            transition: all 0.3s ease;
+        }
+        .load-more-btn:hover {
+            box-shadow: 0 0 15px var(--neon-blue), 0 0 30px var(--neon-cyan);
+            transform: scale(1.02);
+        }
+        .load-more-btn:disabled {
+            background: #1a1a2a;
+            color: #4b5563;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .filter-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 9l4-4 4 4m0 6l-4 4-4-4' /%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        /* Modal specific styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: var(--bg-dark);
+            width: 90%;
+            max-width: 500px;
+            padding: 1.5rem;
+            border-radius: 12px;
+            animation: fadeIn 0.3s ease-out;
+            position: relative; /* Needed for the close button */
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            line-height: 1;
+            color: #ccc;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.2s;
+        }
+        .close-btn:hover {
+            color: var(--neon-cyan);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-dark-grid text-gray-200 min-h-screen font-inter">
+
+    <!-- Opinion Popup Modal -->
+    <div id="opinion-modal" class="modal-overlay hidden">
+        <div class="modal-content neon-border border-cyan-500/80">
+            <!-- Close Button -->
+            <button id="close-modal-btn-x" class="close-btn" aria-label="Close form">
+                &times;
+            </button>
+            
+            <h2 class="text-3xl font-extrabold text-center mb-4 neon-text uppercase tracking-widest">
+                We Want Your Opinion
+            </h2>
+            <p class="text-gray-400 text-center mb-6">Help us refine this resource. Your feedback is confidential and appreciated!</p>
+
+            <!-- Formspree Form Placeholder -->
+            <!-- NOTE: Replace "YOUR_FORMSPREE_ENDPOINT" with your actual Formspree URL -->
+            <form action="https://formspree.io/f/YOUR_FORMSPREE_ENDPOINT" method="POST" class="space-y-4">
+                <div>
+                    <label for="feedback_name" class="block text-sm font-medium text-cyan-400">Your Name (Optional)</label>
+                    <input type="text" name="name" id="feedback_name" class="mt-1 block w-full bg-gray-700/50 border border-cyan-500/30 rounded-md shadow-sm p-2 text-white focus:ring-cyan-500 focus:border-cyan-500">
+                </div>
+                <div>
+                    <label for="feedback_message" class="block text-sm font-medium text-cyan-400">Feedback / Suggestion</label>
+                    <textarea name="message" id="feedback_message" rows="4" required class="mt-1 block w-full bg-gray-700/50 border border-cyan-500/30 rounded-md shadow-sm p-2 text-white focus:ring-cyan-500 focus:border-cyan-500"></textarea>
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" id="close-modal-btn-later" class="px-4 py-2 text-sm font-medium rounded-full text-gray-300 bg-gray-700 hover:bg-gray-600 transition duration-150">
+                        Maybe Later
+                    </button>
+                    <button type="submit" class="load-more-btn text-gray-900 font-extrabold py-2 px-4 rounded-full shadow-lg uppercase text-sm tracking-widest">
+                        Submit Feedback
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto p-4 sm:p-8">
+        <!-- Header -->
+        <header class="text-center mb-8 p-4 border-b-2 border-cyan-500/50">
+            <!-- Mobile optimization: Smaller font on mobile for status -->
+            <p id="zone-status" class="text-xs sm:text-lg font-light tracking-widest text-cyan-400 mb-1 font-mono">
+                >> Status: Static Dataset Loaded (120 Zones)
+            </p>
+            <!-- Mobile optimization: Adjust header size -->
+            <h1 class="text-5xl sm:text-7xl font-extrabold tracking-tight neon-text uppercase">
+                flightfeed.uk
+            </h1>
+            <p class="text-lg sm:text-2xl font-semibold tracking-wide text-gray-300 mt-2">South Wales Drone Flight Locations</p>
+        </header>
+
+        <!-- Warning Box -->
+        <div class="bg-red-900/40 p-4 mb-8 rounded-xl neon-border border-red-500/50">
+            <p class="text-sm font-semibold text-red-300 flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 mr-3 text-red-400 flex-shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.026 3.3 1.77 3.3h13.72c1.744 0 2.63-1.8 1.77-3.3L13.722 4.072a1.725 1.725 0 0 0-3.444 0L2.697 16.126ZM12 15.75h.007" />
+                </svg>
+                CRITICAL AIRSPACE PROTOCOL: This is a static list. **Always** check official NATS airspace maps, current NOTAMs, and local weather before flying. Landowner permission is *always* required for take-off/landing.
+            </p>
+        </div>
+
+        <!-- Filter Dropdown - Mobile optimization: w-full for filter -->
+        <div class="mb-8 p-4 bg-gray-800/70 rounded-xl neon-border border-cyan-500/50 flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
+            <label for="region-filter" class="text-lg font-bold text-cyan-400 tracking-wider">Filter By Region:</label>
+            <select id="region-filter" class="filter-select bg-gray-900 border border-cyan-500/50 text-white p-3 rounded-lg shadow-inner focus:ring-2 focus:ring-cyan-500 w-full sm:w-64 cursor-pointer">
+                <!-- Options populated by JS -->
+            </select>
+            <p id="location-count-display" class="text-sm text-gray-400 italic sm:ml-4"></p>
+        </div>
+
+        <!-- Location Cards Container - Mobile optimization: only 1 column on small screens -->
+        <div id="location-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Cards will be inserted here by JavaScript -->
+        </div>
+
+        <!-- Load More Section -->
+        <div id="load-more-section" class="flex justify-center mt-10">
+            <button id="load-more-btn" class="load-more-btn text-gray-900 font-extrabold py-3 px-8 rounded-full shadow-lg uppercase text-sm tracking-widest">
+                Load More Locations (10)
+            </button>
+        </div>
+
+        <!-- End of List Message -->
+        <div id="end-message" class="hidden text-center mt-10 p-4 border border-green-500/50 rounded-xl bg-green-900/30">
+            <p class="text-lg font-bold text-green-300">End of Data Feed :: All Zones Loaded</p>
+        </div>
+    </div>
+
+    <script>
+        // --- EXPANDED DRONE LOCATIONS DATASET (STATIC/REAL-WORLD REFERENCES) ---
+        // Total locations: 120
+        const droneLocations = [
+            // CARDIFF (15)
+            { region: "Cardiff", name: "Cardiff Bay Barrage (East)", type: "Coastal / Water", status: "Highly Restricted", permission: "Requires Cardiff Harbour Auth. consent. Avoid Heliport traffic.", caution: "High density of people and boats. Close proximity to controlled airspace." },
+            { region: "Cardiff", name: "Garth Mountain Summit", type: "Hilltop / Views", status: "Public Access", permission: "Generally public access, check local bylaws and respect common land users.", caution: "High winds, exposed location. Watch for paragliders and high foot traffic." },
+            { region: "Cardiff", name: "Wentlooge Flats (Marsh Road)", type: "Coastal Flats / Rural", status: "Agricultural / Public Access", permission: "Requires landowner permission for TOAL.", caution: "Proximity to Newport Wetlands (FRZ) and Bristol Channel bird flight paths." },
+            { region: "Cardiff", name: "Llandaff Fields (Distant Edge)", type: "Urban Green Space (Caution)", status: "Council Owned (Permit likely)", permission: "Strictly avoid crowds (150m rule). Fly only in empty areas at quiet times.", caution: "Urban area. High risk of breaching 50m/150m rules. High park usage." },
+            { region: "Cardiff", name: "St Mellons Stone Circle Area", type: "Park / Historic", status: "Council / Historic", permission: "Council land. Fly from surrounding fields, avoiding the monument.", caution: "Archaeological sensitivity. Maintain distance from residential areas." },
+            { region: "Cardiff", name: "Taff Trail (Northern Edge)", type: "Trail / River", status: "Public Access", permission: "Avoid flying low over the trail, cycle paths, and river users.", caution: "Keep distance from cyclists and pedestrians. Signal risk due to trees." },
+            { region: "Cardiff", name: "Castell Coch Viewpoint (Distant)", type: "Forest Edge", status: "NT/Private", permission: "Fly only from distant public land, avoiding the National Trust structure.", caution: "Strictly avoid the castle structure and surrounding NT land." },
+            { region: "Cardiff", name: "Bute Park Perimeter (Northern)", type: "Urban Park (High Risk)", status: "Highly Restricted", permission: "Cardiff Council park. Requires permit. Do not fly over crowds.", caution: "CRITICAL: High foot traffic, major urban area. High chance of violation." },
+            { region: "Cardiff", name: "Flat Holm Island View (Lavernock Point)", type: "Coastal / Viewpoint", status: "Public Access", permission: "Fly from mainland only. Do not attempt flight to or over the island (protected).", caution: "Extreme long-distance flight required. High risk of radio link loss." },
+            { region: "Cardiff", name: "Taff's Well Overlook", type: "Hillside", status: "Public Access", permission: "Good vantage point. Avoid flying over the busy A470 corridor.", caution: "Risk of interference from high-voltage power lines and passing traffic." },
+            { region: "Cardiff", name: "Cardiff Airport AFZ (Outer Limit)", type: "Controlled Airspace Edge", status: "EXTREME CAUTION (AFZ)", permission: "CRITICAL: Must maintain strict horizontal/vertical distance from AFZ boundary.", caution: "High risk of collision with manned aircraft. CHECK NATS MAPS before flight." },
+            { region: "Cardiff", name: "Cefn Onn Park Area (North)", type: "Hillside / Residential Edge", status: "Council / Residential", permission: "Use extreme caution. Too close to Lisvane/Thornhill housing estates. Better to choose a site further north.", caution: "High risk of breaching 150m rule. High traffic area." },
+            { region: "Cardiff", name: "Peterstone Wentlooge Flats", type: "Coastal Flats / Rural", status: "Agricultural", permission: "Requires landowner permission for TOAL. Flat, open marshland.", caution: "Proximity to bird flight paths. Very exposed to strong winds." },
+            { region: "Cardiff", name: "Lisvane Reservoir (Distant View)", type: "Reservoir / Water", status: "Dwr Cymru / Private", permission: "Fly only from adjacent public land. Avoid flying over water infrastructure.", caution: "Sensitive infrastructure. Check local Dwr Cymru land rules." },
+            { region: "Cardiff", name: "Pentyrch Common (Western Edge)", type: "Moorland / Village Edge", status: "Public Access", permission: "Open area near Pentyrch. Respect village privacy.", caution: "Monitor for equestrian activity and dog walkers." },
+
+            // NEWPORT & MONMOUTHSHIRE (10)
+            { region: "Newport & Monmouthshire", name: "Newport Transporter Bridge (Distant)", type: "Historic / Industrial", status: "Highly Restricted", permission: "CRITICAL: Controlled airspace and high traffic area. Requires explicit permission.", caution: "Urban environment, high traffic, and complex airspace. High-risk zone." },
+            { region: "Newport & Monmouthshire", name: "The Sugar Loaf (Abergavenny)", type: "Mountain / Iconic", status: "National Trust", permission: "NT land. Check current NT drone policy (recreational flights often banned).", caution: "Very high foot traffic. Avoid unless flying early morning." },
+            { region: "Newport & Monmouthshire", name: "Tintern Abbey Viewpoint (Distant)", type: "Historic / Valley", status: "Cadw / Private", permission: "Requires Cadw permission to fly over the Abbey. Use distant woodland vantage points.", caution: "Protected historic site. Narrow valley can cause GPS signal instability." },
+            { region: "Newport & Monmouthshire", name: "Wentwood Forest (Remote Sections)", type: "Forest / Woodland", status: "NRW / Public Access", permission: "Check NRW permit requirements. Fly from cleared areas or forest edge.", caution: "Dense canopy makes VLOS challenging. Logging activity possible." },
+            { region: "Newport & Monmouthshire", name: "The Blorenge (Abergavenny)", type: "Mountain / Iconic", status: "National Park", permission: "Popular mountain near Abergavenny. Check for paraglider activity.", caution: "High wind risk. Share the airspace with paragliders." },
+            { region: "Newport & Monmouthshire", name: "Goldcliff Seawall", type: "Coastal / Estuary", status: "Public Path / SSSI", permission: "Public access to the path. Avoid flying over protected SSSI marshland.", caution: "Proximity to Newport Wetlands FRZ. Sensitive bird nesting site." },
+            { region: "Newport & Monmouthshire", name: "Whitecastle (Grosmont)", type: "Historic / Rural", status: "Cadw / Rural", permission: "Requires Cadw permission to fly over the castle. Use surrounding quiet fields.", caution: "Ancient site. Very quiet rural area; respect local residents." },
+            { region: "Newport & Monmouthshire", name: "Goytre Wharf (Monmouthshire Canal)", type: "Inland Water / Historic", status: "Public Access", permission: "Fly along remote stretches, away from bridges and activity centres.", caution: "Risk of drone falling into the water. Respect canal users." },
+            { region: "Newport & Monmouthshire", name: "Penarth Docks (Distant Water)", type: "Coastal / Industrial", status: "Docks Authority / Caution", permission: "Requires permission from the Docks Authority. Avoid boat traffic.", caution: "Busy marine area. High risk of disturbance to port operations." },
+            { region: "Newport & Monmouthshire", name: "Llandegfedd Reservoir", type: "Reservoir / Recreation", status: "Welsh Water / Recreation", permission: "Popular sailing/activity spot. Check if Welsh Water permits drones for TOAL.", caution: "Risk to boats and water users. Maintain distance from all water activity." },
+
+            // SWANSEA (15)
+            { region: "Swansea", name: "Mumbles Head & Lighthouse (Distant)", type: "Coastal / Town", status: "Extremely Difficult", permission: "Fly only from distant public land, avoiding the town and lighthouse.", caution: "Highly congested with people and structures. High-risk zone." },
+            { region: "Swansea", name: "Swansea Bay (East Beach)", type: "Coastal / Beach", status: "Public Beach", permission: "Generally permitted from the beach area, avoiding Swansea Docks.", caution: "Watch for low-flying traffic associated with Swansea Airport (check zones)." },
+            { region: "Swansea", name: "Rhossili Bay (Gower)", type: "Coastal / Iconic", status: "National Trust / Public Beach", permission: "NT land. Check NT drone policy. Generally tolerated from the beach, but avoid the cliff tops.", caution: "Iconic location, very busy. High winds likely. Avoid Worm's Head peninsula." },
+            { region: "Swansea", name: "Three Cliffs Bay (Gower)", type: "Coastal / Iconic", status: "National Trust", permission: "NT land. Fly from the sand at low tide, away from the cliffs.", caution: "Dangerous cliff terrain. High foot traffic near the cliffs." },
+            { region: "Swansea", name: "Oxwich Bay (Gower)", type: "Coastal / Beach", status: "National Trust", permission: "NT land. Popular beach. Fly early, away from bathers.", caution: "Popular tourist spot. Risk of people/structure proximity violations." },
+            { region: "Swansea", name: "Whiteford Sands (Gower)", type: "Coastal / Beach", status: "National Trust / Remote", permission: "NT land. Remote beach, generally quieter than Rhossili.", caution: "Check tide times. Avoid the ancient Whiteford Point Lighthouse (protected)." },
+            { region: "Swansea", name: "Crymlyn Burrows (Distant)", type: "Coastal / Dunes", status: "Wildlife / SSSI", permission: "Fly from adjacent areas, not over the SSSI itself.", caution: "Strictly avoid wildlife disturbance. Check NATS for airspace near Neath/Port Talbot." },
+            { region: "Swansea", name: "Loughor Estuary (North Shore)", type: "Estuary / Flats", status: "Public Access / SSSI", permission: "Fly from the shore, avoiding low flight over the sensitive SSSI mudflats.", caution: "Bird flight paths. Mudflats are dangerous to approach on foot." },
+            { region: "Swansea", name: "Bishopston Valley (Gower)", type: "Valley / Woodland", status: "National Trust", permission: "NT land. Check NT drone policy. Difficult VLOS due to trees.", caution: "Narrow, confined space. Risk of GPS loss and signal interference." },
+            { region: "Swansea", name: "Cefn Bryn (Gower)", type: "Moorland / Hilltop", status: "Common Land / NT", permission: "Vast open moorland. Good for VLOS practice away from residences.", caution: "Exposed to high winds. Livestock (cattle and ponies) present." },
+            { region: "Swansea", name: "Gower Heritage Centre (Distant)", type: "Rural / Historic", status: "Private / Historic", permission: "Fly from distant public land, avoiding the centre and nearby farms.", caution: "Strictly avoid private property and busy roads." },
+            { region: "Swansea", name: "Pennard Cliffs (Gower)", type: "Coastal / Cliffs", status: "National Trust", permission: "NT land. Highly scenic, but exposed cliff edge.", caution: "Very high wind risk near the cliff face. Check ground stability." },
+            { region: "Swansea", name: "Clyne Gardens (Distant)", type: "Urban Park / Council", status: "Council Owned (Permit likely)", permission: "Strictly avoid flying over the gardens. Use distant perimeter access.", caution: "Urban area. High chance of violating 50m/150m rules due to park users." },
+            { region: "Swansea", name: "Fairwood Common (North Gower)", type: "Common Land", status: "Public Access", permission: "Large open area. Check for small aircraft activity from nearby private strips.", caution: "Watch for model aircraft and gliders." },
+            { region: "Swansea", name: "Kilvey Hill (Eastern Overlook)", type: "Hilltop / City View", status: "Public Access", permission: "Good urban viewpoint. Fly away from residential areas on the slopes.", caution: "Close proximity to city centre. Use caution near radio masts." },
+
+            // VALE OF GLAMORGAN & BRIDGEND (15)
+            { region: "Vale of Glamorgan & Bridgend", name: "Nash Point Lighthouse", type: "Coastal / Landmark", status: "Trinity House / Coastal Path", permission: "Coastal path access. Lighthouse is private. Fly from surrounding fields (with permission).", caution: "Dramatic, exposed cliffs. Strong wind risk. Be aware of tide times." },
+            { region: "Vale of Glamorgan & Bridgend", name: "Ogmore-by-Sea (Beach & River Mouth)", type: "Coastal / Estuary", status: "Public Beach", permission: "Generally permitted from the beach, but avoid the ruins of Ogmore Castle (Cadw land).", caution: "Popular beach in summer. Check tide times carefully. Fly away from crowds." },
+            { region: "Vale of Glamorgan & Bridgend", name: "Southerndown Cliff Tops", type: "Coastal / Cliffs", status: "National Trust / Public Access", permission: "NT land. Check NT Gower/Vale of Glamorgan policy on recreational drone use.", caution: "Stunning but highly exposed. Very strong winds expected." },
+            { region: "Vale of Glamorgan & Bridgend", name: "Llantwit Major Beach", type: "Coastal / Rocky Shore", status: "Public Access", permission: "Excellent open coastal area, great for shots of the layered cliffs.", caution: "Popular with fossil hunters. Maintain visual line of sight over the sea." },
+            { region: "Vale of Glamorgan & Bridgend", name: "Porthcawl (Newton Beach)", type: "Coastal / Dunes", status: "Public Beach", permission: "Generally permitted from the dune area, avoiding the town centre.", caution: "Avoid protected dune systems. Check local kite-flying activity." },
+            { region: "Vale of Glamorgan & Bridgend", name: "Sully Island Viewpoint (Mainland)", type: "Coastal / Viewpoint", status: "Public Access", permission: "Fly from the mainland side, not over the island (unless explicit permission gained).", caution: "Tides cut off access to the island rapidly. Watch for low-flying helicopters from nearby MOD St Athan." },
+            { region: "Vale of Glamorgan & Bridgend", name: "Porthkerry Park (Distant Fields)", type: "Park / Coast", status: "Council Owned", permission: "Use distant, non-park fields to fly over the coast. Avoid main park area.", caution: "Strictly avoid flying in the main Porthkerry park area (council restriction)." },
+            { region: "Vale of Glamorgan & Bridgend", name: "Rest Bay (Porthcawl)", type: "Coastal / Beach", status: "Public Beach", permission: "Generally fine, especially outside peak season. Avoid surfers/beach users.", caution: "Popular surfing spot; ensure drone does not interfere with water sports." },
+            { region: "Vale of Glamorgan & Bridgend", name: "Kenfig National Nature Reserve (Boundary)", type: "Dunes / Reserve", status: "RESTRICTED", permission: "STRICTLY PROHIBITED over the reserve due to highly sensitive wildlife and SSSI designation.", caution: "Critical wildlife hazard. Fly far from the reserve boundaries." },
+            { region: "Vale of Glamorgan & Bridgend", name: "Llandow Airfield Perimeter (Distant)", type: "Open Fields / Airfield", status: "EXTREME CAUTION (AFZ)", permission: "CRITICAL: Stay far outside the Airfield Flight Restriction Zone (AFZ). Contact ATC if needed.", caution: "High risk of collision with manned aircraft. CHECK NATS MAPS." },
+            { region: "Vale of Glamorgan & Bridgend", name: "Merthyr Mawr Dunes (Distant)", type: "Dunes / Nature Reserve", status: "SSSI / Private Land", permission: "Requires landowner permission. Fly only from permitted public access points.", caution: "Protected landscape. Dunes shift, making landing unstable. High winds." },
+            { region: "Vale of Glamorgan & Bridgend", name: "Candleston Castle (Distant)", type: "Historic / Dunes", status: "Cadw / Private", permission: "Avoid flying directly over the ruins. Use adjacent dune areas.", caution: "Archaeological sensitivity. High foot traffic in summer." },
+            { region: "Vale of Glamorgan & Bridgend", name: "Ewenny Moor (Near Bridgend)", type: "Rural / Flats", status: "Agricultural", permission: "Requires landowner permission. Vast flat area suitable for distance testing.", caution: "Active farmland. Look out for crops and machinery. Avoid disturbing livestock." },
+            { region: "Vale of Glamorgan & Bridgend", name: "Porthcawl Lighthouse (Distant)", type: "Coastal / Town", status: "Use Caution", permission: "Fly from far down the coast, avoiding the town centre/lighthouse structure.", caution: "Highly visible landmark. Ensure strict distance from people and structures." },
+            { region: "Vale of Glamorgan & Bridgend", name: "Coity Castle Viewpoint (Distant)", type: "Historic / Rural", status: "Cadw / Private", permission: "Fly from adjacent public area. Requires Cadw permission over the structure.", caution: "Protected historic structure. Fly high and respectfully." },
+
+            // RHONDDA CYNON TAF & CAERPHILLY (15)
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Caerphilly Mountain (North Side)", type: "Hillside / Rural", status: "Public Access", permission: "Access via public rights of way. Avoid flying near the built-up areas of Caerphilly.", caution: "Proximity to houses means strict 150m separation from congested areas is mandatory." },
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Twmbarlwm (Risca)", type: "Hilltop / Ancient Site", status: "National Trust / Public Access", permission: "NT land - check policy. Avoid landing on the scheduled ancient monument (Hill Fort).", caution: "Archaeological sensitivity. Fly high and respect the heritage site." },
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Penrhys Mountain (Rhondda)", type: "Hilltop / Valley Views", status: "Public Access", permission: "Views over the Rhondda Valley. Use open areas away from the Penrhys estate.", caution: "Adjacent to residential areas. Strict distance rules apply." },
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Rhymney Valley Ridgeline (Bargoed)", type: "Upland / Views", status: "Public Access", permission: "Vast open views along the ridgeline. Check for small scattered properties.", caution: "Wind funnels through the valleys; expect unpredictable turbulence." },
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Eglwysilan Common (Near Pontypridd)", type: "Moorland", status: "Public Access", permission: "Large open space. Generally safe, but respect livestock/horse riders.", caution: "Exposed to the elements; check weather for fog/visibility." },
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Llantrisant Common", type: "Common Land", status: "Public Access", permission: "Large common area. Good VLOS potential.", caution: "Watch for model aircraft activity, as this is a traditional model flying spot." },
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Pen-Pych Mountain (Rhondda Fawr)", type: "Mountain / Valley Edge", status: "Public Access", permission: "Dramatic views down into the Rhondda Fawr. Fly from the summit area.", caution: "Steep drops, risk of downdrafts due to the sheer valley sides." },
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Llwydcoed Common (Aberdare)", type: "Moorland / Valley", status: "Public Access", permission: "Open moorland. Check for mining remnants or unstable ground.", caution: "Remote. High exposure to wind and weather." },
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Pontypridd Common (Distant)", type: "Urban Green Space", status: "Council (High Caution)", permission: "Avoid crowds. Fly only from the furthest, highest parts of the common.", caution: "High risk of breaching 150m rule due to surrounding town." },
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Cilfynydd Common (Pontypridd)", type: "Hillside", status: "Public Access", permission: "Good height above the valley floor. Avoid flying over the A470.", caution: "Interference risk from high-voltage pylons and road traffic." },
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Craig yr Allt (Near Taff's Well)", type: "Hilltop / Cliffs", status: "Public Access", permission: "Clifftop area with good views. Avoid the quarry areas.", caution: "Sheer drops. Unstable ground near quarry edges. High winds." },
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Blaencwm (Rhondda Head)", type: "Valley Head / Remote", status: "Public Access", permission: "Furthest point of the valley. Remote and ideal for quiet flying.", caution: "Extreme exposure. Check battery for long flights in cold/wind." },
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Cefn y Brith (Caerphilly)", type: "Hilltop", status: "Public Access", permission: "Open ground with views of Caerphilly Castle (distant only).", caution: "Avoid residential views. Respect privacy." },
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Gelligaer Common", type: "Moorland / Plateau", status: "Common Land", permission: "Vast open common area. Ideal for long-range VLOS practice.", caution: "Livestock present. Exposed to strong winds." },
+            { region: "Rhondda Cynon Taf & Caerphilly", name: "Coity Mountain (Near Porth)", type: "Moorland", status: "Public Access", permission: "High ground offering expansive views of the surrounding Valleys.", caution: "Ensure strong radio link; the valley structure can cause signal drop-out." },
+
+            // NEATH PORT TALBOT & MERTHYR TYDFIL (15)
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Margam Park (Distant Area)", type: "Park / Historic", status: "Council / Historic Site", permission: "Requires council permission. Avoid flying over the Castle or deer park.", caution: "Deer are easily spooked. Maintain high altitude and distance from the herd." },
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Port Talbot Steelworks (Distant Upland)", type: "Industrial / Critical", status: "HIGHLY RESTRICTED / DANGER", permission: "CRITICAL: Industrial airspace zone. Fly only from distant upland, maintaining max distance.", caution: "Extreme risk of interference, air traffic, and legal action if flown too close." },
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Vaynor Quarries (Merthyr Tydfil)", type: "Industrial / Dangerous", status: "Private Land / Dangerous", permission: "Requires explicit permission from quarry operators. HIGHLY DANGEROUS to fly without permission.", caution: "CRITICAL: Unstable cliff faces and active industrial machinery/blasting. AVOID." },
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Glyncorrwg Ponds (Afan Valley)", type: "Recreation / Forest", status: "Council / NRW", permission: "Popular mountain biking area. Fly only when the trails are quiet.", caution: "Risk to cyclists. Maintain high altitude above the tree line and trails." },
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Upper Neath Valley (Waterfall Country)", type: "Valley / River", status: "NRW / High Traffic", permission: "Congested area. Fly high from distant, open fields.", caution: "Narrow, confined valley. Risk of GPS loss and crowd violations." },
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Hirwaun Common (Penderyn)", type: "Moorland / Upland", status: "Public Access", permission: "Vast area on the edge of the National Park.", caution: "Exposed to severe weather. Watch for military low-flying activity." },
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Vyrnwy Reservoir (Taff Fechan)", type: "Reservoir / Water", status: "Dwr Cymru Welsh Water", permission: "Check Welsh Water policy. Avoid flying over infrastructure or dam.", caution: "Sensitive water supply area. High wind risk." },
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Cwm Cadlan (Merthyr)", type: "SSSI / Moorland", status: "SSSI / Public Access", permission: "Sensitive site. Avoid disturbing wildlife. Fly from the perimeter.", caution: "Wildlife risk. Remote access requires 4x4 or hiking." },
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Craig y Llyn (Rhigos)", type: "Mountain Ridge / Lake", status: "Public Access", permission: "High ridge with stunning views. Fly from the highest accessible point.", caution: "Sheer drops and very high wind speeds are common. Extremely dangerous near the edge." },
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Kenfig Industrial Area (Distant)", type: "Industrial Edge", status: "Private / Industrial", permission: "Requires explicit permission. Maintain large distance from facilities.", caution: "Industrial hazard. Avoid magnetic interference near large metal structures." },
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Ynysangharad Park (Distant)", type: "Urban Park (High Risk)", status: "Council (Permit required)", permission: "Strictly avoid the Lido/River Taff/crowds. Use distant, empty edges.", caution: "Urban area. High risk of violation." },
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Llanharan Wind Farm (Distant)", type: "Industrial / Upland", status: "Private Land / Critical", permission: "**NEVER FLY NEAR TURBINES.** Fly from a distant public road/hillside.", caution: "CRITICAL: Air turbulence, magnetic interference, and legal risk associated with flying near turbines (150m+ minimum)." },
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Trefil Quarry (Near Merthyr Tydfil)", type: "Quarry / Exposed", status: "Private Land / Industrial", permission: "REQUIRES owner permission. Dangerous industrial site.", caution: "Unstable rock faces. High-risk flight area. Strong winds expected." },
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Mynydd Llangeinor", type: "Moorland", status: "Public Access", permission: "Open moorland near Bridgend. Good for wide-angle landscape shots.", caution: "Very open and exposed. High chance of encountering livestock." },
+            { region: "Neath Port Talbot & Merthyr Tydfil", name: "Cilfrew Hills (Neath Valley)", type: "Hillside", status: "Public Access", permission: "Good views over the Neath valley floor.", caution: "Check for nearby quarries or industrial sites." },
+
+            // CARMARTHENSHIRE & PEMBROKESHIRE (25)
+            { region: "Carmarthenshire & Pembrokeshire", name: "Pendine Sands (Carmarthen Bay)", type: "Beach / Military", status: "DANGER ZONE / RESTRICTED", permission: "Check military firing range schedule. Flying may be strictly prohibited on certain days.", caution: "CRITICAL: Active military testing area. Check NOTAMs meticulously." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Kidwelly Castle Viewpoint (Distant)", type: "Historic / Rural", status: "Cadw / Private", permission: "Requires Cadw permission to fly over the Castle. Use distant public land.", caution: "Avoid historic structures. Fly high to maintain privacy for nearby residents." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Pembrey Country Park (Western Beach)", type: "Coastal / Park", status: "Council Owned", permission: "Check council rules. Fly from the beach, avoiding the forest areas.", caution: "Close to Pembrey Airfield. Check local airspace before flight." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Llanelli Beach/Burry Port Area", type: "Coastal / Flats", status: "Public Access / Docks", permission: "Fly from the beach, avoiding docks and industrial areas.", caution: "Watch for boat traffic and industrial infrastructure." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Amroth Beach (Pembrokeshire Edge)", type: "Coastal / Beach", status: "Public Beach", permission: "Generally safe from the beach, avoiding the village.", caution: "Check Pembrokeshire Coast National Park rules if flying inland." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Tenby North Beach", type: "Coastal / Town", status: "Highly Restricted", permission: "CRITICAL: Town area, high traffic, extremely busy in summer. Avoid entirely.", caution: "High risk of 50m/150m violations. Use only distant viewpoints." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "St David's Cathedral (Distant)", type: "Historic / Town", status: "Highly Restricted / Church", permission: "Requires permission from Church and Pembrokeshire Coast NP. Avoid town.", caution: "Difficult to fly legally due to size of St David's and NP rules." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Barafundle Bay (Pembrokeshire)", type: "Coastal / Beach", status: "National Trust / Remote", permission: "NT land. Check NT Pembrokeshire policy. Remote and popular.", caution: "High foot traffic in summer. Exposed cliff path access." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Flimston Bay (Military)", type: "Coastal / Military", status: "DANGER ZONE / RESTRICTED", permission: "CRITICAL: Located within Castlemartin Firing Range. STRICTLY PROHIBITED when range is active.", caution: "Extreme danger due to live firing. Check NOTAMs meticulously." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Saundersfoot Harbour (Distant)", type: "Coastal / Town", status: "Use Caution", permission: "Fly from adjacent quiet beach areas, avoiding the harbour/town.", caution: "High density of boats and tourists in summer." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Llyn y Fan Fach (Black Mountain)", type: "Remote Lake", status: "National Park / SSSI", permission: "Highly remote and protected SSSI. Approach with extreme caution and respect.", caution: "Wildlife risk (birds of prey). Extremely remote; plan recovery thoroughly." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Carmarthen Fan (Black Mountain)", type: "Mountain / Remote", status: "National Park / SSSI", permission: "Remote peak. Requires planning and respect for the national park.", caution: "Extreme remoteness and high weather risk. Minimal access routes." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Broad Haven Beach (Pembrokeshire)", type: "Coastal / Beach", status: "Public Beach / NP", permission: "Pembrokeshire Coast NP rules apply. Generally permitted from the beach.", caution: "Popular spot. Avoid crowds and houses behind the beach." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Strumble Head Lighthouse (Distant)", type: "Coastal / Landmark", status: "Trinity House / Remote", permission: "Fly from distant coastal path, avoiding the private lighthouse property.", caution: "Very exposed location. High winds and turbulent air expected." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Marloes Sands (Pembrokeshire)", type: "Coastal / Beach", status: "National Trust / NP", permission: "NT land. Remote beach, check tide times.", caution: "Check tide times carefully. High winds near the cliffs." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Cwm-yr-Eglwys (Pembrokeshire)", type: "Cove / Historic", status: "Public Access / NP", permission: "Small, quiet cove. Check NP rules. Avoid the ruined church structure.", caution: "Very small area, restricted VLOS due to cove walls." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Preseli Hills (Mynydd Preseli)", type: "Hills / Ancient Site", status: "National Park / Historic", permission: "Pembrokeshire National Park rules apply. Sensitive ancient sites.", caution: "Archaeological sensitivity. High altitude winds. Remote location." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Laugharne Castle Viewpoint (Distant)", type: "Historic / Estuary", status: "Cadw / Rural", permission: "Requires Cadw permission over the Castle. Fly from the opposite bank of the Taf estuary.", caution: "Tidal estuary mudflats are dangerous. Avoid flying over Dylan Thomas' Boathouse (private)." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Llandovery Area (Rural Upland)", type: "Rural / Remote", status: "Public Access", permission: "Vast open moorland north of Llandovery.", caution: "Very isolated. Requires careful planning and full battery backup." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Carmarthen Town (Distant Fields)", type: "Urban Edge", status: "Council / Urban", permission: "Use distant, high ground fields outside the main town centre.", caution: "Avoid the busy A40 corridor and main residential areas." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Fishguard Harbour (Distant)", type: "Docks / Coastal", status: "Harbour Authority / Caution", permission: "Requires Harbour Authority consent. Avoid flying over the ferry routes.", caution: "Active ferry port. High risk of disturbance to marine traffic." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Newgale Beach (Pembrokeshire)", type: "Coastal / Beach", status: "Public Beach / NP", permission: "Popular surfing beach. Fly only away from surfers and beach users.", caution: "High wind area. Watch for kite surfers." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Dinas Island (Pembrokeshire)", type: "Coastal / Peninsula", status: "National Trust / NP", permission: "NT land. Spectacular coastal views. Exposed cliff path.", caution: "High winds and risk of erosion near cliff edges." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Cenarth Falls (River Teifi)", type: "Waterfall / River", status: "Public Access / Tourist", permission: "High tourist traffic. Fly only when deserted.", caution: "Narrow river gorge. Risk of GPS loss. Wet terrain for TOAL." },
+            { region: "Carmarthenshire & Pembrokeshire", name: "Porthgain Harbour (Pembrokeshire)", type: "Historic / Coastal", status: "NP / Public Access", permission: "Pembrokeshire Coast NP rules apply. Check for local restrictions on the old brickworks.", caution: "Archaeological sensitivity on the industrial ruins. High tourist traffic." },
+
+            // BRECON BEACONS / BANNAN BRYCHEINIOG (40)
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Pen y Fan (Brecon Beacons)", type: "Mountain / Iconic", status: "National Park / NT", permission: "Brecon Beacons National Park rules apply (often requires a permit). Check NT land rules.", caution: "Extreme exposure, sudden weather changes. High foot traffic requires early/late flight." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Talybont Reservoir (Brecon)", type: "Reservoir / Water", status: "Dwr Cymru Welsh Water / NP", permission: "Welsh Water property (may prohibit TOAL). Check NP rules.", caution: "Sensitive water infrastructure. Cold, high altitude. Watch for low-flying military jets." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Pontsticill Reservoir", type: "Reservoir / Mountain", status: "Dwr Cymru Welsh Water / NP", permission: "Similar restrictions to Talybont. Check for designated launching areas.", caution: "Very high altitude. Severe wind risk and remote rescue difficulty." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Fan y Big (Brecon)", type: "Mountain Plateau", status: "National Park / Remote", permission: "Vast open space. Ideal for VLOS practice away from people.", caution: "Highly remote area. Carry sufficient safety gear. Extreme weather changes." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Storey Arms Area (Near A470)", type: "Mountain Pass", status: "Public Access", permission: "Fly from adjacent hillsides away from the road and car parks.", caution: "Busy road area. Potential low-flying helicopters (rescue training)." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Llwyn-on Reservoir", type: "Reservoir / Water", status: "Dwr Cymru Welsh Water / NP", permission: "Similar restrictions to Talybont/Pontsticill. Check Dwr Cymru land rules.", caution: "Popular spot for fishing and hiking. Check Dwr Cymru land rules." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Grwyne Fawr Reservoir (Black Mountains)", type: "Reservoir / Remote", status: "Dwr Cymru Welsh Water / Remote", permission: "Extremely remote. Check for remote access rules.", caution: "Very remote location. Weather conditions can change instantly. Minimal cell reception." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "The Skirrid (Abergavenny)", type: "Mountain", status: "National Trust", permission: "NT land. Similar restrictions to Sugar Loaf. Steep terrain.", caution: "Steep ascent, be cautious of battery drain during ascent/descent shots." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Afon Hepste Waterfalls (Brecon)", type: "Waterfall / SSSI", status: "NRW / High Traffic", permission: "Congested area. Fly high from distant, open fields. NRW land.", caution: "Extremely difficult area due to crowds and confined space. Avoid peak times." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Mynydd Epynt (Military Training Area)", type: "Upland / Military", status: "DANGER ZONE / RESTRICTED", permission: "CRITICAL: Active MOD training area. Check firing notices and NOTAMs. STRICTLY PROHIBITED when live.", caution: "Extreme danger due to military activity. Only view from distant public roads." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Black Mountain Pass (A4069)", type: "Road / Mountain", status: "Public Road / NP", permission: "Iconic driving road. Fly from adjacent moorland, avoiding the road itself.", caution: "Disturbance to drivers/vehicles is illegal. High wind risk on the pass." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Fan Gyhirych (Neath Port Talbot)", type: "Mountain / High Peak", status: "National Park", permission: "Remote section of the Brecon Beacons. High altitude flying.", caution: "Harsh weather conditions. Be mindful of sheep and remote rescue difficulty." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Llanthony Valley (Black Mountains)", type: "Valley / Historic", status: "National Park / Private", permission: "Llanthony Priory is historic/private. Fly from high adjacent moorland.", caution: "Monastic ruins are protected. Respect local farms and accommodation." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Pen y Crug Hillfort (Brecon)", type: "Hillfort / NP", status: "Historic / Public Access", permission: "Avoid landing on the scheduled monument area. Fly from surrounding fields.", caution: "Archaeological sensitivity. Exposed hilltop location." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Usk Reservoir (Near Trecastle)", type: "Reservoir / Water", status: "Dwr Cymru Welsh Water / NP", permission: "Remote reservoir. Check Welsh Water policy. Quiet area.", caution: "Very remote location. Weather conditions can change instantly." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Sugar Loaf Mountain, near Llandovery", type: "Mountain / Remote", status: "Public Access", permission: "Remote upland area. Check for boundaries of the National Park.", caution: "Very isolated. Requires careful planning and full battery backup." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Craig Cerrig-gleisiad (Brecon)", type: "Mountain / SSSI", status: "National Park / SSSI", permission: "Protected area for rare plants and birds. Fly high and maintain distance.", caution: "Wildlife hazard. Steep terrain and exposed cliffs." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Mynedd Llangattock (Caves)", type: "Mountain Plateau / Caves", status: "National Park / SSSI", permission: "Area with protected caves. Avoid flying over cave entrances or groups of cavers.", caution: "Sensitive geological area. High altitude wind risk." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Brecon Beacons Visitor Centre Area (Distant)", type: "National Park / Tourist", status: "RESTRICTED / High Traffic", permission: "Highly congested area. Only fly from distant moorland, away from the centre.", caution: "Crowd risk and high visibility. Likely subject to strict park ranger rules." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Clydach Gorge (Near Gilwern)", type: "Gorge / Industrial Heritage", status: "National Park / Historic", permission: "Sensitive industrial heritage area. Fly from above the gorge.", caution: "Narrow space and protected sites. Maintain strict vertical distance." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Upper Llynfell Valley (Remote)", type: "Valley / Remote", status: "Public Access / NP", permission: "Very remote valley in the west of the park.", caution: "Minimal cell service. High chance of encountering livestock." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Sgwd yr Eira (Falls Walk)", type: "Waterfall / High Traffic", status: "NRW / Highly Restricted", permission: "Requires permit. Do not fly over the crowds walking behind the waterfall.", caution: "Extreme risk due to crowds, spray, and restricted VLOS. AVOID peak times." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Tretower Court & Castle (Distant)", type: "Historic / Rural", status: "Cadw / Rural", permission: "Requires Cadw permission over the structures. Use surrounding open fields.", caution: "Protected historic sites. Avoid nearby farm properties." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Pen y Garth (Near Talgarth)", type: "Hilltop / NP", status: "Public Access", permission: "High point near Talgarth. Open space for good VLOS.", caution: "Check for gliders/small aircraft from local strips." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Ystradfellte Falls Area", type: "Waterfall / SSSI", status: "NRW / Highly Sensitive", permission: "Very high foot traffic. Avoid flying over people at the falls.", caution: "Extremely difficult area due to crowds and confined space. Avoid peak times." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Fan Frynich (Brecon)", type: "Mountain Ridge", status: "National Park / Remote", permission: "High altitude ridge. Very exposed and remote.", caution: "High risk of strong, turbulent wind. Remote landing difficulty." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "The Gribin (Brecon)", type: "Mountain Ridge", status: "National Park / Remote", permission: "High ridge walk. Ideal for epic mountain views.", caution: "Very exposed to the wind. Check for sudden weather shifts." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Crickhowell Bridge (Distant)", type: "Historic / Town", status: "Use Caution", permission: "Fly from distant fields, avoiding the town centre and River Usk.", caution: "Risk of flying over vehicles or people near the river bridge." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Pyscodlyn Uchaf Reservoir", type: "Reservoir / Rural", status: "Dwr Cymru Welsh Water", permission: "Small, quiet reservoir. Check local signage for drone restrictions.", caution: "Smaller water body, less margin for error in case of water landing." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Afon Lwyd Trail (Remote sections)", type: "Trail / River", status: "Public Access", permission: "Avoid flying low over the trail. Use adjacent open fields for TOAL.", caution: "Keep distance from cyclists and pedestrians on the trail." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Blaenavon World Heritage Site (Upland)", type: "Industrial Heritage / Upland", status: "WHS / Cadw", permission: "Sensitive site. Avoid flying over structures or areas managed by Cadw/WHS. Use distant moorland.", caution: "Archaeological sensitivity. Avoid structures associated with the former ironworks." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Mynydd Llangynidr", type: "Moorland / Plateau", status: "National Park / Public Access", permission: "Vast, open moorland plateau.", caution: "Exposed area, potential for sudden fog or low cloud." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Llandegley Common (Mid-Wales Edge)", type: "Remote Moorland", status: "Public Access", permission: "Vast, quiet common land. Excellent for remote VLOS practice.", caution: "Remote area. Limited cell service." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Sgwd-Clun-Gwyn (Falls Walk)", type: "Waterfall / High Traffic", status: "NRW / Highly Restricted", permission: "Similar restrictions to other falls. Avoid flying over water/crowds.", caution: "Narrow, wet, and high-traffic area. High risk." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Talygarn Lakes (Rural)", type: "Rural / Water", status: "Private Land", permission: "REQUIRES landowner permission. Private estate area.", caution: "Strictly private land. Do not fly without explicit permission." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Trecastle Mountain (Upland)", type: "Mountain / Remote", status: "National Park / Remote", permission: "High altitude, quiet moorland.", caution: "Very isolated. Extreme weather exposure." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Cray Reservoir (Brecon)", type: "Reservoir / Water", status: "Dwr Cymru Welsh Water / NP", permission: "Remote reservoir in the west of the park. Check Welsh Water policy.", caution: "Sensitive water supply area. Remote rescue difficulty." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Blaen y Glyn Waterfalls (Brecon)", type: "Waterfall / River", status: "NRW / Public", permission: "Check for permit requirements. Avoid flying over people at the falls.", caution: "High tourist traffic in summer. Difficult VLOS in the gorge." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Nant Llech Waterfall (Near Ystradfellte)", type: "Waterfall / Valley", status: "Public Access", permission: "Popular tourist/walking area. Fly only when the area is deserted.", caution: "Narrow, confined valley. Risk of GPS loss (canyoning effect). Wet terrain." },
+            { region: "Brecon Beacons / Bannau Brycheiniog", name: "Ebbw Valley (Near Abertillery)", type: "Valley Upland", status: "Public Access", permission: "Fly high on the surrounding hills to capture the valley structure.", caution: "Old mining areas—be cautious of unstable ground and old infrastructure." },
+
+        ];
+
+        // --- CORE APPLICATION LOGIC ---
+
+        const LOCATIONS_PER_PAGE = 10;
+        let currentPage = 0;
+        let currentFilter = 'All';
+        let filteredLocations = [];
+
+        const container = document.getElementById('location-container');
+        const loadMoreBtn = document.getElementById('load-more-btn');
+        const endMessage = document.getElementById('end-message');
+        const regionFilter = document.getElementById('region-filter');
+        const locationCountDisplay = document.getElementById('location-count-display');
+        const zoneStatus = document.getElementById('zone-status');
+
+        const totalLocations = droneLocations.length;
+
+        /**
+         * Initializes the filter dropdown with unique, sorted regions.
+         */
+        function initializeFilters() {
+            const regions = new Set(droneLocations.map(loc => loc.region));
+            const sortedRegions = Array.from(regions).sort();
+
+            let optionsHTML = '<option value="All" selected>All South Wales Regions</option>';
+            sortedRegions.forEach(region => {
+                optionsHTML += `<option value="${region}">${region}</option>`;
+            });
+
+            regionFilter.innerHTML = optionsHTML;
+            regionFilter.addEventListener('change', handleFilterChange);
+        }
+
+        /**
+         * Handles filter change, recalculates visible data, and resets the feed.
+         */
+        function handleFilterChange(event) {
+            currentFilter = event.target.value;
+            currentPage = 0;
+            container.innerHTML = ''; // Clear existing cards
+            filterLocations();
+            loadMoreLocations();
+        }
+
+        /**
+         * Filters the master list based on the current filter setting.
+         */
+        function filterLocations() {
+            if (currentFilter === 'All') {
+                filteredLocations = droneLocations;
+            } else {
+                filteredLocations = droneLocations.filter(loc => loc.region === currentFilter);
+            }
+            // Update the count display for the filtered set
+            locationCountDisplay.textContent = `${filteredLocations.length} total zones found in filter.`;
+        }
+
+        /**
+         * Renders an individual location card HTML structure.
+         */
+        function createCardHTML(location) {
+            let statusColor, statusTextClass;
+
+            // Determine color based on permission status for rapid assessment
+            const statusUpper = location.status.toUpperCase();
+            if (statusUpper.includes('RESTRICTED') || statusUpper.includes('CRITICAL') || statusUpper.includes('DANGER') || statusUpper.includes('AVOID')) {
+                statusColor = 'border-red-500/70';
+                statusTextClass = 'text-red-400';
+            } else if (statusUpper.includes('NATIONAL PARK') || statusUpper.includes('CAUTION') || statusUpper.includes('HIGH RISK') || statusUpper.includes('USE CAUTION')) {
+                statusColor = 'border-yellow-500/70';
+                statusTextClass = 'text-yellow-400';
+            } else {
+                statusColor = 'border-cyan-500/70';
+                statusTextClass = 'text-cyan-400';
+            }
+
+            return `
+                <div class="p-5 bg-gray-900/70 rounded-xl shadow-2xl neon-border ${statusColor} backdrop-blur-sm transform transition-transform hover:scale-[1.01] duration-300">
+                    <h3 class="text-xs font-mono text-cyan-500 mb-1 font-semibold">${location.region}</h3>
+                    <h2 class="text-xl font-bold mb-3 neon-text">${location.name}</h2>
+                    
+
+                    <div class="mb-4">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 block mb-1">General Status:</span>
+                        <span class="text-base font-extrabold ${statusTextClass}">
+                            ${location.status}
+                        </span>
+                    </div>
+
+                    <div class="space-y-2 mb-4">
+                        <div>
+                            <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 block mb-1">Permission Advice:</span>
+                            <p class="text-sm text-gray-300">${location.permission}</p>
+                        </div>
+                    </div>
+
+                    <div class="p-3 mt-4 rounded border border-yellow-700/50 bg-yellow-900/30">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-yellow-300 block mb-1">Safety Caution:</span>
+                        <p class="text-xs text-yellow-200">${location.caution}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * Loads and renders the next set of locations from the filtered list.
+         */
+        function loadMoreLocations() {
+            const start = currentPage * LOCATIONS_PER_PAGE;
+            const end = start + LOCATIONS_PER_PAGE;
+            const locationsToRender = filteredLocations.slice(start, end);
+
+            let htmlContent = '';
+            locationsToRender.forEach(location => {
+                htmlContent += createCardHTML(location);
+            });
+
+            container.insertAdjacentHTML('beforeend', htmlContent);
+            currentPage++;
+
+            // Update button and status
+            const remaining = filteredLocations.length - (currentPage * LOCATIONS_PER_PAGE);
+
+            if (remaining <= 0) {
+                loadMoreBtn.disabled = true;
+                loadMoreBtn.textContent = 'All Zones Loaded';
+                loadMoreBtn.classList.add('hidden');
+                endMessage.classList.remove('hidden');
+                document.getElementById('load-more-section').classList.add('hidden');
+            } else {
+                loadMoreBtn.disabled = false;
+                loadMoreBtn.classList.remove('hidden');
+                document.getElementById('load-more-section').classList.remove('hidden');
+                endMessage.classList.add('hidden');
+                loadMoreBtn.textContent = `Load More Locations (${Math.min(LOCATIONS_PER_PAGE, remaining)})`;
+            }
+        }
+
+        /**
+         * Closes the modal and sets the flag in localStorage.
+         */
+        function closeModal() {
+            const modal = document.getElementById('opinion-modal');
+            modal.classList.add('hidden');
+            // Use localStorage to prevent showing the modal again
+            try {
+                localStorage.setItem('hasSeenOpinionModal', 'true');
+            } catch (e) {
+                console.error("Local storage access denied:", e);
+            }
+        }
+
+        // Event listeners
+        loadMoreBtn.addEventListener('click', loadMoreLocations);
+        document.getElementById('close-modal-btn-x').addEventListener('click', closeModal);
+        document.getElementById('close-modal-btn-later').addEventListener('click', closeModal);
+
+        // --- Initialization on Load ---
+        window.onload = function() {
+            zoneStatus.textContent = `>> Status: Static Dataset Loaded (${totalLocations} Zones)`;
+            document.querySelector('#end-message p').textContent = `End of Data Feed :: All ${totalLocations} South Wales Zones Loaded`;
+            
+            initializeFilters();
+            filterLocations(); // Initial filter (All)
+            loadMoreLocations(); // Initial load of first 10
+
+            // Check if the user has seen the modal before
+            let hasSeen;
+            try {
+                hasSeen = localStorage.getItem('hasSeenOpinionModal');
+            } catch (e) {
+                console.error("Local storage access denied on read:", e);
+                hasSeen = 'true'; // Assume seen if storage fails
+            }
+
+            if (hasSeen !== 'true') {
+                const modal = document.getElementById('opinion-modal');
+                modal.classList.remove('hidden');
+            }
+        };
+    </script>
+</body>
+</html>
