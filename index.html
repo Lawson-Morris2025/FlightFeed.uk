@@ -113,9 +113,10 @@
 </head>
 <body class="bg-dark-grid text-gray-200 min-h-screen">
 
-    <!-- Opinion Popup Modal --><div id="opinion-modal" class="modal-overlay hidden">
+    <!-- Opinion Popup Modal -->
+    <div id="opinion-modal" class="modal-overlay hidden">
         <div class="modal-content neon-border border-cyan-500/80">
-            <!-- Close Button --><button id="close-modal-btn-x" class="close-btn" aria-label="Close form">
+            <!-- Close Button --><button id="close-opinion-modal-btn-x" class="close-btn" aria-label="Close opinion form">
                 &times;
             </button>
             
@@ -124,7 +125,8 @@
             </h2>
             <p class="text-gray-400 text-center mb-6">Help us refine this resource. Your feedback is confidential and appreciated!</p>
 
-            <!-- Formspree Form Placeholder (Replace with your actual endpoint) --><form action="https://formspree.io/f/YOUR_FORMSPREE_ENDPOINT" method="POST" class="space-y-4">
+            <!-- Formspree Form Placeholder (Replace with your actual endpoint) -->
+            <form id="opinion-form" action="https://formspree.io/f/YOUR_FORMSPREE_ENDPOINT" method="POST" class="space-y-4">
                 <div>
                     <label for="feedback_name" class="block text-sm font-medium text-cyan-400">Your Name (Optional)</label>
                     <input type="text" name="name" id="feedback_name" class="mt-1 block w-full bg-gray-700/50 border border-cyan-500/30 rounded-md shadow-sm p-2 text-white focus:ring-cyan-500 focus:border-cyan-500">
@@ -134,7 +136,7 @@
                     <textarea name="message" id="feedback_message" rows="4" required class="mt-1 block w-full bg-gray-700/50 border border-cyan-500/30 rounded-md shadow-sm p-2 text-white focus:ring-cyan-500 focus:border-cyan-500"></textarea>
                 </div>
                 <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-2">
-                    <button type="button" id="close-modal-btn-later" class="w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-full text-gray-300 bg-gray-700 hover:bg-gray-600 transition duration-150">
+                    <button type="button" id="close-opinion-modal-btn-later" class="w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-full text-gray-300 bg-gray-700 hover:bg-gray-600 transition duration-150">
                         Maybe Later
                     </button>
                     <button type="submit" class="w-full sm:w-auto load-more-btn text-gray-900 font-extrabold py-2 px-4 rounded-full shadow-lg uppercase text-sm tracking-widest">
@@ -144,10 +146,49 @@
             </form>
         </div>
     </div>
+
+    <!-- Suggest a Place Modal (NEW) -->
+    <div id="suggest-modal" class="modal-overlay hidden">
+        <div class="modal-content neon-border border-blue-500/80">
+            <!-- Close Button --><button id="close-suggest-modal-btn-x" class="close-btn" aria-label="Close suggestion form">
+                &times;
+            </button>
+            
+            <h2 class="text-3xl font-extrabold text-center mb-4 neon-text uppercase tracking-widest">
+                Suggest a Flight Zone
+            </h2>
+            <p class="text-gray-400 text-center mb-6">Found a great spot? Let us know the details!</p>
+
+            <!-- Suggestion Formspree Form (Replace with your actual endpoint) -->
+            <form id="suggestion-form" action="https://formspree.io/f/YOUR_FORMSPREE_ENDPOINT" method="POST" class="space-y-4">
+                <div>
+                    <label for="suggest_place_name" class="block text-sm font-medium text-blue-400">Place Name (e.g., Penarth Headlands)</label>
+                    <input type="text" name="Place Name" id="suggest_place_name" required class="mt-1 block w-full bg-gray-700/50 border border-blue-500/30 rounded-md shadow-sm p-2 text-white focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="suggest_address" class="block text-sm font-medium text-blue-400">Address / Nearest Postcode / Coordinates</label>
+                    <input type="text" name="Address/Location" id="suggest_address" required class="mt-1 block w-full bg-gray-700/50 border border-blue-500/30 rounded-md shadow-sm p-2 text-white focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="suggest_reason" class="block text-sm font-medium text-blue-400">Why should this be added? (E.g., Low crowds, great view, local permission exists)</label>
+                    <textarea name="Reason for Addition" id="suggest_reason" rows="4" required class="mt-1 block w-full bg-gray-700/50 border border-blue-500/30 rounded-md shadow-sm p-2 text-white focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+                <div class="flex justify-end pt-2">
+                    <button type="submit" class="load-more-btn text-gray-900 font-extrabold py-2 px-4 rounded-full shadow-lg uppercase text-sm tracking-widest bg-blue-500 hover:bg-blue-400">
+                        Submit Suggestion
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     
-    <!-- Main content container, fluid width on mobile --><div class="w-full max-w-7xl mx-auto p-4 md:p-8">
-        <!-- Header --><header class="text-center mb-6 p-2 border-b-2 border-cyan-500/50">
-            <!-- Status Row: Online Status and Zone Count --><div class="flex justify-between items-center mb-1">
+    <!-- Main content container, fluid width on mobile -->
+    <div class="w-full max-w-7xl mx-auto p-4 md:p-8">
+        <!-- Header -->
+        <header class="text-center mb-6 p-2 border-b-2 border-cyan-500/50">
+            <!-- Status Row: Online Status and Zone Count -->
+            <div class="flex justify-between items-center mb-1">
                 <!-- Status Indicator --><p id="status-indicator" class="text-xs font-light tracking-widest text-cyan-400 font-mono flex items-center">
                     <span id="status-dot" class="inline-block w-2 h-2 rounded-full mr-2 bg-yellow-500 animate-pulse"></span>
                     >> Status: Initializing
@@ -163,6 +204,12 @@
             <p class="text-md sm:text-xl font-semibold tracking-wide text-gray-300 mt-1">South Wales Drone Flight Locations</p>
         </header>
 
+        <!-- Suggest A Place Button (NEW) --><div class="text-center mb-6">
+            <button id="show-suggest-modal" class="px-6 py-3 text-sm font-bold rounded-full text-gray-900 load-more-btn uppercase transition duration-300 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-cyan-500/50">
+                + Suggest a New Flight Zone
+            </button>
+        </div>
+
         <!-- Warning Box - Ensures text is readable even if it wraps --><div class="bg-red-900/40 p-3 mb-6 rounded-xl neon-border border-red-500/50">
             <p class="text-xs sm:text-sm font-semibold text-red-300 flex items-start">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-3 text-red-400 flex-shrink-0 mt-0.5">
@@ -172,7 +219,8 @@
             </p>
         </div>
         
-        <!-- iOS Add to Homescreen Instructions (Mobile Only) --><!-- Added ID and logic for dismissal --><div id="install-instructions" class="bg-blue-900/30 p-4 mb-6 rounded-xl neon-border border-blue-500/50 block sm:hidden relative">
+        <!-- iOS Add to Homescreen Instructions (Mobile Only) -->
+        <div id="install-instructions" class="bg-blue-900/30 p-4 mb-6 rounded-xl neon-border border-blue-500/50 block sm:hidden relative">
             
             <!-- X Dismiss Button --><button id="close-instructions-x" class="absolute top-2 right-2 p-1 text-lg leading-none text-blue-300 hover:text-cyan-400 transition" aria-label="Close instructions">
                 &times;
@@ -462,7 +510,9 @@
         const HIDE_KEY = 'hideInstallInstructions';
 
         function hideInstructions() {
-            installInstructions.style.display = 'none';
+            if (installInstructions) {
+                installInstructions.style.display = 'none';
+            }
         }
         
         function setHidePermanent() {
@@ -493,31 +543,49 @@
             hideInstructionsBtn.addEventListener('click', setHidePermanent);
         }
 
-        // --- Modal Functionality (Opinion Modal) ---
-        const modal = document.getElementById('opinion-modal');
-        const showModalBtn = document.getElementById('show-opinion-modal');
-        const closeModalXBtn = document.getElementById('close-modal-btn-x');
-        const closeModalLaterBtn = document.getElementById('close-modal-btn-later');
+        // --- Modal Functionality (Suggestion & Opinion) ---
+        
+        // Opinion Modal Elements
+        const opinionModal = document.getElementById('opinion-modal');
+        const showOpinionModalBtn = document.getElementById('show-opinion-modal');
+        const closeOpinionModalXBtn = document.getElementById('close-opinion-modal-btn-x');
+        const closeOpinionModalLaterBtn = document.getElementById('close-opinion-modal-btn-later');
 
-        function toggleModal(show) {
+        // Suggestion Modal Elements
+        const suggestModal = document.getElementById('suggest-modal');
+        const showSuggestModalBtn = document.getElementById('show-suggest-modal');
+        const closeSuggestModalXBtn = document.getElementById('close-suggest-modal-btn-x');
+        
+        // Generic function to toggle any modal
+        function toggleModal(modalElement, show) {
             if (show) {
-                modal.classList.remove('hidden');
+                modalElement.classList.remove('hidden');
             } else {
-                modal.classList.add('hidden');
+                modalElement.classList.add('hidden');
             }
         }
         
-        showModalBtn.addEventListener('click', () => toggleModal(true));
-        closeModalXBtn.addEventListener('click', () => toggleModal(false));
-        closeModalLaterBtn.addEventListener('click', (e) => {
+        // Opinion Modal Handlers
+        showOpinionModalBtn.addEventListener('click', () => toggleModal(opinionModal, true));
+        closeOpinionModalXBtn.addEventListener('click', () => toggleModal(opinionModal, false));
+        closeOpinionModalLaterBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            toggleModal(false);
+            toggleModal(opinionModal, false);
         });
 
-        // Close modal when clicking outside (on the overlay)
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                toggleModal(false);
+        // Suggestion Modal Handlers
+        showSuggestModalBtn.addEventListener('click', () => toggleModal(suggestModal, true));
+        closeSuggestModalXBtn.addEventListener('click', () => toggleModal(suggestModal, false));
+        
+        // Close modals when clicking outside (on the overlay)
+        opinionModal.addEventListener('click', (e) => {
+            if (e.target === opinionModal) {
+                toggleModal(opinionModal, false);
+            }
+        });
+        suggestModal.addEventListener('click', (e) => {
+            if (e.target === suggestModal) {
+                toggleModal(suggestModal, false);
             }
         });
 
