@@ -210,12 +210,12 @@
             </button>
         </div>
 
-        <!-- Warning Box - Ensures text is readable even if it wraps --><div class="bg-red-900/40 p-3 mb-6 rounded-xl neon-border border-red-500/50">
+        <!-- Warning Box - UPDATED TEXT --><div class="bg-red-900/40 p-3 mb-6 rounded-xl neon-border border-red-500/50">
             <p class="text-xs sm:text-sm font-semibold text-red-300 flex items-start">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-3 text-red-400 flex-shrink-0 mt-0.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.026 3.3 1.77 3.3h13.72c1.744 0 2.63-1.8 1.77-3.3L13.722 4.072a1.725 1.725 0 0 0-3.444 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                 </svg>
-                Disclaimer: This is simulated data. ALWAYS check official aviation and local authority maps before flying. Fly responsibly!
+                Disclaimer: This data may not be fully correct. We are working hard to verify and update all information to ensure accuracy. Please check official aviation maps before flying.
             </p>
         </div>
         
@@ -365,13 +365,15 @@
             const lat = 51.3 + Math.random() * 0.7; // South Wales latitude range
             const lon = -4.5 + Math.random() * 2.5; // South Wales longitude range
             
-            let details;
+            let riskDetails;
+            // Note: Risk mapping: 1 (Low), 2 (Moderate), 3 (High)
             switch(risk) {
-                case 3: details = "High sensitivity area. Check NOTAMs for military/airport zones. Permissions strongly advised. Max height 50ft."; break;
-                case 2: details = "Moderate risk. Be cautious of public density and local council restrictions. VLOS is mandatory. Max height 250ft."; break;
-                case 1: details = "Low risk, open area. Standard drone code applies. Avoid flying directly over people. Max height 400ft."; break;
+                case 1: riskDetails = "Low risk, open area. Standard drone code applies. Avoid flying directly over people. Max height 400ft."; break;
+                case 2: riskDetails = "Moderate risk. Be cautious of public density and local council restrictions. VLOS is mandatory. Max height 250ft."; break;
+                case 3: riskDetails = "High sensitivity area. Check NOTAMs for military/airport zones. Permissions strongly advised. Max height 50ft."; break;
             }
-            details += ` (${Math.floor(Math.random() * 200) + 50}m radius buffer zone.)`;
+            riskDetails += ` (${Math.floor(Math.random() * 200) + 50}m radius buffer zone.)`;
+
 
             return {
                 id: id,
@@ -379,7 +381,7 @@
                 county: county,
                 type: type,
                 risk: risk,
-                details: details,
+                details: riskDetails,
                 lat: lat.toFixed(4),
                 lon: lon.toFixed(4)
             };
@@ -404,6 +406,7 @@
         // --- Utility Functions ---
 
         function getRiskColor(risk) {
+            // Risk 1 (Low) = Green, Risk 2 (Moderate) = Yellow, Risk 3 (High) = Red
             switch (risk) {
                 case 3: return 'bg-red-800 text-red-200 neon-border border-red-500/50';
                 case 2: return 'bg-yellow-800 text-yellow-200 neon-border border-yellow-500/50';
