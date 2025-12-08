@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flightfeed.uk - Choose Your Region</title>
+    
+    <!-- Essential Mobile Metadata -->
+    <meta name="theme-color" content="#0a0a1a">
+    
+    <!-- PWA/IOS Setup for 'F' Logo & Standalone App Mode -->
+    
+    <!-- 
+        NEW: General Favicon (Browser Tab Icon) - TikTok Style
+        Uses a bold 'F' with the classic red/cyan split shadow effect on a black background, 
+        making it immediately recognizable as a high-impact, social-friendly graphic.
+    -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23000000'/><text y='.9em' x='50%' dominant-baseline='middle' text-anchor='middle' font-family='Orbitron' font-size='90' fill='%23FFFFFF' style='filter: drop-shadow(4px 0 0 %23FF0050) drop-shadow(-4px 0 0 %2300F2EA);'>F</text></svg>">
+    
+    <!-- 
+        NEW: iOS PWA/Homescreen Setup - High Contrast TikTok Theme
+        Keeps the flightfeed blue theme but adds the TikTok aesthetic to the main letter for recognition.
+    -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FlightFeed UK">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230a0a1a'/><defs><style>@font-face{font-family:'Orbitron';src:url('https://fonts.gstatic.com/s/orbitron/v17/yMJRMIlzDPvjdzoPEK3cQ_2n.woff2') format('woff2');font-weight:700;}</style></defs><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-family='Orbitron' font-size='70' fill='%23FFFFFF' style='filter: drop-shadow(4px 0 0 %23FF0050) drop-shadow(-4px 0 0 %2300F2EA);'>F</text><text x='50%' y='85%' font-family='Inter, sans-serif' font-size='18' fill='%238AAEF9' text-anchor='middle'>flightfeed.uk</text></svg>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom neon glow and dark theme */
+        :root {
+            --neon-blue: #00BFFF;
+            --neon-cyan: #00FFFF;
+            --neon-red: #FF0077;
+            --bg-dark: #0a0a1a;
+            --secondary-bg: #1a1a2a;
+        }
+        body { 
+            font-family: 'Inter', sans-serif;
+            padding-top: 0; 
+        }
+        .neon-text {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 20px var(--neon-cyan), 0 0 30px rgba(0, 255, 255, 0.5);
+            font-family: 'Orbitron', sans-serif;
+        }
+        .neon-cyan-glow {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px rgba(0, 255, 255, 0.7);
+            font-family: 'Orbitron', sans-serif;
+        }
+        .bg-dark-grid {
+            background-color: var(--bg-dark);
+            background-image: linear-gradient(0deg, transparent 24%, rgba(0, 191, 255, 0.03) 25%, rgba(0, 191, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 191, 255, 0.03) 75%, rgba(0, 191, 255, 0.03) 76%, transparent 77%), linear-gradient(90deg, transparent 24%, rgba(0, 191, 255, 0.03) 25%, rgba(0, 191, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 191, 255, 0.03) 75%, rgba(0, 191, 255, 0.03) 76%, transparent 77%);
+            background-size: 50px 50px;
+        }
+        
+        /* --- ANIMATIONS START --- */
+
+        /* 1. Content Fade In */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animated-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0; /* Start invisible */
+        }
+        
+        /* 2. Active Button Pulse */
+        @keyframes neonPulseActive {
+            0% {
+                box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+                border-color: rgba(0, 191, 255, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(0, 255, 255, 0.6), 0 0 50px rgba(0, 255, 255, 0.2);
+                border-color: var(--neon-cyan);
+            }
+            100% {
+                box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+                border-color: rgba(0, 191, 255, 0.5);
+            }
+        }
+        .region-button.active-pulse {
+            animation: neonPulseActive 3s infinite ease-in-out;
+        }
+        
+        /* --- ANIMATIONS END --- */
+
+        /* === Fixed Top Banner === */
+        .top-banner-fixed {
+            background-color: #1a1a2a; /* Secondary background color */
+            border-bottom: 2px solid var(--neon-red);
+            position: fixed; /* Keep it fixed */
+            top: 1px; /* Adjusting the top position to sit just below the progress bar */
+            left: 0;
+            right: 0;
+            z-index: 40; /* Below progress bar (50) and modals (100+) */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        .ribbon-text {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-red);
+            text-shadow: 0 0 5px var(--neon-red), 0 0 10px rgba(255, 0, 119, 0.5);
+        }
+        
+        /* Diagonal Ribbon Effect for Top Banner */
+        .diagonal-ribbon {
+            position: absolute;
+            top: 5px;
+            right: -25px;
+            width: 150px;
+            padding: 4px 0;
+            font-weight: bold;
+            text-align: center;
+            font-size: 0.75rem;
+            transform: rotate(45deg);
+            transform-origin: 50% 50%;
+            letter-spacing: 0.5px;
+            line-height: 1; 
+            z-index: 10;
+        }
+
+        /* Diagonal Ribbon Effect for Coming Soon Section (The newly added ribbon) */
+        .section-ribbon {
+            position: absolute;
+            top: 20px; /* Position down a bit from the top edge of the section box */
+            right: -40px; /* Overhang outside the box */
+            width: 200px; /* Larger than the top banner ribbon */
+            padding: 6px 0;
+            font-weight: bold;
+            text-align: center;
+            font-size: 0.9rem;
+            transform: rotate(45deg);
+            transform-origin: 50% 50%;
+            letter-spacing: 1px;
+            z-index: 20; /* High z-index to sit above the blur and overlay */
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: 0 0 15px rgba(255, 0, 119, 0.9);
+        }
+        
+        /* === Styles for Blurred/Disabled Sections === */
+        /* Used for England/Scotland button section */
+        .blurred-content {
+            filter: blur(3px) grayscale(50%);
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .coming-soon-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(10, 10, 26, 0.4);
+            border-radius: 1rem;
+            cursor: default;
+        }
+
+        .neon-text-red-overlay {
+            color: var(--neon-red);
+            text-shadow: 0 0 10px var(--neon-red), 0 0 25px rgba(255, 0, 119, 0.9);
+            font-family: 'Orbitron', sans-serif;
+            animation: pulse-red 2s infinite alternate;
+        }
+        
+        @keyframes pulse-red {
+            from {
+                opacity: 0.8;
+                text-shadow: 0 0 10px var(--neon-red);
+            }
+            to {
+                opacity: 1;
+                text-shadow: 0 0 20px var(--neon-red), 0 0 40px rgba(255, 0, 119, 0.5);
+            }
+        }
+        
+        /* === General Button Styles (Wales Active Regions) === */
+        .region-button {
+            position: relative; 
+            background-color: var(--secondary-bg);
+            border: 2px solid rgba(0, 191, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+            transition: all 0.3s ease-in-out;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
+        }
+        .region-button:hover:not(.disabled) {
+            transform: scale(1.05);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px var(--neon-cyan), 0 0 40px rgba(0, 255, 255, 0.5);
+            background-color: #2a2a3a;
+        }
+        
+        /* Style for disabled/coming soon buttons (e.g., inside blurred container) */
+        .region-button-disabled {
+            background-color: var(--secondary-bg);
+            border: 2px solid rgba(255, 0, 119, 0.3);
+            box-shadow: none; 
+            color: #6b7280;
+            padding: 1rem; 
+            pointer-events: none;
+        }
+
+        /* === Modal Styles (Shared) === */
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.85);
+        }
+        .modal-content {
+            background-color: var(--bg-dark);
+            border: 2px solid var(--neon-cyan); 
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5), 0 0 40px rgba(0, 255, 255, 0.2);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .agree-button {
+            background-color: #1a1a2a;
+            border: 2px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            transition: all 0.2s;
+        }
+        .agree-button:hover {
+            background-color: var(--neon-cyan);
+            color: #0a0a1a;
+            box-shadow: 0 0 20px var(--neon-cyan);
+        }
+        .footer-link {
+            color: var(--neon-cyan);
+            transition: color 0.2s, text-shadow 0.2s;
+            cursor: pointer;
+        }
+        .footer-link:hover {
+            color: white;
+            text-shadow: 0 0 5px var(--neon-cyan);
+        }
+        
+        /* === INTRO MODAL SPECIFIC (Full Screen Splash) === */
+        #introModal {
+            background-color: var(--bg-dark);
+            z-index: 200;
+        }
+        .intro-screen-text {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+        }
+        
+        /* === WELCOME POPUP SPECIFIC (Persistent) === */
+        #welcomePopup {
+            z-index: 150;
+        }
+        .welcome-popup-content {
+            background: linear-gradient(135deg, #1a1a2a, #2a2a3a);
+            border: 3px solid var(--neon-blue);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+            position: relative;
+        }
+    </style>
+</head>
+<body class="bg-dark-grid text-gray-200 min-h-screen p-2 sm:p-4">
+
+    <!-- Scroll Progress Bar -->
+    <div id="progressBarContainer" class="fixed top-0 left-0 w-full z-50 h-1" style="background-color: rgba(0, 191, 255, 0.1);">
+        <div id="progressBar" class="h-full" style="width: 0%; background-color: var(--neon-cyan); box-shadow: 0 0 5px var(--neon-cyan), 0 0 10px rgba(0, 255, 255, 0.7); transition: width 0.1s linear;"></div>
+    </div>
+    
+    <!-- Fixed Top Banner for Coming Soon -->
+    <div class="top-banner-fixed fixed top-1 left-0 right-0 z-40">
+        <div class="max-w-5xl mx-auto flex justify-between items-center px-4 relative h-8">
+            
+            <!-- Main Text -->
+            <p class="text-xs sm:text-sm font-semibold text-gray-400 py-1">
+                <span class="ribbon-text font-bold text-sm sm:text-base">ENGLAND & SCOTLAND:</span> 
+                Coming soon! We are working hard to bring these zones as soon as possible.
+            </p>
+            
+            <!-- Diagonal Ribbon (Visible on sm and up) -->
+            <div class="hidden sm:block diagonal-ribbon bg-red-600 text-gray-900 shadow-xl shadow-red-500/80">
+                COMING SOON
+            </div>
+            
+        </div>
+    </div>
+    <!-- End Fixed Top Banner -->
+
+    <!-- 0. NEW: Intro / Loading Screen Modal (Session-based) -->
+    <div id="introModal" class="modal-overlay fixed inset-0 flex items-center justify-center hidden">
+        <div class="w-11/12 max-w-2xl text-center">
+            
+            <!-- Intro Step 1: Welcome -->
+            <div id="introStep1" class="space-y-6 hidden">
+                <p class="intro-screen-text text-5xl sm:text-7xl font-extrabold neon-text animate-pulse">
+                    WELCOME
+                </p>
+                <p class="text-xl sm:text-3xl text-gray-300">
+                    Preparing to load flightfeed.uk
+                </p>
+                <button id="introNextBtn1" class="agree-button py-3 px-8 rounded-xl font-bold uppercase tracking-wider text-xl mt-8">
+                    Next
+                </button>
+            </div>
+
+            <!-- Intro Step 2: Wales Ready (New Slide) -->
+            <div id="introStep2" class="space-y-6 hidden">
+                <h2 class="intro-screen-text text-3xl sm:text-5xl font-extrabold neon-cyan-glow mb-4">
+                    WALES ZONES ACTIVE
+                </h2>
+                <p class="text-lg sm:text-2xl text-gray-300">
+                    All four major flight zones in Wales are now ready for use.
+                </p>
+                <div class="p-4 mt-6 rounded-lg border border-cyan-500/50 bg-cyan-900/20">
+                    <p class="text-xl sm:text-3xl font-bold neon-text">
+                        South, West, East, and North Wales
+                    </p>
+                    <p class="text-base sm:text-xl text-gray-400 mt-1">
+                        Use the active buttons below to select your flight feed.
+                    </p>
+                </div>
+                <button id="introNextBtn2" class="agree-button py-3 px-8 rounded-xl font-bold uppercase tracking-wider text-xl mt-8">
+                    Next: UK Expansion Status
+                </button>
+            </div>
+
+            <!-- Intro Step 3: UK Expansion Status (Modified original Step 2) -->
+            <div id="introStep3" class="space-y-6 hidden">
+                <h2 class="intro-screen-text text-3xl sm:text-5xl font-extrabold neon-text mb-4">
+                    UK EXPANSION STATUS
+                </h2>
+                <p class="text-lg sm:text-2xl text-gray-300">
+                    We are currently prioritizing the development of England and Scotland zones.
+                </p>
+                <div class="p-4 mt-6 rounded-lg border border-red-500/50 bg-red-900/20">
+                    <p class="text-xl sm:text-3xl font-bold neon-text-red-overlay">
+                        ENGLAND & SCOTLAND:
+                    </p>
+                    <p class="text-base sm:text-xl text-gray-400 mt-1">
+                        Coverage is coming soon! Thank you for your patience.
+                    </p>
+                </div>
+                <button id="introFinishBtn" class="agree-button py-3 px-8 rounded-xl font-bold uppercase tracking-wider text-xl mt-8">
+                    Start Site
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 0. NEW: Persistent Welcome Popup (Always shows) -->
+    <div id="welcomePopup" class="modal-overlay fixed inset-0 flex items-center justify-center hidden">
+        <div class="welcome-popup-content w-11/12 max-w-md p-6 sm:p-8 rounded-2xl mx-auto shadow-2xl">
+            <button id="welcomeCloseBtn" class="absolute top-3 right-3 text-white hover:text-red-400 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h2 class="text-2xl sm:text-3xl font-extrabold uppercase mb-2 neon-cyan-glow">
+                WELCOME
+            </h2>
+            <p class="text-lg sm:text-xl font-bold text-cyan-200">
+                To our new and improved site for <span class="neon-text">flightfeed.uk</span>!
+            </p>
+            <p class="text-sm text-gray-400 mt-3">
+                Enjoy enhanced stability and preparation for our UK-wide expansion.
+            </p>
+        </div>
+    </div>
+    
+
+    <!-- The main container -->
+    <div class="w-full max-w-5xl mx-auto text-center main-content-area"> 
+        
+        <!-- Header -->
+        <header id="mainHeader" class="mb-8 sm:mb-10 p-2 border-b-2 border-cyan-500/50 pt-16 animated-fade-in-up" style="animation-delay: 0.8s;">
+            <h1 class="text-4xl sm:text-7xl font-extrabold tracking-tight neon-text uppercase">
+                flightfeed.uk
+            </h1>
+            <p class="text-sm sm:text-xl font-semibold tracking-wide text-gray-300 mt-2">
+                UK Drone Flight Zone Directory
+            </p>
+            <!-- REGION STATUS LINE -->
+            <p class="text-lg sm:text-2xl font-bold tracking-wider text-cyan-400 mt-6">
+                SELECT YOUR REGION (WALES ZONES ACTIVE)
+            </p>
+        </header>
+
+        <!-- Region Buttons Grid - WALES (2-Column) -->
+        <div id="walesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-8 animated-fade-in-up" style="animation-delay: 1.0s;">
+            
+            <!-- South Wales Button (ACTIVE) -->
+            <a href="south-wales.html" class="region-button active-pulse block p-4 sm:p-6 rounded-xl sm:rounded-2xl">
+                <div class="text-2xl sm:text-3xl font-extrabold neon-text">SOUTH WALES</div>
+                <p class="text-xs sm:text-sm text-gray-400 mt-1 sm:mt-2">Cardiff, Newport & Valleys</p>
+            </a>
+            
+            <!-- West Wales Button (ACTIVE) -->
+            <a href="flightfeed.uk - West Wales Feed.html" class="region-button active-pulse block p-4 sm:p-6 rounded-xl sm:rounded-2xl">
+                <div class="text-2xl sm:text-3xl font-extrabold neon-text">WEST WALES</div>
+                <p class="text-xs sm:text-sm text-gray-400 mt-1 sm:mt-2">Pembrokeshire, Ceredigion & Swansea</p>
+            </a>
+
+            <!-- East Wales Button (ACTIVE) -->
+            <a href="flightfeed.uk - East Wales Feed.html" class="region-button active-pulse block p-4 sm:p-6 rounded-xl sm:rounded-2xl">
+                <div class="text-2xl sm:text-3xl font-extrabold neon-text">EAST WALES</div>
+                <p class="text-xs sm:text-sm text-gray-400 mt-1 sm:mt-2">Monmouthshire, Powys & Wrexham</p>
+            </a>
+            
+            <!-- North Wales Button (ACTIVE) -->
+            <a href="flightfeed.uk - North Wales Feed.html" class="region-button active-pulse block p-4 sm:p-6 rounded-xl sm:rounded-2xl">
+                <div class="text-2xl sm:text-3xl font-extrabold neon-text">NORTH WALES</div>
+                <p class="text-xs sm:text-sm text-gray-400 mt-1 sm:mt-2">Gwynedd, Conwy, Anglesey</p>
+            </a>
+        </div>
+        
+        <!-- === ENGLAND & SCOTLAND SECTION (COMING SOON / BLURRED) === -->
+        <div id="comingSoonSection" class="relative mt-8 sm:mt-12 mb-8 p-3 sm:p-4 rounded-xl border border-red-900/40 animated-fade-in-up" style="animation-delay: 1.2s;">
+            
+            <!-- NEW DIAGONAL RIBBON FOR SECTION -->
+            <div class="section-ribbon bg-red-600 text-gray-900 font-bold uppercase">
+                IN PROGRESS
+            </div>
+            
+            <!-- COMING SOON OVERLAY -->
+            <div class="coming-soon-overlay">
+                <p class="text-2xl sm:text-4xl font-extrabold tracking-widest uppercase neon-text-red-overlay">
+                    COMING SOON
+                </p>
+                <p class="text-sm sm:text-lg text-gray-400 mt-2 font-medium">UK Expansion Under Development</p>
+            </div>
+            
+            <!-- Content to be Blurred (Title and Buttons) -->
+            <div class="blurred-content pt-4"> 
+                
+                <!-- Title (Dimmed) -->
+                <h2 class="text-lg sm:text-3xl font-extrabold tracking-wider mb-6 sm:mb-8 uppercase text-white/50 border-b-2 border-red-500/20 pb-2" style="font-family: 'Orbitron', sans-serif;">
+                    England & Scotland Zones
+                </h2>
+
+                <!-- Region Buttons Grid - ENGLAND & SCOTLAND (Dull/Disabled Styling) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                    
+                    <!-- England Regions -->
+                    <a href="#" class="region-button-disabled block rounded-xl">
+                        <div class="text-xl sm:text-2xl font-extrabold">LONDON</div>
+                        <p class="text-xs sm:text-sm mt-1 font-medium">Greater London, City of London</p>
+                    </a>
+                    <a href="#" class="region-button-disabled block rounded-xl">
+                        <div class="text-xl sm:text-2xl font-extrabold">SOUTH EAST</div>
+                        <p class="text-xs sm:text-sm mt-1 font-medium">Brighton, Southampton, Oxford, Reading</p>
+                    </a>
+                    <a href="#" class="region-button-disabled block rounded-xl">
+                        <div class="text-xl sm:text-2xl font-extrabold">SOUTH WEST</div>
+                        <p class="text-xs sm:text-sm mt-1 font-medium">Bristol, Plymouth, Exeter, Bournemouth</p>
+                    </a>
+                    <a href="#" class="region-button-disabled block rounded-xl">
+                        <div class="text-xl sm:text-2xl font-extrabold">EAST OF ENGLAND</div>
+                        <p class="text-xs sm:text-sm mt-1 font-medium">Norwich, Cambridge, Ipswich, Peterborough</p>
+                    </a>
+                    <a href="#" class="region-button-disabled block rounded-xl">
+                        <div class="text-xl sm:text-2xl font-extrabold">WEST MIDLANDS</div>
+                        <p class="text-xs sm:text-sm mt-1 font-medium">Birmingham, Coventry, Wolverhampton</p>
+                    </a>
+                    <a href="#" class="region-button-disabled block rounded-xl">
+                        <div class="text-xl sm:text-2xl font-extrabold">EAST MIDLANDS</div>
+                        <p class="text-xs sm:text-sm mt-1 font-medium">Leicester, Nottingham, Derby, Northampton</p>
+                    </a>
+                    <a href="#" class="region-button-disabled block rounded-xl">
+                        <div class="text-xl sm:text-2xl font-extrabold">YORKSHIRE & THE HUMBER</div>
+                        <p class="text-xs sm:text-sm mt-1 font-medium">Leeds, Sheffield, Hull, York</p>
+                    </a>
+                    <a href="#" class="region-button-disabled block rounded-xl">
+                        <div class="text-xl sm:text-2xl font-extrabold">NORTH WEST</div>
+                        <p class="text-xs sm:text-sm mt-1 font-medium">Manchester, Liverpool, Preston, Chester</p>
+                    </a>
+                    <a href="#" class="region-button-disabled block rounded-xl">
+                        <div class="text-xl sm:text-2xl font-extrabold">NORTH EAST</div>
+                        <p class="text-xs sm:text-sm mt-1 font-medium">Newcastle, Sunderland, Middlesbrough</p>
+                    </a>
+                    
+                    <!-- Scotland Region -->
+                    <a href="#" class="region-button-disabled block rounded-xl">
+                        <div class="text-xl sm:text-2xl font-extrabold">SCOTLAND ZONES</div>
+                        <p class="text-xs text-gray-500 mt-1 font-bold">Future Expansion</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- === END COMING SOON SECTION === -->
+        
+        <!-- Footer / Disclaimer -->
+        <footer class="text-center text-xs text-gray-600 mt-8 sm:mt-12 pt-4 border-t border-cyan-500/20 animated-fade-in-up" style="animation-delay: 1.4s;">
+            <!-- UPDATED COPYRIGHT -->
+            <p>&copy; 2025 Lawson Morris | Always check official NOTAMs and local restrictions before flying.</p>
+            <!-- T&C Link & LEGAL Link -->
+            <p class="mt-1">
+                <a id="openFullTcBtn" href="#" class="footer-link font-bold mr-4">Terms and Conditions</a>
+                <span class="text-gray-600">|</span>
+                <a id="legalLinkBtn" href="https://legal.lawsonmorris.co.uk" class="footer-link font-bold ml-4">Legal</a>
+            </p>
+        </footer>
+
+    </div>
+    
+    <!-- 1. Initial T&C Modal Overlay (Click to view full terms) -->
+    <div id="tcModal" class="modal-overlay fixed inset-0 flex items-center justify-center z-[100] hidden">
+        <div class="modal-content w-11/12 max-w-lg p-6 sm:p-8 rounded-2xl mx-auto shadow-2xl">
+            <h2 class="text-2xl sm:text-3xl font-extrabold uppercase mb-4 neon-cyan-glow">
+                Accept Our Terms and Conditions
+            </h2>
+            
+            <div class="text-left text-sm sm:text-base space-y-4 mb-6 tc-text">
+                <p>Welcome to <span class="font-bold">flightfeed.uk</span>. Your safety is our primary concern. This directory is provided for informational and planning purposes only.</p>
+                
+                <p class="p-3 rounded-lg bg-cyan-900/30 border border-cyan-700/50">
+                    <span class="font-bold text-cyan-400">Important:</span> By continuing, you agree to assume full responsibility for all flight planning and operations. You must obtain and verify all official flight zone information directly from the CAA (Civil Aviation Authority) and local authorities before any flight.
+                </p>
+                
+                <p>Click below to view the detailed terms and finalize your acceptance.</p>
+            </div>
+            
+            <button id="initialViewBtn" class="agree-button w-full py-3 rounded-xl font-bold uppercase tracking-wider text-lg">
+                View Full Terms and Accept
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. Full T&C Modal Overlay (Detailed Professional Terms) -->
+    <div id="fullTcModal" class="modal-overlay fixed inset-0 flex items-center justify-center z-[101] hidden">
+        <div class="modal-content w-11/12 max-w-xl p-6 sm:p-8 rounded-2xl mx-auto shadow-2xl">
+            <h2 class="text-2xl sm:text-3xl font-extrabold uppercase mb-4 neon-cyan-glow">
+                Detailed Terms of Use (V 1.1)
+            </h2>
+            
+            <div class="text-left text-xs sm:text-sm space-y-4 mb-6 tc-text max-h-96 overflow-y-auto pr-2">
+                
+                <p class="font-bold text-cyan-300">1. Disclaimer of Liability</p>
+                <p>1.1. <span class="font-bold">flightfeed.uk</span> provides a directory service based on aggregated public data. This data is subject to change without notice and may contain omissions or inaccuracies.</p>
+                <p>1.2. The user acknowledges that they are a professional or recreational drone operator responsible for verifying all information. <span class="font-extrabold text-red-400">flightfeed.uk is not responsible for any direct, indirect, or consequential damages, financial penalties, or legal repercussions caused by reliance on this information.</span></p>
+                
+                <p class="font-bold text-cyan-300">2. Mandatory Pre-Flight Verification</p>
+                <p>2.1. By accepting these terms, the user confirms their understanding of the UK Drone Code and mandatory requirements of the CAA.</p>
+                <p>2.2. The user <span class="font-extrabold text-cyan-400">MUST independently check all current NOTAMs (Notice to Airmen) and relevant airspace charts (e.g., through the Drone Code App or NATS) immediately prior to flight operations.</span> The information on this site is for planning only and must not be used as the sole basis for flight authorisation.</p>
+                
+                <p class="font-bold text-cyan-300">3. Data Accuracy and Availability</p>
+                <p>3.1. We endeavor to maintain data currency, but guarantee of real-time accuracy is explicitly disclaimed.</p>
+                <p>3.2. Service availability is not guaranteed. We reserve the right to suspend or discontinue the service at any time without prior notice.</p>
+                
+                <p class="font-bold text-cyan-300">4. Governing Law</p>
+                <p>4.1. These terms and conditions are governed by and construed in accordance with the laws of Wales and England.</p>
+            </div>
+            
+            <button id="finalAgreeBtn" class="agree-button w-full py-3 mt-4 rounded-xl font-bold uppercase tracking-wider text-lg">
+                I Have Read and Fully Accept the Terms
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Globals ---
+        const agreementKey = 'flightfeed_uk_tc_agreed_v1_1';
+        const introSeenKey = 'flightfeed_uk_intro_seen_session_v1';
+        let currentIntroStep = 1;
+
+        // --- Elements ---
+        const introModal = document.getElementById('introModal');
+        const introStep1 = document.getElementById('introStep1');
+        const introStep2 = document.getElementById('introStep2'); 
+        const introStep3 = document.getElementById('introStep3'); 
+        
+        const introNextBtn1 = document.getElementById('introNextBtn1');
+        const introNextBtn2 = document.getElementById('introNextBtn2');
+        const introFinishBtn = document.getElementById('introFinishBtn');
+        
+        const welcomePopup = document.getElementById('welcomePopup');
+        const welcomeCloseBtn = document.getElementById('welcomeCloseBtn');
+        
+        const initialModal = document.getElementById('tcModal');
+        const fullModal = document.getElementById('fullTcModal');
+        const initialViewBtn = document.getElementById('initialViewBtn');
+        const finalAgreeBtn = document.getElementById('finalAgreeBtn');
+        const openFullTcBtn = document.getElementById('openFullTcBtn'); 
+        const legalLinkBtn = document.getElementById('legalLinkBtn');
+
+        /** Toggles body scroll lock */
+        function toggleScroll(disable) {
+            document.body.style.overflow = disable ? 'hidden' : '';
+        }
+
+        /** Function to update the scroll progress bar width. */
+        function updateProgressBar() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = 0;
+            if (height > 0) {
+                scrolled = (winScroll / height) * 100;
+            }
+            const progressBar = document.getElementById("progressBar");
+            if (progressBar) {
+                progressBar.style.width = scrolled + "%";
+            }
+        }
+        
+        // --- 1. Intro Screen Logic (Session Storage - One per session) ---
+
+        /** Updates the visibility of the current step. */
+        function showIntroStep(step) {
+            const steps = [introStep1, introStep2, introStep3];
+            steps.forEach((el, index) => {
+                // Use index + 1 to match the step number
+                if (el) {
+                    el.classList.toggle('hidden', index + 1 !== step);
+                }
+            });
+        }
+        
+        /** Starts the intro screen sequence. */
+        function showIntroScreen() {
+            currentIntroStep = 1;
+            introModal.classList.remove('hidden');
+            toggleScroll(true);
+            showIntroStep(currentIntroStep);
+        }
+        
+        /** Handler for transitioning between steps. */
+        function handleIntroNext() {
+            if (currentIntroStep === 1 || currentIntroStep === 2) {
+                currentIntroStep += 1;
+                showIntroStep(currentIntroStep);
+            }
+        }
+
+        /** Closes the intro modal and proceeds to the welcome popup. */
+        function closeIntroScreen() {
+            sessionStorage.setItem(introSeenKey, 'true');
+            introModal.classList.add('hidden');
+            // Next step in the sequence
+            showWelcomePopup();
+        }
+
+        // --- 2. Persistent Welcome Popup Logic (Always Show) ---
+        function showWelcomePopup() {
+            welcomePopup.classList.remove('hidden');
+            toggleScroll(true);
+        }
+
+        function closeWelcomePopup() {
+            welcomePopup.classList.add('hidden');
+            // Next step in the sequence
+            checkAndShowTCModal();
+        }
+
+        // --- 3. T&C Logic (Local Storage - Permanent Check) ---
+        function checkAndShowTCModal() {
+            if (localStorage.getItem(agreementKey) !== 'true') {
+                initialModal.classList.remove('hidden');
+                toggleScroll(true);
+            } else {
+                initialModal.classList.add('hidden');
+                toggleScroll(false); // Only unlock if all startup modals are clear
+            }
+        }
+        
+        // Detailed T&C Modal
+        function openFullTermsPopup(e) {
+            if (e) e.preventDefault();
+            initialModal.classList.add('hidden');
+            fullModal.classList.remove('hidden');
+            toggleScroll(true);
+        }
+
+        function finalAgreement() {
+            localStorage.setItem(agreementKey, 'true');
+            fullModal.classList.add('hidden');
+            toggleScroll(false); // Restore scrolling
+        }
+        
+        // Legal Link Handler with Redirect Alert
+        function handleLegalRedirect(e) {
+            e.preventDefault();
+            const targetUrl = legalLinkBtn.href; 
+            
+            // Use custom modal or alert 
+            // We use alert here temporarily as per prior code structure, but note for future improvements:
+            alert("Redirecting to external Legal notice.");
+            
+            window.location.href = targetUrl;
+        }
+
+        // --- Event Listeners and Initial Load ---
+        window.addEventListener('scroll', updateProgressBar);
+        window.addEventListener('DOMContentLoaded', updateProgressBar);
+        
+        window.onload = () => {
+            updateProgressBar();
+            
+            // Start the sequence flow:
+            if (sessionStorage.getItem(introSeenKey) !== 'true') {
+                showIntroScreen();
+            } else {
+                // If intro skipped, go straight to persistent welcome popup
+                showWelcomePopup();
+            }
+        };
+
+        // Intro Screen Listeners
+        if (introNextBtn1) introNextBtn1.addEventListener('click', handleIntroNext);
+        if (introNextBtn2) introNextBtn2.addEventListener('click', handleIntroNext);
+        if (introFinishBtn) introFinishBtn.addEventListener('click', closeIntroScreen);
+        
+        // Welcome Popup Listeners
+        welcomeCloseBtn.addEventListener('click', closeWelcomePopup);
+        
+        // T&C Modal Listeners
+        initialViewBtn.addEventListener('click', openFullTermsPopup);
+        openFullTcBtn.addEventListener('click', openFullTermsPopup);
+        finalAgreeBtn.addEventListener('click', finalAgreement);
+        
+        // Legal Link Listener
+        legalLinkBtn.addEventListener('click', handleLegalRedirect);
+        
+    </script>
+    
+</body>
+</html>
+
