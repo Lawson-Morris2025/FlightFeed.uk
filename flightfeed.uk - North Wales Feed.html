@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flightfeed.uk - North Wales Zone Filter</title>
+    
+    <!-- Essential Mobile Metadata --><meta name="theme-color" content="#0a0a1a">
+    
+    <!-- PWA/IOS Setup for 'F' Logo & Standalone App Mode --><!-- Favicon (General) - Simple Blue 'F' for browser tabs --><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-family='Orbitron' font-size='90' fill='%2300FFFF'>F</text></svg>">
+    
+    <!-- iOS PWA/Homescreen Setup --><meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FlightFeed UK">
+    <!-- Apple Touch Icon - Custom 'F' with 'flightfeed.uk' text on dark background --><link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230a0a1a'/><defs><linearGradient id='grad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%2300BFFF;stop-opacity:1' /><stop offset='100%' style='stop-color:%235B42F3;stop-opacity:1' /></linearGradient></defs><text x='50%' y='55%' font-family='Orbitron' font-size='70' fill='url(%23grad)' text-anchor='middle' dominant-baseline='middle'>F</text><text x='50%' y='85%' font-family='Inter, sans-serif' font-size='18' fill='%238AAEF9' text-anchor='middle'>flightfeed.uk</text></svg>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom neon glow and dark theme */
+        :root {
+            --neon-blue: #00BFFF;
+            --neon-cyan: #00FFFF;
+            --bg-dark: #0a0a1a;
+            --secondary-bg: #1a1a2a;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .neon-text {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 20px var(--neon-cyan), 0 0 30px rgba(0, 255, 255, 0.5);
+            font-family: 'Orbitron', sans-serif;
+        }
+        .neon-border {
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 8px rgba(0, 191, 255, 0.5), 0 0 15px rgba(0, 191, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .neon-border:hover {
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.8), 0 0 25px rgba(0, 191, 255, 0.6);
+            transform: translateY(-2px);
+        }
+        .bg-dark-grid {
+            background-color: var(--bg-dark);
+            background-image: linear-gradient(0deg, transparent 24%, rgba(0, 191, 255, 0.03) 25%, rgba(0, 191, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 191, 255, 0.03) 75%, rgba(0, 191, 255, 0.03) 76%, transparent 77%), linear-gradient(90deg, transparent 24%, rgba(0, 191, 255, 0.03) 25%, rgba(0, 191, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 191, 255, 0.03) 75%, rgba(0, 191, 255, 0.03) 76%, transparent 77%);
+            background-size: 50px 50px;
+        }
+        .load-more-btn {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-cyan));
+            box-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-cyan);
+            transition: all 0.3s ease;
+        }
+        .load-more-btn:hover {
+            box-shadow: 0 0 15px var(--neon-blue), 0 0 30px var(--neon-cyan);
+            transform: scale(1.02);
+        }
+        .load-more-btn:disabled {
+            background: #1a1a2a;
+            color: #4b5563;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .filter-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 9l4-4 4 4m0 6l-4 4-4-4' /%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        /* Modal specific styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: var(--bg-dark);
+            width: 90%; 
+            max-width: 500px;
+            padding: 1.5rem;
+            border-radius: 12px;
+            animation: fadeIn 0.3s ease-out;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            line-height: 1;
+            color: #ccc;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.2s;
+        }
+        .close-btn:hover {
+            color: var(--neon-cyan);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-dark-grid text-gray-200 min-h-screen">
+
+    <!-- Opinion Popup Modal -->
+    <div id="opinion-modal" class="modal-overlay hidden">
+        <div class="modal-content neon-border border-cyan-500/80">
+            <!-- Close Button --><button id="close-opinion-modal-btn-x" class="close-btn" aria-label="Close opinion form">
+                &times;
+            </button>
+            
+            <h2 class="text-3xl font-extrabold text-center mb-4 neon-text uppercase tracking-widest">
+                We Want Your Opinion
+            </h2>
+            <p class="text-gray-400 text-center mb-6">Help us refine this resource. Your feedback is confidential and appreciated!</p>
+
+            <!-- Formspree Form Placeholder (Replace with your actual endpoint) -->
+            <form id="opinion-form" action="https://formspree.io/f/YOUR_FORMSPREE_ENDPOINT" method="POST" class="space-y-4">
+                <div>
+                    <label for="feedback_name" class="block text-sm font-medium text-cyan-400">Your Name (Optional)</label>
+                    <input type="text" name="name" id="feedback_name" class="mt-1 block w-full bg-gray-700/50 border border-cyan-500/30 rounded-md shadow-sm p-2 text-white focus:ring-cyan-500 focus:border-cyan-500">
+                </div>
+                <div>
+                    <label for="feedback_message" class="block text-sm font-medium text-cyan-400">Feedback / Suggestion</label>
+                    <textarea name="message" id="feedback_message" rows="4" required class="mt-1 block w-full bg-gray-700/50 border border-cyan-500/30 rounded-md shadow-sm p-2 text-white focus:ring-cyan-500 focus:border-cyan-500"></textarea>
+                </div>
+                <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-2">
+                    <button type="button" id="close-opinion-modal-btn-later" class="w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-full text-gray-300 bg-gray-700 hover:bg-gray-600 transition duration-150">
+                        Maybe Later
+                    </button>
+                    <button type="submit" class="w-full sm:w-auto load-more-btn text-gray-900 font-extrabold py-2 px-4 rounded-full shadow-lg uppercase text-sm tracking-widest">
+                        Submit Feedback
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Suggest a Place Modal (NEW) -->
+    <div id="suggest-modal" class="modal-overlay hidden">
+        <div class="modal-content neon-border border-blue-500/80">
+            <!-- Close Button --><button id="close-suggest-modal-btn-x" class="close-btn" aria-label="Close suggestion form">
+                &times;
+            </button>
+            
+            <h2 class="text-3xl font-extrabold text-center mb-4 neon-text uppercase tracking-widest">
+                Suggest a Flight Zone
+            </h2>
+            <p class="text-gray-400 text-center mb-6">Found a great spot? Let us know the details!</p>
+
+            <!-- Suggestion Formspree Form (Replace with your actual endpoint) -->
+            <form id="suggestion-form" action="https://formspree.io/f/YOUR_FORMSPREE_ENDPOINT" method="POST" class="space-y-4">
+                <div>
+                    <label for="suggest_place_name" class="block text-sm font-medium text-blue-400">Place Name (e.g., Penarth Headlands)</label>
+                    <input type="text" name="Place Name" id="suggest_place_name" required class="mt-1 block w-full bg-gray-700/50 border border-blue-500/30 rounded-md shadow-sm p-2 text-white focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="suggest_address" class="block text-sm font-medium text-blue-400">Address / Nearest Postcode / Coordinates</label>
+                    <input type="text" name="Address/Location" id="suggest_address" required class="mt-1 block w-full bg-gray-700/50 border border-blue-500/30 rounded-md shadow-sm p-2 text-white focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="suggest_reason" class="block text-sm font-medium text-blue-400">Why should this be added? (E.g., Low crowds, great view, local permission exists)</label>
+                    <textarea name="Reason for Addition" id="suggest_reason" rows="4" required class="mt-1 block w-full bg-gray-700/50 border border-blue-500/30 rounded-md shadow-sm p-2 text-white focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+                <div class="flex justify-end pt-2">
+                    <button type="submit" class="load-more-btn text-gray-900 font-extrabold py-2 px-4 rounded-full shadow-lg uppercase text-sm tracking-widest bg-blue-500 hover:bg-blue-400">
+                        Submit Suggestion
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <!-- Main content container, fluid width on mobile -->
+    <div class="w-full max-w-7xl mx-auto p-4 md:p-8">
+        <!-- Header -->
+        <header class="text-center mb-6 p-2 border-b-2 border-cyan-500/50">
+            <!-- Status Row: Online Status and Zone Count -->
+            <div class="flex justify-between items-center mb-1">
+                <!-- Status Indicator --><p id="status-indicator" class="text-xs font-light tracking-widest text-cyan-400 font-mono flex items-center">
+                    <span id="status-dot" class="inline-block w-2 h-2 rounded-full mr-2 bg-yellow-500 animate-pulse"></span>
+                    >> Status: Initializing
+                </p>
+                <!-- Zone Load Status --><p id="zone-status" class="text-xs font-light tracking-widest text-cyan-400 font-mono">
+                    >> Data: Static (<span id="total-locations">0</span> Zones)
+                </p>
+            </div>
+
+            <!-- Title --><h1 class="text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight neon-text uppercase">
+                flightfeed.uk
+            </h1>
+            <p class="text-md sm:text-xl font-semibold tracking-wide text-gray-300 mt-1">North Wales Drone Flight Locations</p>
+        </header>
+
+        <!-- Suggest A Place Button (NEW) --><div class="text-center mb-6">
+            <button id="show-suggest-modal" class="px-6 py-3 text-sm font-bold rounded-full text-gray-900 load-more-btn uppercase transition duration-300 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-cyan-500/50">
+                + Suggest a New Flight Zone
+            </button>
+        </div>
+
+        <!-- Warning Box - UPDATED TEXT --><div class="bg-red-900/40 p-3 mb-6 rounded-xl neon-border border-red-500/50">
+            <p class="text-xs sm:text-sm font-semibold text-red-300 flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-3 text-red-400 flex-shrink-0 mt-0.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.026 3.3 1.77 3.3h13.72c1.744 0 2.63-1.8 1.77-3.3L13.722 4.072a1.725 1.725 0 0 0-3.444 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+                Disclaimer: This data may not be fully correct. We are working hard to verify and update all information to ensure accuracy. Please check official aviation maps before flying.
+            </p>
+        </div>
+        
+        <!-- iOS Add to Homescreen Instructions (Mobile Only) -->
+        <div id="install-instructions" class="bg-blue-900/30 p-4 mb-6 rounded-xl neon-border border-blue-500/50 block sm:hidden relative">
+            
+            <!-- X Dismiss Button --><button id="close-instructions-x" class="absolute top-2 right-2 p-1 text-lg leading-none text-blue-300 hover:text-cyan-400 transition" aria-label="Close instructions">
+                &times;
+            </button>
+
+            <h3 class="text-lg font-bold text-blue-300 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2 text-blue-400 flex-shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5h3m-6.75-2.25h10.5M18 6.75h-.75m-11.25 0H5.25m5.517 7.721 2.572-2.572m-2.572 2.572-2.572-2.572m2.572 2.572V19.5m0-12.75v12.75" />
+                </svg>
+                Install App (iOS)
+            </h3>
+            <p class="text-sm font-semibold text-gray-300 mb-2">For a full-screen experience without the browser bar:</p>
+            <ol class="list-decimal list-inside text-sm text-gray-300 space-y-1 ml-4">
+                <li>Tap the <span class="font-bold text-cyan-400">Share button</span> <span class="text-lg align-middle inline-block">(<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 inline-block translate-y-[2px]">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                </svg>)</span> in the bottom toolbar.</li>
+                <li>Scroll down and select <span class="font-bold text-cyan-400">Add to Home Screen</span>.</li>
+                <li>Tap <span class="font-bold text-cyan-400">Add</span> to install the app.</li>
+            </ol>
+            
+            <!-- Don't Show Again Button --><div class="mt-4 text-right">
+                <button id="hide-instructions-permanent" class="text-xs font-semibold text-blue-300 hover:text-cyan-400 transition duration-150 underline">
+                    Don't show this again
+                </button>
+            </div>
+        </div>
+
+
+        <!-- Filter Controls --><div class="bg-secondary-bg p-4 mb-8 rounded-xl neon-border border-cyan-500/30 shadow-2xl">
+            <div class="flex flex-col sm:flex-row gap-4 items-end">
+                <!-- Location Filter --><div class="w-full sm:w-1/3">
+                    <label for="area-filter" class="block text-sm font-medium text-cyan-400 mb-1">Filter by Area/County</label>
+                    <select id="area-filter" class="filter-select w-full bg-gray-700/50 border border-cyan-500/30 rounded-lg text-white p-2.5 shadow-md focus:ring-cyan-500 focus:border-cyan-500">
+                        <!-- Options populated by JS --></select>
+                </div>
+                
+                <!-- Risk Level Filter --><div class="w-full sm:w-1/3">
+                    <label for="risk-filter" class="block text-sm font-medium text-cyan-400 mb-1">Minimum Risk Level</label>
+                    <select id="risk-filter" class="filter-select w-full bg-gray-700/50 border border-cyan-500/30 rounded-lg text-white p-2.5 shadow-md focus:ring-cyan-500 focus:border-cyan-500">
+                        <option value="0">All Levels</option>
+                        <option value="1">Level 1 (Low)</option>
+                        <option value="2">Level 2 (Moderate)</option>
+                        <option value="3">Level 3 (High)</option>
+                    </select>
+                </div>
+
+                <!-- Action Button --><div class="w-full sm:w-1/3 flex justify-end">
+                    <button id="apply-filters-btn" class="w-full sm:w-auto px-6 py-2.5 text-lg font-bold rounded-xl text-gray-900 load-more-btn uppercase">
+                        Apply Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Cards Grid --><div id="location-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Cards will be injected here --></div>
+
+        <!-- Load More Button --><div class="text-center mb-10">
+            <button id="load-more-btn" class="load-more-btn text-gray-900 font-extrabold py-3 px-8 rounded-full shadow-lg uppercase text-lg tracking-widest transition duration-300">
+                Load More Zones (0/0 displayed)
+            </button>
+        </div>
+        
+        <!-- Footer --><footer class="text-center text-sm text-gray-500 border-t border-cyan-500/20 pt-4">
+            <p>&copy; 2025 flightfeed.uk concept | Data Simulated.</p>
+            <button id="show-opinion-modal" class="text-cyan-500 hover:text-cyan-400 mt-1 transition duration-150">
+                Give Feedback
+            </button>
+        </footer>
+
+    </div>
+    
+    <!-- Back to Top Button --><button id="back-to-top" class="fixed bottom-5 right-5 p-3 rounded-full load-more-btn opacity-0 hidden transition-opacity duration-300 shadow-xl z-50" aria-label="Back to top">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 text-gray-900">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+        </svg>
+    </button>
+
+    <!-- JavaScript Logic --><script>
+        // --- 1. Network Status Setup ---
+        
+        function updateOnlineStatus() {
+            const isOnline = navigator.onLine;
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-indicator');
+
+            if (statusDot && statusText) {
+                if (isOnline) {
+                    statusDot.classList.remove('bg-red-500');
+                    statusDot.classList.add('bg-green-500', 'animate-pulse');
+                    statusText.innerHTML = '<span id="status-dot" class="inline-block w-2 h-2 rounded-full mr-2 bg-green-500 animate-pulse"></span>>> Status: Online';
+                } else {
+                    statusDot.classList.remove('bg-green-500', 'animate-pulse');
+                    statusDot.classList.add('bg-red-500');
+                    statusText.innerHTML = '<span id="status-dot" class="inline-block w-2 h-2 rounded-full mr-2 bg-red-500"></span>>> Status: Offline (Simulated)';
+                }
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        
+        // --- 2. Mock Data Generation (150 Locations using real field names) ---
+
+        const locationNames = [
+            "Snowdon Summit Access Path (Lower Sections)", "Ogwen Valley Viewpoint", "Llyn Padarn Shoreline, Llanberis",
+            "Beaumaris Pier and Castle View", "South Stack Cliffs, Anglesey", "Holyhead Mountain Base",
+            "Conwy Castle Exterior Walls", "Llandudno Great Orme Summit (Eastern Side)", "Betws-y-Coed Village Fields",
+            "Coed y Brenin Forest Park (Designated Areas)", "Harlech Castle Viewpoint", "Barmouth Beach Promenade",
+            "Wrexham Industrial Estate Buffer Zone", "Flint Castle Grounds", "Rhyl Beach Promenade",
+            "Afon Glaslyn Estuary, Porthmadog", "Capel Curig Valley Floor", "Plas Newydd Gardens (Exterior), Anglesey",
+            "Denbigh Castle Grounds", "Tal-y-Llyn Lake Shore"
+        ];
+
+        const counties = ["Gwynedd", "Conwy", "Anglesey", "Denbighshire", "Wrexham", "Flintshire"];
+        const types = ["Mountain/Summit", "Coastal/Urban", "Historical", "Lake/Reservoir", "Forest/Park", "Industrial Buffer"];
+        
+        function generateRandomLocation(id) {
+            const nameBase = locationNames[Math.floor(Math.random() * locationNames.length)];
+            const county = counties[Math.floor(Math.random() * counties.length)];
+            const type = types[Math.floor(Math.random() * types.length)];
+            const risk = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3
+            const lat = 52.8 + Math.random() * 1.5; // North Wales latitude range
+            const lon = -4.5 + Math.random() * 2.5; // North Wales longitude range
+            
+            let riskDetails;
+            switch(risk) {
+                case 1: riskDetails = "Low risk, open fields or coastal areas away from towns. Standard drone code applies. High wind risk likely. Max height 400ft."; break;
+                case 2: riskDetails = "Moderate risk. Sensitive areas like National Park zones or busy tourist spots. Adhere to local bylaws. VLOS is mandatory. Max height 250ft."; break;
+                case 3: riskDetails = "High sensitivity area. Near RAF Valley CTR or within Snowdonia's busiest peaks. Strict no-fly zones apply. Permissions mandatory. Max height 50ft."; break;
+            }
+            riskDetails += ` (${Math.floor(Math.random() * 200) + 50}m radius buffer zone.)`;
+
+
+            return {
+                id: id,
+                name: `${nameBase} (Zone ${id})`, 
+                county: county,
+                type: type,
+                risk: risk,
+                details: riskDetails,
+                lat: lat.toFixed(4),
+                lon: lon.toFixed(4)
+            };
+        }
+
+        const mockLocations = [];
+        for (let i = 1; i <= 150; i++) {
+            mockLocations.push(generateRandomLocation(i));
+        }
+
+        let filteredLocations = [...mockLocations];
+        let displayLimit = 12; 
+        const locationsPerPage = 12; 
+
+        const locationList = document.getElementById('location-list');
+        const areaFilter = document.getElementById('area-filter');
+        const riskFilter = document.getElementById('risk-filter');
+        const applyBtn = document.getElementById('apply-filters-btn');
+        const loadMoreBtn = document.getElementById('load-more-btn');
+        const totalLocationsSpan = document.getElementById('total-locations');
+
+        // --- Utility Functions ---
+
+        function getRiskColor(risk) {
+            // Risk 1 (Low) = Green, Risk 2 (Moderate) = Yellow, Risk 3 (High) = Red
+            switch (risk) {
+                case 3: return 'bg-red-800 text-red-200 neon-border border-red-500/50';
+                case 2: return 'bg-yellow-800 text-yellow-200 neon-border border-yellow-500/50';
+                case 1: 
+                default: return 'bg-green-800 text-green-200 neon-border border-green-500/50';
+            }
+        }
+
+        function createLocationCard(location) {
+            const riskClasses = getRiskColor(location.risk);
+            
+            return `
+                <div class="bg-secondary-bg rounded-xl p-5 shadow-lg neon-border transition duration-300 hover:shadow-cyan-500/50">
+                    <div class="flex justify-between items-start mb-3">
+                        <h2 class="text-xl font-bold neon-text leading-tight">${location.name}</h2>
+                        <span class="text-xs font-mono font-bold px-3 py-1 rounded-full ${riskClasses} flex-shrink-0">
+                            RISK ${location.risk}
+                        </span>
+                    </div>
+                    <p class="text-sm font-semibold text-cyan-400 mb-2">Area Type: ${location.type} | County: ${location.county}</p>
+                    <p class="text-gray-400 mb-4 text-sm leading-relaxed">${location.details}</p>
+                    <div class="flex justify-between items-center text-xs font-mono text-gray-500 pt-2 border-t border-gray-700/50">
+                        <span>Lat: ${location.lat}°</span>
+                        <span>Lon: ${location.lon}°</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Main Rendering and Filtering Logic ---
+
+        function renderLocations(locations) {
+            locationList.innerHTML = '';
+            const locationsToDisplay = locations.slice(0, displayLimit);
+            
+            if (locationsToDisplay.length === 0) {
+                locationList.innerHTML = `
+                    <p class="col-span-full text-center text-xl text-gray-500 py-10">
+                        <span class="neon-text">>> ERROR:</span> No flight zones match the current filter criteria.
+                    </p>
+                `;
+            } else {
+                locationsToDisplay.forEach(location => {
+                    locationList.innerHTML += createLocationCard(location);
+                });
+            }
+
+            // Update load more button state
+            const remaining = locations.length - displayLimit;
+            loadMoreBtn.textContent = remaining > 0 
+                ? `Load More Zones (${locationsToDisplay.length}/${locations.length} displayed)` 
+                : `All Zones Loaded (${locations.length}/${locations.length} displayed)`;
+            loadMoreBtn.disabled = remaining <= 0;
+            
+            // Update total location count in header
+            totalLocationsSpan.textContent = mockLocations.length;
+        }
+
+        function applyFilters() {
+            const selectedCounty = areaFilter.value;
+            const minRisk = parseInt(riskFilter.value, 10);
+
+            filteredLocations = mockLocations.filter(location => {
+                const countyMatch = selectedCounty === 'All' || location.county === selectedCounty;
+                const riskMatch = location.risk >= minRisk;
+                return countyMatch && riskMatch;
+            });
+
+            // Reset display limit and re-render
+            displayLimit = locationsPerPage;
+            renderLocations(filteredLocations);
+        }
+
+        function loadMore() {
+            displayLimit += locationsPerPage;
+            renderLocations(filteredLocations);
+            
+            // Scroll to the latest loaded content
+            window.scrollBy({
+                top: 400, // Scroll down by a fixed amount (adjust as needed)
+                behavior: 'smooth'
+            });
+        }
+        
+        // --- 3. Initialization and Event Listeners ---
+
+        function populateCountyFilter() {
+            // Get unique, sorted list of counties
+            const uniqueCounties = ['All', ...new Set(mockLocations.map(l => l.county))].sort();
+            
+            areaFilter.innerHTML = '';
+            uniqueCounties.forEach(county => {
+                const option = document.createElement('option');
+                option.value = county;
+                option.textContent = county === 'All' ? 'All Areas' : county;
+                areaFilter.appendChild(option);
+            });
+        }
+
+        // --- iOS Install Instructions Dismissal Logic ---
+        const installInstructions = document.getElementById('install-instructions');
+        const closeInstructionsXBtn = document.getElementById('close-instructions-x');
+        const hideInstructionsBtn = document.getElementById('hide-instructions-permanent');
+        const HIDE_KEY = 'hideInstallInstructions';
+
+        function hideInstructions() {
+            if (installInstructions) {
+                installInstructions.style.display = 'none';
+            }
+        }
+        
+        function setHidePermanent() {
+            // Set flag in localStorage and hide the element
+            try {
+                localStorage.setItem(HIDE_KEY, 'true');
+            } catch (e) {
+                console.error("Could not use localStorage to set preference.", e);
+            }
+            hideInstructions();
+        }
+
+        function checkAndHideInstructions() {
+            // Check if user has previously opted to hide the banner
+            const shouldHide = localStorage.getItem(HIDE_KEY) === 'true';
+            if (shouldHide) {
+                hideInstructions();
+            }
+        }
+
+        if (closeInstructionsXBtn) {
+            // Simply hide the banner for the current session when 'X' is pressed
+            closeInstructionsXBtn.addEventListener('click', hideInstructions);
+        }
+
+        if (hideInstructionsBtn) {
+            // Hide the banner permanently when 'Don't show this again' is pressed
+            hideInstructionsBtn.addEventListener('click', setHidePermanent);
+        }
+
+        // --- Modal Functionality (Suggestion & Opinion) ---
+        
+        // Opinion Modal Elements
+        const opinionModal = document.getElementById('opinion-modal');
+        const showOpinionModalBtn = document.getElementById('show-opinion-modal');
+        const closeOpinionModalXBtn = document.getElementById('close-opinion-modal-btn-x');
+        const closeOpinionModalLaterBtn = document.getElementById('close-opinion-modal-btn-later');
+
+        // Suggestion Modal Elements
+        const suggestModal = document.getElementById('suggest-modal');
+        const showSuggestModalBtn = document.getElementById('show-suggest-modal');
+        const closeSuggestModalXBtn = document.getElementById('close-suggest-modal-btn-x');
+        
+        // Generic function to toggle any modal
+        function toggleModal(modalElement, show) {
+            if (show) {
+                modalElement.classList.remove('hidden');
+            } else {
+                modalElement.classList.add('hidden');
+            }
+        }
+        
+        // Opinion Modal Handlers
+        showOpinionModalBtn.addEventListener('click', () => toggleModal(opinionModal, true));
+        closeOpinionModalXBtn.addEventListener('click', () => toggleModal(opinionModal, false));
+        closeOpinionModalLaterBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleModal(opinionModal, false);
+        });
+
+        // Suggestion Modal Handlers
+        showSuggestModalBtn.addEventListener('click', () => toggleModal(suggestModal, true));
+        closeSuggestModalXBtn.addEventListener('click', () => toggleModal(suggestModal, false));
+        
+        // Close modals when clicking outside (on the overlay)
+        opinionModal.addEventListener('click', (e) => {
+            if (e.target === opinionModal) {
+                toggleModal(opinionModal, false);
+            }
+        });
+        suggestModal.addEventListener('click', (e) => {
+            if (e.target === suggestModal) {
+                toggleModal(suggestModal, false);
+            }
+        });
+
+        // Back to Top functionality
+        const backToTopBtn = document.getElementById('back-to-top');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.remove('opacity-0', 'hidden');
+                backToTopBtn.classList.add('opacity-100', 'flex');
+            } else {
+                backToTopBtn.classList.remove('opacity-100', 'flex');
+                backToTopBtn.classList.add('opacity-0', 'hidden');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Main App initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            updateOnlineStatus(); // Set initial online/offline status
+            checkAndHideInstructions(); // Check user preference for install banner
+            populateCountyFilter();
+            applyFilters(); // Initial render
+            
+            // Event listeners for filtering
+            applyBtn.addEventListener('click', applyFilters);
+            loadMoreBtn.addEventListener('click', loadMore);
+        });
+    </script>
+</body>
+</html>
