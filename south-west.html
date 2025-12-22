@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlightFeed.uk - South West Zone Filter</title>
+    
+    <!-- Essential Mobile Metadata -->
+    <meta name="theme-color" content="#1a0a0a">
+    
+    <!-- Favicon - Red 'F' -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-family='Orbitron' font-size='90' fill='%23FF0000'>F</text></svg>">
+    
+    <!-- iOS PWA Setup -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FlightFeed.uk SW">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231a0a0a'/><defs><linearGradient id='grad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%23FF0000;stop-opacity:1' /><stop offset='100%' style='stop-color:%23800000;stop-opacity:1' /></linearGradient></defs><text x='50%' y='55%' font-family='Orbitron' font-size='70' fill='url(%23grad)' text-anchor='middle' dominant-baseline='middle'>F</text><text x='50%' y='85%' font-family='Inter, sans-serif' font-size='18' fill='%23FF4D4D' text-anchor='middle'>flightfeed.uk</text></svg>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --neon-red: #FF0000;
+            --neon-crimson: #DC143C;
+            --bg-dark: #0f0505;
+            --secondary-bg: #1f0a0a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); }
+        
+        .neon-text {
+            color: var(--neon-red);
+            text-shadow: 0 0 5px var(--neon-red), 0 0 10px var(--neon-crimson), 0 0 20px rgba(220, 20, 60, 0.5);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .neon-border {
+            border: 1px solid var(--neon-crimson);
+            box-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .neon-border:hover {
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .bg-dark-grid {
+            background-image: linear-gradient(0deg, transparent 24%, rgba(255, 0, 0, 0.02) 25%, rgba(255, 0, 0, 0.02) 26%, transparent 27%, transparent 74%, rgba(255, 0, 0, 0.02) 75%, rgba(255, 0, 0, 0.02) 76%, transparent 77%), 
+                              linear-gradient(90deg, transparent 24%, rgba(255, 0, 0, 0.02) 25%, rgba(255, 0, 0, 0.02) 26%, transparent 27%, transparent 74%, rgba(255, 0, 0, 0.02) 75%, rgba(255, 0, 0, 0.02) 76%, transparent 77%);
+            background-size: 50px 50px;
+        }
+
+        .action-btn {
+            background: linear-gradient(45deg, #800000, #FF0000);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            color: white;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+        }
+
+        .action-btn:hover {
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+            filter: brightness(1.2);
+        }
+
+        .filter-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='red'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 9l4-4 4 4m0 6l-4 4-4-4' /%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.2em;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-dark-grid text-gray-200 min-h-screen">
+
+    <!-- Coming Soon Modal -->
+    <div id="coming-soon-modal" class="modal-overlay">
+        <div class="bg-zinc-900 w-[90%] max-w-sm p-8 rounded-2xl border border-red-500 shadow-2xl relative text-center">
+            <div class="mb-4 flex justify-center">
+                <div class="w-16 h-16 rounded-full border-2 border-red-500 flex items-center justify-center animate-pulse">
+                    <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                </div>
+            </div>
+            <h2 class="text-xl font-bold neon-text mb-2 uppercase italic">FlightFeed.uk</h2>
+            <p class="text-gray-300 font-medium mb-6 text-sm">Sorry, we are adding the location submission feature soon!</p>
+            <button onclick="toggleModal('coming-soon-modal', false)" class="w-full py-3 rounded-lg action-btn text-xs">
+                Understood
+            </button>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 py-6 md:py-10">
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-4 border-b border-red-900/30 pb-2">
+                <div id="status-line" class="text-[10px] font-mono text-red-500 uppercase flex items-center">
+                    <span class="w-2 h-2 rounded-full bg-red-600 animate-ping mr-2"></span>
+                    System: Active // Regional: South West
+                </div>
+                <div class="text-[10px] font-mono text-red-400 uppercase">
+                    Data: Live Sync (<span id="count-total">0</span>)
+                </div>
+            </div>
+            
+            <!-- Reduced title size from text-5xl/8xl to 4xl/6xl -->
+            <h1 class="text-4xl md:text-6xl font-black neon-text italic tracking-tighter">FLIGHTFEED.UK</h1>
+            <p class="text-gray-400 font-medium tracking-widest uppercase mt-2 text-xs md:text-sm">South West England // Drone Intelligence</p>
+        </header>
+
+        <div class="text-center mb-8">
+            <button onclick="toggleModal('coming-soon-modal', true)" class="px-8 py-3 rounded-full action-btn text-xs">
+                + Add Regional Location
+            </button>
+        </div>
+
+        <!-- Alerts -->
+        <div class="bg-red-950/20 border-l-4 border-red-600 p-4 mb-8 rounded-r-xl">
+            <div class="flex items-center text-red-400 font-bold text-xs uppercase tracking-widest">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 9V5a1 1 0 112 0v4a1 1 0 11-2 0zm0 4a1 1 0 112 0 1 1 0 01-2 0z"/></svg>
+                Warning: Verification Required
+            </div>
+            <p class="text-gray-400 text-xs mt-1 font-semibold italic">Disclaimer: Hazard levels and risk warnings displayed here may not be correct. We are working to verify all data, but you must consult official aviation charts and local byelaws before any flight.</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-[#1a0505] p-6 rounded-2xl border border-red-900/40 mb-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                <div>
+                    <label class="block text-[10px] font-bold text-red-500 uppercase mb-2">County / Unitary Authority</label>
+                    <select id="county-filter" class="filter-select w-full bg-black border border-red-900/50 rounded-xl p-3 text-white outline-none focus:border-red-500"></select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-red-500 uppercase mb-2">Hazard Level</label>
+                    <select id="risk-filter" class="filter-select w-full bg-black border border-red-900/50 rounded-xl p-3 text-white outline-none focus:border-red-500">
+                        <option value="0">Show All Risks</option>
+                        <option value="1">Level 1 (Low)</option>
+                        <option value="2">Level 2 (Moderate)</option>
+                        <option value="3">Level 3 (High Caution)</option>
+                    </select>
+                </div>
+                <button onclick="applyFilters()" class="w-full py-3.5 rounded-xl action-btn">Filter Feed</button>
+            </div>
+        </div>
+
+        <!-- Grid -->
+        <div id="zone-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"></div>
+
+        <!-- Pagination -->
+        <div class="text-center pb-20">
+            <button id="load-more" onclick="loadMore()" class="px-10 py-4 rounded-full border border-red-600 text-red-500 hover:bg-red-600 hover:text-white transition-all font-bold uppercase text-xs tracking-widest">
+                Expand Feed
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const SW_COUNTIES = ["Bristol", "Cornwall", "Devon", "Dorset", "Gloucestershire", "Somerset", "Wiltshire", "Isles of Scilly"];
+        const SW_SITES = [
+            "Clifton Suspension Bridge Lookout", "Ashton Court Estate", "Durgan Beach", "St Michael's Mount Perimeter",
+            "Cheddar Gorge Cliff Edge", "Dartmoor Haytor Rocks", "Land's End Coastal Path", "Bath Royal Victoria Park",
+            "Exmouth Seafront", "Salisbury Plain Edge", "Glastonbury Tor Base", "Lulworth Cove Viewpoint",
+            "Portland Bill Lighthouse Area", "Cheltenham Racecourse Perimeter", "Truro Cathedral Surrounds",
+            "Fowey Estuary", "St Ives Island", "Cotswold Water Park", "Forest of Dean Sculpture Trail",
+            "Tyntesfield Grounds", "Weston-super-Mare Pier Area", "Plymouth Hoe", "Torquay Harbour Mouth",
+            "Minack Theatre Cliffs", "Tintagel Castle Viewpoint", "Stourhead Gardens", "Avebury Henge Perimeter"
+        ];
+        const TYPES = ["Coastal", "National Park", "Urban/City", "Heritage", "Forest", "Rural"];
+
+        let allZones = [];
+        let filteredZones = [];
+        let limit = 12;
+
+        function initData() {
+            for (let i = 1; i <= 150; i++) {
+                const site = SW_SITES[Math.floor(Math.random() * SW_SITES.length)];
+                const county = SW_COUNTIES[Math.floor(Math.random() * SW_COUNTIES.length)];
+                const risk = Math.floor(Math.random() * 3) + 1;
+                allZones.push({
+                    id: i,
+                    name: `${site} #${i}`,
+                    county: county,
+                    type: TYPES[Math.floor(Math.random() * TYPES.length)],
+                    risk: risk,
+                    lat: (50 + Math.random() * 1.5).toFixed(4),
+                    lon: (-(2 + Math.random() * 3)).toFixed(4),
+                    desc: risk === 3 ? "Restricted airspace nearby. High pedestrian density. Visual Line of Sight (VLOS) critical." : 
+                          risk === 2 ? "Moderate traffic. Check for local council permit requirements." : 
+                          "Wide open space. Ideal for beginner flight testing."
+                });
+            }
+            populateFilters();
+            applyFilters();
+        }
+
+        function populateFilters() {
+            const select = document.getElementById('county-filter');
+            if(!select) return;
+            select.innerHTML = '<option value="All">All Counties</option>';
+            SW_COUNTIES.sort().forEach(c => {
+                select.innerHTML += `<option value="${c}">${c}</option>`;
+            });
+        }
+
+        function toggleModal(id, show) {
+            const modal = document.getElementById(id);
+            if (show) {
+                modal.classList.add('active');
+            } else {
+                modal.classList.remove('active');
+            }
+        }
+
+        function applyFilters() {
+            const county = document.getElementById('county-filter').value;
+            const risk = parseInt(document.getElementById('risk-filter').value);
+            
+            filteredZones = allZones.filter(z => {
+                const cMatch = county === "All" || z.county === county;
+                const rMatch = risk === 0 || z.risk >= risk;
+                return cMatch && rMatch;
+            });
+            
+            limit = 12;
+            render();
+        }
+
+        function loadMore() {
+            limit += 12;
+            render();
+        }
+
+        function render() {
+            const grid = document.getElementById('zone-grid');
+            const countDisplay = document.getElementById('count-total');
+            if(!grid) return;
+            grid.innerHTML = '';
+            
+            const visible = filteredZones.slice(0, limit);
+            visible.forEach(z => {
+                const riskColor = z.risk === 3 ? 'text-red-500' : z.risk === 2 ? 'text-orange-500' : 'text-green-500';
+                const borderColor = z.risk === 3 ? 'border-red-600/50' : 'border-red-900/30';
+                
+                grid.innerHTML += `
+                    <div class="bg-[#1a0a0a] border ${borderColor} rounded-2xl p-5 neon-border">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-bold text-white text-lg">${z.name}</h3>
+                            <span class="text-[10px] font-mono px-2 py-1 bg-black border border-red-900 rounded ${riskColor}">
+                                LVL ${z.risk}
+                            </span>
+                        </div>
+                        <div class="text-[11px] text-red-400 font-bold uppercase mb-2">${z.county} // ${z.type}</div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4 h-12 overflow-hidden">${z.desc}</p>
+                        <div class="flex justify-between items-center pt-3 border-t border-red-900/20 text-[10px] font-mono text-gray-600">
+                            <span>GPS: ${z.lat}, ${z.lon}</span>
+                            <span class="text-red-900">ID: ${z.id}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            countDisplay.innerText = filteredZones.length;
+            const loadBtn = document.getElementById('load-more');
+            if(loadBtn) loadBtn.style.display = limit >= filteredZones.length ? 'none' : 'inline-block';
+        }
+
+        window.onload = initData;
+    </script>
+</body>
+</html>
