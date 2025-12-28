@@ -11,6 +11,7 @@
             --neon-blue: #00d4ff; 
             --deep-cobalt: #003366; 
             --bg-dark: #020617; 
+            --error-red: #ff4d4d;
         }
         body { 
             font-family: 'Inter', sans-serif; 
@@ -34,52 +35,240 @@
             border: 1px solid rgba(0, 212, 255, 0.2);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-        .form-container {
-            width: 100%;
-            max-width: 800px;
-            height: 900px;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
+        
+        .rating-group {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .rating-group input { display: none; }
+        .rating-group label {
+            cursor: pointer;
+            font-size: 2.5rem;
+            color: rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+        .rating-group label:hover,
+        .rating-group label:hover ~ label,
+        .rating-group input:checked ~ label {
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px rgba(0, 212, 255, 0.8);
+        }
+
+        .cyber-input {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            color: white;
+            transition: all 0.3s ease;
+            appearance: none;
+        }
+        .cyber-input:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.15);
+            background: rgba(15, 23, 42, 1);
+        }
+
+        .required-star {
+            color: var(--error-red);
+            font-size: 14px;
+            margin-left: 2px;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+        .select-wrapper::after {
+            content: '▼';
+            font-size: 10px;
+            color: var(--neon-blue);
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .hidden { display: none; }
+
+        @keyframes pulse-border {
+            0% { border-color: rgba(0, 212, 255, 0.2); }
+            50% { border-color: rgba(0, 212, 255, 0.6); }
+            100% { border-color: rgba(0, 212, 255, 0.2); }
+        }
+        .active-pulse {
+            animation: pulse-border 2s infinite;
         }
     </style>
 </head>
 <body class="bg-blue-grid min-h-screen flex flex-col items-center justify-center p-4 md:p-10">
 
-    <!-- Header Section -->
     <header class="text-center mb-8 w-full max-w-2xl">
         <h1 class="text-3xl md:text-5xl font-black neon-text italic tracking-tighter mb-2">SERVICE PORTAL</h1>
         <p class="text-cyan-500 font-mono text-[10px] md:text-xs uppercase tracking-[0.3em]">FlightFeed.uk // Interaction Audit</p>
         <div class="h-px w-full bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent mt-4"></div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="glass-panel w-full max-w-4xl rounded-3xl p-4 md:p-8 flex flex-col items-center">
-        <div class="mb-6 text-center">
-            <h2 class="text-white text-lg font-bold mb-1 uppercase tracking-tight">Rate your experience with our customer service</h2>
-            <p class="text-slate-400 text-sm">Your feedback helps us maintain mission-critical support standards.</p>
+    <main class="glass-panel w-full max-w-lg rounded-3xl p-8 md:p-12 active-pulse">
+        
+        <div id="form-container">
+            <div class="mb-8 text-center">
+                <h2 class="text-white text-xl font-bold mb-2 uppercase tracking-tight">Transmission Entry</h2>
+                <p class="text-slate-400 text-sm">Log your interaction data for system optimization.</p>
+            </div>
+
+            <form id="feedback-form" action="https://api.web3forms.com/submit" method="POST">
+                <!-- Web3Forms Access Key provided by User -->
+                <input type="hidden" name="access_key" value="df9255d2-c51c-4ca2-98fe-058734ade998">
+                <input type="hidden" name="subject" value="New Service Feedback - FlightFeed.uk">
+                <input type="hidden" name="from_name" value="FlightFeed Portal">
+                
+                <div class="mb-6">
+                    <label class="block text-cyan-500 text-[10px] uppercase font-bold mb-2 tracking-[0.2em]">
+                        Your Name <span class="required-star">*</span>
+                    </label>
+                    <input type="text" name="name" required placeholder="Enter full name..." 
+                        class="cyber-input w-full rounded-xl px-4 py-4 text-sm font-medium">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-cyan-500 text-[10px] uppercase font-bold mb-2 tracking-[0.2em]">
+                        Email Address <span class="required-star">*</span>
+                    </label>
+                    <input type="email" name="email" required placeholder="operator@flightfeed.uk" 
+                        class="cyber-input w-full rounded-xl px-4 py-4 text-sm font-medium">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-cyan-500 text-[10px] uppercase font-bold mb-2 tracking-[0.2em]">
+                        Who was your agent? <span class="required-star">*</span>
+                    </label>
+                    <div class="select-wrapper">
+                        <select id="agent-select" name="agent" required class="cyber-input w-full rounded-xl px-4 py-4 text-sm font-medium cursor-pointer">
+                            <option value="" disabled selected>Select an agent...</option>
+                            <option value="Lawson (CEO)">Lawson (CEO)</option>
+                            <option value="Other Support Staff">Other Support Staff</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="other-agent-container" class="mb-6 hidden">
+                    <label class="block text-cyan-500 text-[10px] uppercase font-bold mb-2 tracking-[0.2em]">
+                        Specify Agent Name <span class="required-star">*</span>
+                    </label>
+                    <input type="text" id="other-agent-name" name="specified_agent" placeholder="Enter agent name..." 
+                        class="cyber-input w-full rounded-xl px-4 py-4 text-sm font-medium">
+                </div>
+
+                <div class="mb-10 text-center">
+                    <label class="block text-cyan-500 text-[10px] uppercase font-bold mb-4 tracking-[0.2em]">
+                        Satisfaction Rating <span class="required-star">*</span>
+                    </label>
+                    <div class="rating-group">
+                        <input type="radio" id="star5" name="stars" value="5" /><label for="star5">★</label>
+                        <input type="radio" id="star4" name="stars" value="4" /><label for="star4">★</label>
+                        <input type="radio" id="star3" name="stars" value="3" /><label for="star3">★</label>
+                        <input type="radio" id="star2" name="stars" value="2" /><label for="star2">★</label>
+                        <input type="radio" id="star1" name="stars" value="1" required /><label for="star1">★</label>
+                    </div>
+                </div>
+
+                <button type="submit" id="submit-btn"
+                    class="group relative w-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-black py-5 rounded-xl uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(0,212,255,0.3)]">
+                    <span class="relative z-10">Submit</span>
+                </button>
+            </form>
         </div>
 
-        <!-- Integrated Form Container -->
-        <div class="form-container shadow-2xl">
-            <iframe 
-                src="https://docs.google.com/forms/d/e/1FAIpQLSd8-6uLlafWT0iRpKRLyajRTHBpehzrCiUKFnRefrbmwfHSmA/viewform?embedded=true" 
-                width="100%" 
-                height="929" 
-                frameborder="0" 
-                marginheight="0" 
-                marginwidth="0">
-                Loading satisfaction survey...
-            </iframe>
+        <div id="success-container" class="hidden text-center py-10">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-cyan-500/10 border border-cyan-500/50 mb-6">
+                <svg class="w-10 h-10 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2 class="text-white text-2xl font-black neon-text italic mb-4 uppercase">Thank you</h2>
+            <p class="text-slate-400 text-sm leading-relaxed max-w-[280px] mx-auto">
+                Your feedback is appreciated. Your contribution improves mission safety.
+            </p>
+            <button id="reset-btn" class="mt-8 text-cyan-500 text-[10px] uppercase font-bold tracking-[0.3em] hover:text-white transition-colors">
+                New Entry
+            </button>
         </div>
+
     </main>
 
-    <!-- Footer -->
     <footer class="mt-10 text-center text-slate-500">
         <p class="text-[10px] font-mono uppercase tracking-widest">
             &copy; 2025 FlightFeed Intelligence // Performance Review Channel
         </p>
-    </footer >
+    </footer>
 
+    <script>
+        const form = document.getElementById('feedback-form');
+        const formContainer = document.getElementById('form-container');
+        const successContainer = document.getElementById('success-container');
+        const agentSelect = document.getElementById('agent-select');
+        const otherAgentContainer = document.getElementById('other-agent-container');
+        const otherAgentInput = document.getElementById('other-agent-name');
+        const resetBtn = document.getElementById('reset-btn');
+        const submitBtn = document.getElementById('submit-btn');
+
+        agentSelect.addEventListener('change', function() {
+            if (this.value === 'Other Support Staff') {
+                otherAgentContainer.classList.remove('hidden');
+                otherAgentInput.setAttribute('required', 'true');
+            } else {
+                otherAgentContainer.classList.add('hidden');
+                otherAgentInput.removeAttribute('required');
+                otherAgentInput.value = ''; 
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            form.reset();
+            otherAgentContainer.classList.add('hidden');
+            otherAgentInput.removeAttribute('required');
+            submitBtn.innerHTML = '<span class="relative z-10">Submit</span>';
+            submitBtn.disabled = false;
+            successContainer.classList.add('hidden');
+            formContainer.classList.remove('hidden');
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            submitBtn.innerHTML = 'Submitting...';
+            submitBtn.disabled = true;
+
+            const formData = new FormData(form);
+            const object = Object.fromEntries(formData);
+            const json = JSON.stringify(object);
+
+            try {
+                const response = await fetch("https://api.web3forms.com/submit", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: json
+                });
+
+                const result = await response.json();
+
+                if (response.status === 200) {
+                    formContainer.classList.add('hidden');
+                    successContainer.classList.remove('hidden');
+                } else {
+                    throw new Error(result.message || 'Submission failed');
+                }
+            } catch (error) {
+                submitBtn.innerHTML = 'Retry Submit';
+                submitBtn.disabled = false;
+                console.error('Error:', error);
+            }
+        });
+    </script>
 </body>
 </html>
