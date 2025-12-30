@@ -184,19 +184,45 @@
             position: relative;
         }
     </style>
-<!-- Smartsupp Live Chat script -->
-<script type="text/javascript">
-var _smartsupp = _smartsupp || {};
-_smartsupp.key = 'c02a369003094686f5552a3a000c58a26b068c9c';
-window.smartsupp||(function(d) {
-  var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
-  s=d.getElementsByTagName('script')[0];c=d.createElement('script');
-  c.type='text/javascript';c.charset='utf-8';c.async=true;
-  c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
-})(document);
+    
+<!-- 1. Load the Featurebase SDK -->
+<script>
+!(function(e,t){
+  var a="featurebase-sdk";
+  function n(){
+    if(!t.getElementById(a)){
+      var e=t.createElement("script");
+      e.id=a;
+      e.src="https://do.featurebase.app/js/sdk.js";
+      t.getElementsByTagName("script")[0].parentNode.insertBefore(
+        e,
+        t.getElementsByTagName("script")[0]
+      );
+    }
+  }
+  "function"!=typeof e.Featurebase &&
+    (e.Featurebase=function(){
+      (e.Featurebase.q=e.Featurebase.q||[]).push(arguments)
+    }),
+  "complete"===t.readyState || "interactive"===t.readyState
+    ? n()
+    : t.addEventListener("DOMContentLoaded",n)
+})(window,document);
 </script>
-<noscript> Powered by <a href=“https://www.smartsupp.com” target=“_blank”>Smartsupp</a></noscript>
 
+<!-- 2. Boot Featurebase with your messenger config -->
+<script>
+  Featurebase("boot", {
+    appId: "6954142e9ce9e07fd16b59fd",
+    email: "user@example.com",         // optional (secure mode)
+    userId: "12345",                   // optional (secure mode)
+    createdAt: "2025-05-06T12:00:00Z",  // optional
+    theme: "light",                    // "light" or "dark"
+    language: "en"                     // e.g. "en", "de"
+    // hideDefaultLauncher: true        // optional
+  });
+</script>
+    
 </head>
 <body class="bg-dark-grid text-gray-200 min-h-screen p-2 sm:p-4">
 
