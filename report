@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlightFeed.uk | Dev Team Issue Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --border-color: #334155;
+        }
+        body {
+            background-color: var(--dark-bg);
+            color: #f1f5f9;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        .dark-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        input, select, textarea {
+            background-color: #0f172a !important;
+            border-color: #475569 !important;
+            color: #f1f5f9 !important;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-blue) !important;
+            ring-color: var(--accent-blue) !important;
+            outline: none;
+        }
+        optgroup {
+            background-color: #1e293b;
+            color: #94a3b8;
+            font-style: normal;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-2xl dark-card rounded-2xl overflow-hidden">
+        <!-- Header -->
+        <div class="bg-slate-800/50 p-6 border-b border-slate-700 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-black tracking-tight text-white flex items-center gap-2">
+                    <i class="fas fa-radar text-sky-400"></i>
+                    FlightFeed<span class="text-sky-400">.uk</span>
+                </h1>
+                <p class="text-slate-400 text-sm mt-1">Technical Debugging & Problem Report (Dev Team)</p>
+            </div>
+            <div class="bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[10px] font-bold px-2 py-1 rounded uppercase">
+                Developer Access
+            </div>
+        </div>
+
+        <!-- Form -->
+        <form action="https://api.web3forms.com/submit" method="POST" id="devReportForm" class="p-8 space-y-5">
+            
+            <input type="hidden" name="access_key" value="588d57c4-4e49-4e33-8482-58722a23e401">
+            <input type="hidden" name="subject" value="An issue has been submitted">
+            <input type="hidden" name="from_name" value="FlightFeed.uk Dev Portal">
+            <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Reporter Name *</label>
+                    <input type="text" name="name" required
+                        class="w-full px-4 py-2.5 rounded-lg border transition-all"
+                        placeholder="Dev/Pilot Name">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Return Email *</label>
+                    <input type="email" name="email" required
+                        class="w-full px-4 py-2.5 rounded-lg border transition-all"
+                        placeholder="dev@flightfeed.uk">
+                </div>
+            </div>
+
+            <!-- Impacted Region -->
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Impacted Area *</label>
+                <div class="relative">
+                    <select name="category" id="regionSelect" required
+                        class="w-full pl-4 pr-10 py-2.5 border rounded-lg appearance-none transition-all">
+                        <option value="" disabled selected>Select affected area...</option>
+                        
+                        <optgroup label="Main Site">
+                            <option value="Homepage">Homepage</option>
+                        </optgroup>
+
+                        <optgroup label="Wales">
+                            <option value="South Wales">South Wales</option>
+                            <option value="Mid Wales">Mid Wales</option>
+                            <option value="North Wales">North Wales</option>
+                        </optgroup>
+
+                        <optgroup label="England">
+                            <option value="North East">North East</option>
+                            <option value="North West">North West</option>
+                            <option value="Yorkshire and the Humber">Yorkshire and the Humber</option>
+                            <option value="East Midlands">East Midlands</option>
+                            <option value="West Midlands">West Midlands</option>
+                            <option value="East of England">East of England</option>
+                            <option value="London">London</option>
+                            <option value="South East">South East</option>
+                            <option value="South West">South West</option>
+                        </optgroup>
+
+                        <optgroup label="Other">
+                            <option value="Other">Other / Global</option>
+                        </optgroup>
+                    </select>
+                    <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-500">
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Technical Details *</label>
+                <textarea name="message" required rows="4"
+                    class="w-full px-4 py-2.5 rounded-lg border transition-all"
+                    placeholder="Describe the bug, data latency, or mapping error..."></textarea>
+            </div>
+
+            <button type="submit" id="submitBtn" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 shadow-lg transition-colors">
+                <i class="fas fa-terminal"></i>
+                Submit to Dev Team
+            </button>
+        </form>
+
+        <!-- Success Message -->
+        <div id="success" class="hidden p-12 text-center">
+            <div class="w-20 h-20 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6 border border-emerald-500/20">
+                <i class="fas fa-check text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white">Thank you for your help!</h3>
+            <p class="text-slate-400 mt-2 max-w-sm mx-auto">The dev team will be in touch shortly regarding your report.</p>
+            <button id="resetBtn" class="mt-8 text-sky-400 font-semibold hover:text-sky-300 transition-colors flex items-center justify-center mx-auto gap-2">
+                <i class="fas fa-plus"></i>Create New Entry
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('devReportForm');
+        const successSection = document.getElementById('success');
+        const submitBtn = document.getElementById('submitBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // Handle Form Submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Syncing...';
+
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(res => {
+                if (res.status === 200) {
+                    form.classList.add('hidden');
+                    successSection.classList.remove('hidden');
+                } else {
+                    throw new Error("Log transmission failed.");
+                }
+            })
+            .catch(err => {
+                alert(err.message || "Network timeout.");
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            });
+        });
+
+        // Handle Reset/New Entry (Fixed button logic)
+        resetBtn.addEventListener('click', function() {
+            form.reset(); // Clear input values
+            successSection.classList.add('hidden'); // Hide success message
+            form.classList.remove('hidden'); // Show form again
+        });
+    </script>
+</body>
+</html>
